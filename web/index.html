@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>中医学习大脑 · 方剂</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">方</span>
+        <div>
+          <h1>中医学习大脑</h1>
+          <p>本地方剂 · 伤寒论辑义</p>
+        </div>
+      </div>
+      <div class="header-note">
+        <strong id="dataset-note">正在读取本地目录</strong>
+        <span>所有条目保留原文定位</span>
+      </div>
+    </header>
+
+    <nav class="module-bar" aria-label="模块">
+      <div class="module-tabs" role="tablist">
+        <button class="module-tab active" data-view="formulas" role="tab" aria-selected="true">方剂</button>
+        <button class="module-tab" data-view="herbs" role="tab" aria-selected="false">中药</button>
+      </div>
+      <span class="module-pending">针灸 · 辨证论治 · 待接入</span>
+    </nav>
+
+    <main>
+      <section id="formulas-view" class="module-view active">
+        <div class="toolbar">
+          <label class="search-box">
+            <span>检索方剂</span>
+            <input id="formula-query" type="search" placeholder="方名、主症、组成、煎服法" autocomplete="off">
+          </label>
+          <label class="filter-box">
+            <span>剂型</span>
+            <select id="formula-type">
+              <option value="">全部</option>
+              <option value="汤">汤</option>
+              <option value="散">散</option>
+              <option value="丸">丸</option>
+              <option value="煎">煎</option>
+            </select>
+          </label>
+          <label class="filter-box">
+            <span>篇次</span>
+            <select id="formula-meridian">
+              <option value="">全部</option>
+              <option value="太阳">太阳</option>
+              <option value="阳明">阳明</option>
+              <option value="少阳">少阳</option>
+              <option value="太阴">太阴</option>
+              <option value="少阴">少阴</option>
+              <option value="厥阴">厥阴</option>
+            </select>
+          </label>
+          <button id="formula-clear" class="quiet-button" type="button">清空</button>
+        </div>
+
+        <div class="workspace">
+          <section class="list-panel" aria-labelledby="formula-list-title">
+            <div class="panel-heading">
+              <h2 id="formula-list-title">方剂目录</h2>
+              <span id="formula-count" class="count-label">—</span>
+            </div>
+            <div id="formula-list" class="entity-list"></div>
+            <button id="formula-more" class="more-button hidden" type="button">加载更多</button>
+          </section>
+          <section id="formula-detail" class="detail-panel" aria-live="polite">
+            <div class="empty-state">
+              <span class="empty-mark">方</span>
+              <h2>从左侧选择一首方剂</h2>
+              <p>组成、剂量、煎服法与出处会在这里展开。</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="herbs-view" class="module-view">
+        <div class="toolbar">
+          <label class="search-box">
+            <span>检索中药</span>
+            <input id="herb-query" type="search" placeholder="药名、性味、主治、功效" autocomplete="off">
+          </label>
+          <label class="filter-box">
+            <span>原文章节</span>
+            <select id="herb-category">
+              <option value="">全部</option>
+              <option value="本经原文">本经原文</option>
+              <option value="性味">性味</option>
+              <option value="主治">主治</option>
+              <option value="用量">用量</option>
+              <option value="禁忌">禁忌</option>
+            </select>
+          </label>
+          <button id="herb-clear" class="quiet-button" type="button">清空</button>
+        </div>
+
+        <div class="workspace">
+          <section class="list-panel" aria-labelledby="herb-list-title">
+            <div class="panel-heading">
+              <h2 id="herb-list-title">本经药物</h2>
+              <span id="herb-count" class="count-label">—</span>
+            </div>
+            <div id="herb-list" class="entity-list"></div>
+            <button id="herb-more" class="more-button hidden" type="button">加载更多</button>
+          </section>
+          <section id="herb-detail" class="detail-panel" aria-live="polite">
+            <div class="empty-state">
+              <span class="empty-mark">药</span>
+              <h2>从左侧选择一味药</h2>
+              <p>神农本草经原文、倪注条目和相关方剂会在这里展开。</p>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <div id="notice" class="notice hidden" role="status"></div>
+    <script src="/app.js"></script>
+  </body>
+</html>
