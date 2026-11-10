@@ -5,7 +5,7 @@
 ## 当前数据
 
 - 伤寒论辑义：113 条记录。110 首严格通过味数校验，2 首按同段原文补入，`土瓜根方` 原文缺并保留占位。
-- 倪海厦注金匮要略：186 条记录全部进入目录；其中 74 条味数完整、74 条有缺剂量、16 条味数不符、21 条未找到校验锚点、1 条加味方。
+- 倪海厦注金匮要略：186 条记录全部进入目录；当前 168 条味数校验完整、17 条有组成但未找到“上X味”锚点、1 条加味方。186 条均已有剂量字段。
 - 倪海厦注神农本草经：351 味药，保留 PDF 页码与分段原文。
 - 每首方保留原文出处、组成、剂量、煎服法、校注和版本差异。
 - `formula_evidence.json` 为每一方保存用法、为什么用、书本候选页、视频候选页和校对状态；目前逐方校完 2 条，其余 297 条明确标为待校。
@@ -34,7 +34,7 @@ python -m unittest discover -s tests -v
 ## API
 
 - `GET /api/overview`
-- `GET /api/formulas?q=&type=&meridian=&book=&status=`
+- `GET /api/formulas?q=&type=&meridian=&book=&status=&review=`
 - `GET /api/formulas/{id}`
 - `GET /api/herbs?q=&category=`
 - `GET /api/herbs/{id}`

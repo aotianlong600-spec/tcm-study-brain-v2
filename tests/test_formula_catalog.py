@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 import unittest
 
 from fastapi.testclient import TestClient
@@ -58,6 +59,10 @@ class FormulaCatalogTest(unittest.TestCase):
         self.assertEqual(detail["name"], "四逆加人参汤")
         self.assertEqual(detail["evidence"]["review_status"], "reviewed")
         self.assertIn("视频同步文稿", detail["evidence"]["usage_note"])
+        jinkui = json.loads((ROOT / "data" / "jinkui_formulas.json").read_text(encoding="utf-8"))
+        self.assertEqual(sum(1 for item in jinkui if any(not row["dose"] for row in item["ingredients"])), 0)
+        self.assertEqual(sum(1 for item in jinkui if item["status"] == "complete"), 168)
+        self.assertEqual(sum(1 for item in jinkui if item["status"] == "unchecked"), 17)
 
 
 if __name__ == "__main__":

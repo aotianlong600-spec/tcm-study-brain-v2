@@ -232,9 +232,9 @@ async function loadFormulas(reset = false) {
   state.formulaItems.push(...data.items);
   renderFormulaList();
   if (!state.selectedFormula && state.formulaItems.length) {
-    const hashId = decodeURIComponent(location.hash.replace(/^#\/formulas\//, ""));
-    const first = state.formulaItems.find((item) => item.id === hashId) || state.formulaItems[0];
-    await selectFormula(first.id);
+    const hashMatch = location.hash.match(/^#\/formulas\/(.+)$/);
+    const targetId = hashMatch ? decodeURIComponent(hashMatch[1]) : state.formulaItems[0].id;
+    await selectFormula(targetId);
   }
 }
 
@@ -255,9 +255,9 @@ async function loadHerbs(reset = false) {
   state.herbItems.push(...data.items);
   renderHerbList();
   if (!state.selectedHerb && state.herbItems.length) {
-    const hashId = decodeURIComponent(location.hash.replace(/^#\/herbs\//, ""));
-    const first = state.herbItems.find((item) => item.id === hashId) || state.herbItems[0];
-    await selectHerb(first.id);
+    const hashMatch = location.hash.match(/^#\/herbs\/(.+)$/);
+    const targetId = hashMatch ? decodeURIComponent(hashMatch[1]) : state.herbItems[0].id;
+    await selectHerb(targetId);
   }
 }
 

@@ -43,11 +43,7 @@ def main() -> int:
             errors.append(f"{item['name']} 无组成")
         missing_doses = sum(not row.get("dose") for row in item["ingredients"])
         if missing_doses:
-            message = f"{item['name']} 有 {missing_doses} 味缺剂量"
-            if item.get("book") == "伤寒论":
-                errors.append(message)
-            else:
-                warnings.append(message)
+            errors.append(f"{item['name']} 有 {missing_doses} 味缺剂量")
         if item.get("book") == "伤寒论":
             line = item["source"].get("line")
             if not line or not 1 <= line <= len(source_text):
