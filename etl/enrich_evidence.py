@@ -17,6 +17,7 @@ DATA = ROOT / "data"
 SOURCES = ROOT / "sources"
 OUTPUT = DATA / "formula_evidence.json"
 REPORT = DATA / "evidence_report.json"
+CURATED = DATA / "curated_formulas.json"
 
 SHANGHAN_BOOK = "sources/ni_shanghan_pages.jsonl"
 JINKUI_BOOK = "sources/ni_jinkui_pages.jsonl"
@@ -137,6 +138,7 @@ def main() -> int:
     jinkui_pages = read_pages(JINKUI_BOOK)
     video_pages = read_pages(JINKUI_VIDEO)
     overrides = reviewed_overrides()
+    curated = json.loads(CURATED.read_text(encoding="utf-8"))
     evidence = {}
 
     for formula in formulas:
@@ -182,6 +184,8 @@ def main() -> int:
         }
         if formula["id"] in overrides:
             entry.update(deepcopy(overrides[formula["id"]]))
+        if formula["id"] in curated:
+            entry.update(deepcopy(curated[formula["id"]]))
         evidence[formula["id"]] = entry
 
     write_json(OUTPUT, evidence)

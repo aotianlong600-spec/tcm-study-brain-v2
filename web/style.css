@@ -274,6 +274,80 @@ summary { color: var(--green-dark); cursor: pointer; font-size: 12px; font-weigh
   font-size: 12px;
 }
 
+.dossier-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.dossier-button, .text-button, .back-to-formula {
+  border: 1px solid #b7cfc2;
+  border-radius: 5px;
+  padding: 7px 10px;
+  color: var(--green-dark);
+  background: #f3f8f4;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.dossier-button:hover, .text-button:hover, .back-to-formula:hover { border-color: var(--green); background: #eaf4ed; }
+.section-heading-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.inline-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.text-button { padding: 4px 7px; font-size: 11px; }
+.proof-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.proof-chip { border: 1px solid #e1d6b8; border-radius: 3px; padding: 4px 7px; color: #75643f; background: #fbf7ea; font-size: 11px; }
+.curated-quote { margin-top: 12px; border-left: 3px solid #d8b568; padding: 9px 12px; color: #4f564e; background: #fbf7e9; font-size: 13px; white-space: pre-wrap; }
+.link-line { border-top: 0; padding-top: 0; }
+.dossier-back { margin-bottom: 18px; }
+.dossier-nav {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin: 22px -4px 0;
+  padding: 9px 4px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 253, 248, .96);
+}
+.dossier-nav button {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 4px 8px;
+  color: var(--green-dark);
+  background: #f7faf7;
+  font-size: 11px;
+}
+.dossier-nav button:hover { border-color: var(--green); }
+.dossier-section { scroll-margin-top: 76px; margin-top: 6px; border-bottom: 1px solid var(--line); padding: 24px 0 28px; }
+.dossier-section-number { color: var(--red); font-family: Georgia, serif; font-size: 13px; }
+.dossier-section h3 { margin-top: 2px; color: var(--ink); font-size: 20px; }
+.dossier-section h4 { margin-top: 21px; color: var(--green-dark); font-size: 13px; }
+.dossier-lead { margin-top: 7px; color: var(--muted); font-size: 14px; }
+.dossier-quote { margin-top: 10px; border-left: 3px solid var(--yellow); padding: 10px 13px; background: #fbf7ea; font-size: 14px; white-space: pre-wrap; }
+.dossier-quote p { margin: 0 0 12px; }
+.dossier-quote p:last-child { margin-bottom: 0; }
+.source-quote { border-left-color: var(--green); background: #f3f7f3; }
+.source-note { margin-top: 7px; color: var(--muted); font-size: 11px; }
+.dossier-notes { display: grid; gap: 12px; margin-top: 10px; }
+.dossier-notes article { border-left: 2px solid #d8c28f; padding-left: 11px; }
+.dossier-notes h5 { margin: 0; color: var(--green-dark); font-size: 13px; }
+.dossier-notes p { margin-top: 4px; white-space: pre-wrap; color: #4e574f; font-size: 13px; }
+.dossier-steps, .dossier-warnings { margin: 10px 0 0; padding-left: 22px; color: #4e574f; font-size: 13px; }
+.dossier-steps li, .dossier-warnings li { margin-bottom: 7px; }
+.dossier-warnings { color: #765c2b; }
+.proof-list { display: grid; gap: 8px; margin-top: 12px; }
+.proof-list article { display: grid; gap: 2px; border-left: 2px solid #b7cfc2; padding-left: 10px; }
+.proof-list strong { color: var(--green-dark); font-size: 12px; }
+.proof-list span { color: var(--muted); font-size: 11px; }
+.proof-list p { color: #5b625b; font-size: 12px; }
+.six-understanding { margin-top: 12px; border-left: 2px solid #d8c28f; padding-left: 11px; }
+.six-understanding h4 { margin: 0; color: var(--green-dark); font-size: 13px; }
+.six-understanding p { margin-top: 4px; color: #4e574f; font-size: 13px; }
+
+@media (max-width: 760px) {
+  .dossier-title-row { display: block; }
+  .dossier-button { margin-top: 12px; }
+  .dossier-nav { top: 0; margin-left: -4px; margin-right: -4px; }
+  .dossier-nav button { font-size: 10px; }
+}
+
 @media (max-width: 760px) {
   .app-header { align-items: flex-start; padding-top: 18px; }
   .header-note { display: none; }

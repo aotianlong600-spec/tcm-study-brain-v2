@@ -66,4 +66,17 @@ def herb(herb_id: str):
     return item
 
 
+@app.get("/api/six-channels")
+def six_channels():
+    return catalog.list_six_channels()
+
+
+@app.get("/api/six-channels/{channel_id:path}")
+def six_channel(channel_id: str):
+    item = catalog.get_six_channel(channel_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="未找到六经条目")
+    return item
+
+
 app.mount("/", StaticFiles(directory=WEB, html=True), name="web")

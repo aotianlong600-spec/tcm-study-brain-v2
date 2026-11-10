@@ -26,6 +26,7 @@
       <div class="module-tabs" role="tablist">
         <button class="module-tab active" data-view="formulas" role="tab" aria-selected="true">方剂</button>
         <button class="module-tab" data-view="herbs" role="tab" aria-selected="false">中药</button>
+        <button class="module-tab" data-view="six" role="tab" aria-selected="false">六经辨证</button>
       </div>
       <span class="module-pending">针灸 · 辨证论治 · 待接入</span>
     </nav>
@@ -149,6 +150,28 @@
               <span class="empty-mark">药</span>
               <h2>从左侧选择一味药</h2>
               <p>神农本草经原文、倪注条目和相关方剂会在这里展开。</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="six-view" class="module-view">
+        <div class="workspace six-workspace">
+          <section class="list-panel" aria-labelledby="six-list-title">
+            <div class="panel-heading">
+              <div>
+                <h2 id="six-list-title">六经辨证</h2>
+                <small>先提纲，再原文注解，再接方证</small>
+              </div>
+              <span id="six-count" class="count-label">6 条</span>
+            </div>
+            <div id="six-list" class="entity-list"></div>
+          </section>
+          <section id="six-detail" class="detail-panel" aria-live="polite">
+            <div class="empty-state">
+              <span class="empty-mark">经</span>
+              <h2>从左侧选择一经</h2>
+              <p>理解总结、原文和原文注解会在这里展开。</p>
             </div>
           </section>
         </div>

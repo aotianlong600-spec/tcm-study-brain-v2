@@ -16,6 +16,8 @@ const state = {
   herbTotal: 0,
   herbItems: [],
   selectedHerb: null,
+  sixItems: [],
+  selectedSix: null,
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -54,6 +56,7 @@ function setView(view) {
     node.classList.toggle("active", node.id === `${view}-view`);
   });
   if (view === "herbs" && !state.herbItems.length) loadHerbs(true);
+  if (view === "six" && !state.sixItems.length) loadSixChannels(true);
 }
 
 function listItem(formula, selected, kind) {
@@ -97,7 +100,153 @@ function ingredientHtml(item) {
   </div>`;
 }
 
+function renderCuratedFormulaDetail(item) {
+  const evidence = item.evidence;
+  const related = item.related_herbs?.length
+    ? `<div class="tag-row">${item.related_herbs.map((herb) =>
+        `<button class="tag" data-herb-id="${encodeURIComponent(herb.id)}">${escapeHtml(herb.name)}</button>`
+      ).join("")}</div>`
+    : `<div class="section-copy">暂无已建立的本经条目链接。</div>`;
+  const proof = evidence.proofreading?.length
+    ? evidence.proofreading.map((row) =>
+        `<span class="proof-chip">${escapeHtml(row.title)} · ${escapeHtml(row.pages || "")}</span>`
+      ).join("")
+    : `<span class="proof-chip">校对依据待补</span>`;
+  return `<div class="detail-inner curated-detail">
+    <div class="detail-kicker">${escapeHtml(item.book)} · 第一版逐方校</div>
+    <div class="dossier-title-row">
+      <div>
+        <h2 class="detail-title">${escapeHtml(item.name)}</h2>
+        <p class="detail-subtitle">${escapeHtml(evidence.rationale.summary)}</p>
+      </div>
+      <button class="dossier-button" data-open-dossier="${encodeURIComponent(item.id)}">展开完整考证</button>
+    </div>
+    <div class="tag-row"><span class="tag">${escapeHtml(item.book)}</span><span class="status-pill status-reviewed">已逐方校</span><span class="tag">${escapeHtml(item.type)}</span><span class="tag">${evidence.six_channel.name}</span><span class="tag">${item.ingredients.length} 味</span></div>
+    <div class="warning-box">古籍剂量和煎服法按原文保留，仅供学习核对；不是个人处方。含附子、乌头、巴豆等药味时须由专业医师处理。</div>
+
+    <div class="section-block curated-summary">
+      <div class="section-heading-row"><div class="section-title">六经辨证 · ${escapeHtml(evidence.six_channel.name)}</div><div class="inline-actions"><button class="text-button" data-six-id="${encodeURIComponent(evidence.six_channel.id)}">打开六经辨证</button><button class="text-button" data-open-dossier="${encodeURIComponent(item.id)}">原文与注解</button></div></div>
+      <div class="section-copy">${escapeHtml(evidence.six_channel.summary)}</div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-heading-row"><div class="section-title">原方组成</div><button class="text-button" data-open-dossier="${encodeURIComponent(item.id)}">完整原方</button></div>
+      <div class="composition-grid">${item.ingredients.map(ingredientHtml).join("")}</div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-heading-row"><div class="section-title">古文用法 · 现代解释</div><button class="text-button" data-open-dossier="${encodeURIComponent(item.id)}">展开煎服步骤</button></div>
+      <div class="section-copy">${escapeHtml(evidence.usage_modern.summary)}</div>
+      <div class="curated-quote">${escapeHtml(evidence.usage_original.text)}</div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-heading-row"><div class="section-title">为什么用</div><button class="text-button" data-open-dossier="${encodeURIComponent(item.id)}">展开倪注与方义</button></div>
+      <div class="section-copy">${escapeHtml(evidence.rationale.summary)}</div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">相关药物</div>
+      ${related}
+    </div>
+
+    <div class="section-block">
+      <div class="section-heading-row"><div class="section-title">校对依据</div><button class="text-button" data-open-dossier="${encodeURIComponent(item.id)}">查看全部</button></div>
+      <div class="proof-row">${proof}</div>
+    </div>
+    <div class="section-block link-line"><button class="back-to-formula" data-formula-id="${encodeURIComponent(item.id)}">在主页面查看简明卡片</button></div>
+  </div>`;
+}
+
+function renderDossier(item) {
+  const evidence = item.evidence;
+  const original = evidence.six_channel;
+  const annotations = original.annotation_original || [];
+  const annotationNotes = original.annotations || [];
+  const formula = evidence.formula_original;
+  const usage = evidence.usage_modern;
+  const rationale = evidence.rationale;
+  const sources = evidence.proofreading || [];
+  const paragraphs = (rows) => rows.map((row) => `<p>${escapeHtml(row)}</p>`).join("");
+  const sourceLabel = (row) => row.pages ? `第 ${escapeHtml(row.pages)} 页` : "";
+  const html = `<div class="detail-inner dossier-page">
+    <button class="back-to-formula dossier-back" data-close-dossier="${encodeURIComponent(item.id)}">← 返回${escapeHtml(item.name)}</button>
+    <div class="detail-kicker">逐方校 · 完整证据卡</div>
+    <h2 class="detail-title">${escapeHtml(item.name)} · 完整考证</h2>
+    <p class="detail-subtitle">${escapeHtml(evidence.editorial_note)}</p>
+    <div class="tag-row"><span class="tag">${escapeHtml(item.book)}</span><span class="status-pill status-reviewed">已逐方校</span><span class="tag">${escapeHtml(original.name)}</span><span class="tag">${item.ingredients.length} 味</span></div>
+    <div class="warning-box">原文、倪注、现代解释分栏陈列；现代解释不是原文，也不是面向个人的处方。</div>
+
+    <nav class="dossier-nav" aria-label="完整考证章节">
+      <button data-scroll-section="dossier-six">六经辨证</button>
+      <button data-scroll-section="dossier-formula">原方与用法</button>
+      <button data-scroll-section="dossier-modern">现代解释</button>
+      <button data-scroll-section="dossier-notes">倪注与方义</button>
+      <button data-scroll-section="dossier-proof">校对依据</button>
+    </nav>
+
+    <section id="dossier-six" class="dossier-section">
+      <div class="dossier-section-number">01</div>
+      <div class="section-heading-row"><h3>六经辨证 · ${escapeHtml(original.name)}</h3><button class="text-button" data-six-id="${encodeURIComponent(original.id)}">打开独立板块</button></div>
+      <p class="dossier-lead">${escapeHtml(original.summary)}</p>
+      <h4>原文</h4>
+      <div class="dossier-quote">${paragraphs(original.original)}</div>
+      <h4>原文注解</h4>
+      <div class="dossier-notes">${annotations.map((row) =>
+        `<article><div class="source-locator">倪海厦伤寒论 · 第 ${escapeHtml(row.page)} 页</div><p>${escapeHtml(row.text)}</p></article>`
+      ).join("")}</div>
+      <h4>理解</h4>
+      <div class="dossier-notes">${annotationNotes.map((row) =>
+        `<article><h5>${escapeHtml(row.heading)}</h5><p>${escapeHtml(row.text)}</p></article>`
+      ).join("")}</div>
+    </section>
+
+    <section id="dossier-formula" class="dossier-section">
+      <div class="dossier-section-number">02</div>
+      <h3>${escapeHtml(formula.title)} · 古文原方</h3>
+      <div class="dossier-quote source-quote">${escapeHtml(formula.text)}</div>
+      <div class="source-note">${escapeHtml(formula.note)}</div>
+      <h4>古文用法</h4>
+      <div class="dossier-quote">${escapeHtml(evidence.usage_original.text)}</div>
+    </section>
+
+    <section id="dossier-modern" class="dossier-section">
+      <div class="dossier-section-number">03</div>
+      <h3>现代解释 · 煎服步骤</h3>
+      <p class="dossier-lead">${escapeHtml(usage.summary)}</p>
+      <ol class="dossier-steps">${usage.steps.map((row) => `<li>${escapeHtml(row)}</li>`).join("")}</ol>
+      <h4>注意</h4>
+      <ul class="dossier-warnings">${usage.cautions.map((row) => `<li>${escapeHtml(row)}</li>`).join("")}</ul>
+      <h4>方义整理</h4>
+      <div class="dossier-quote">${escapeHtml(rationale.full_text)}</div>
+    </section>
+
+    <section id="dossier-notes" class="dossier-section">
+      <div class="dossier-section-number">04</div>
+      <h3>倪注与方义</h3>
+      <div class="dossier-notes">${(evidence.annotations || []).map((row) =>
+        `<article><h5>${escapeHtml(row.heading)}</h5><p>${escapeHtml(row.text)}</p></article>`
+      ).join("")}</div>
+    </section>
+
+    <section id="dossier-proof" class="dossier-section">
+      <div class="dossier-section-number">05</div>
+      <h3>校对依据</h3>
+      <div class="proof-list">${sources.map((row) =>
+        `<article><strong>${escapeHtml(row.kind)} · ${escapeHtml(row.title)}</strong><span>${escapeHtml(row.pages || "")}</span><p>${escapeHtml(row.note || "")}</p></article>`
+      ).join("")}</div>
+      <div class="warning-box">${escapeHtml(evidence.video_note || "")}</div>
+    </section>
+  </div>`;
+  $("#formula-detail").innerHTML = html;
+  return html;
+}
+
 function renderFormulaDetail(item) {
+  if (item.evidence?.six_channel && item.evidence?.usage_modern) {
+    $("#formula-detail").innerHTML = renderCuratedFormulaDetail(item);
+    return;
+  }
   const source = item.source || {};
   const evidence = item.evidence || {};
   const status = item.status || "complete";
@@ -210,6 +359,82 @@ function renderHerbDetail(item) {
   </div>`;
 }
 
+function renderSixList() {
+  const selected = state.selectedSix?.id;
+  $("#six-list").innerHTML = state.sixItems.map((item) => `
+    <button class="entity-item${selected === item.id ? " selected" : ""}" data-six-id="${encodeURIComponent(item.id)}">
+      <span class="entity-name"><strong>${escapeHtml(item.name)}</strong><em>${escapeHtml(item.order)}</em></span>
+      <span class="entity-meta"><span class="status-pill ${item.status === "reviewed" ? "status-reviewed" : "status-pending"}">${escapeHtml(item.status_label)}</span><span>${item.annotations.length} 条注解</span><span>${item.related_formula_ids.length} 首关联方</span></span>
+    </button>
+  `).join("");
+  $("#six-count").textContent = `${state.sixItems.length} 经`;
+}
+
+function renderSixDetail(item) {
+  const original = item.original || [];
+  const annotations = item.annotations || [];
+  const understanding = item.understanding || [];
+  const related = item.related_formula_ids || [];
+  const source = item.source_pages?.length
+    ? `第 ${item.source_pages.join("、")} 页`
+    : "页码待补";
+  $("#six-detail").innerHTML = `<div class="detail-inner">
+    <div class="detail-kicker">六经辨证 · ${escapeHtml(item.name)}</div>
+    <div class="dossier-title-row">
+      <div><h2 class="detail-title">${escapeHtml(item.name)}</h2><p class="detail-subtitle">${escapeHtml(item.summary)}</p></div>
+      <span class="status-pill ${item.status === "reviewed" ? "status-reviewed" : "status-pending"}">${escapeHtml(item.status_label)}</span>
+    </div>
+    <div class="warning-box">这是六经辨证学习条目，不替代面诊、脉诊和个体化辨证。</div>
+    <div class="section-block">
+      <div class="section-title">原文</div>
+      <div class="dossier-quote">${original.map((row) => `<p>${escapeHtml(row)}</p>`).join("")}</div>
+      <div class="source-note">${escapeHtml(source)} · ${escapeHtml(item.proof_note || "")}</div>
+    </div>
+    <div class="section-block">
+      <div class="section-title">原文注解</div>
+      ${annotations.length ? `<div class="dossier-notes">${annotations.map((row) => `<article><div class="source-locator">倪海厦伤寒论 · 第 ${escapeHtml(row.page)} 页</div><p>${escapeHtml(row.text)}</p></article>`).join("")}</div>` : `<div class="missing-composition">原文已列；倪注逐条注解尚未完成，不用总结冒充原文。</div>`}
+    </div>
+    <div class="section-block">
+      <div class="section-title">理解总结</div>
+      ${understanding.length ? understanding.map((row) => `<article class="six-understanding"><h4>${escapeHtml(row.heading)}</h4><p>${escapeHtml(row.text)}</p></article>`).join("") : `<div class="missing-composition">尚待逐条整理。</div>`}
+    </div>
+    <div class="section-block">
+      <div class="section-title">关联方剂</div>
+      ${related.length ? `<div class="herb-formulas">${related.map((id) => `<button class="herb-formula-link" data-formula-id="${encodeURIComponent(id)}">${escapeHtml(id.split(":").slice(1).join(":"))}</button>`).join("")}</div>` : `<div class="section-copy">关系待接。</div>`}
+    </div>
+    <div class="section-block link-line"><div class="review-note">${escapeHtml(item.review_note || "")}</div></div>
+  </div>`;
+}
+
+async function loadSixChannels() {
+  const data = await request("/api/six-channels");
+  state.sixItems = data.items || [];
+  renderSixList();
+  if (!state.selectedSix && state.sixItems.length) {
+    const hashMatch = location.hash.match(/^#\/six\/(.+)$/);
+    const target = hashMatch ? decodeURIComponent(hashMatch[1]) : state.sixItems[0].id;
+    await selectSix(target);
+  }
+}
+
+async function selectSix(id) {
+  state.selectedSix = state.sixItems.find((item) => item.id === id) || await request(`/api/six-channels/${encodeURIComponent(id)}`);
+  state.view = "six";
+  setView("six");
+  location.hash = `#/six/${encodeURIComponent(id)}`;
+  renderSixList();
+  renderSixDetail(state.selectedSix);
+}
+
+function openSix(id) {
+  setView("six");
+  if (!state.sixItems.length) {
+    loadSixChannels().then(() => selectSix(id)).catch(() => showNotice("六经条目读取失败"));
+  } else {
+    selectSix(id).catch(() => showNotice("六经条目读取失败"));
+  }
+}
+
 async function loadFormulas(reset = false) {
   if (reset) {
     state.formulaPage = 1;
@@ -231,7 +456,8 @@ async function loadFormulas(reset = false) {
   state.formulaTotal = data.total;
   state.formulaItems.push(...data.items);
   renderFormulaList();
-  if (!state.selectedFormula && state.formulaItems.length) {
+  const preservedHash = location.hash.startsWith("#/dossier/") || location.hash.startsWith("#/six/");
+  if (!state.selectedFormula && state.formulaItems.length && !preservedHash) {
     const hashMatch = location.hash.match(/^#\/formulas\/(.+)$/);
     const targetId = hashMatch ? decodeURIComponent(hashMatch[1]) : state.formulaItems[0].id;
     await selectFormula(targetId);
@@ -286,6 +512,19 @@ function openHerb(id) {
 function openFormula(id) {
   setView("formulas");
   selectFormula(id).catch(() => showNotice("该方剂暂时无法读取"));
+}
+
+async function openDossier(id) {
+  state.selectedFormula = await request(`/api/formulas/${encodeURIComponent(id)}`);
+  state.dossierFormula = state.selectedFormula;
+  setView("formulas");
+  location.hash = `#/dossier/${encodeURIComponent(id)}`;
+  renderDossier(state.selectedFormula);
+}
+
+function closeDossier(id) {
+  location.hash = `#/formulas/${encodeURIComponent(id)}`;
+  renderFormulaDetail(state.selectedFormula);
 }
 
 function debounce(fn, wait = 180) {
@@ -381,8 +620,37 @@ document.addEventListener("click", (event) => {
     event.preventDefault();
     openFormula(decodeURIComponent(formulaLink.dataset.formulaId));
   }
+  const dossierButton = event.target.closest("[data-open-dossier]");
+  if (dossierButton) {
+    event.preventDefault();
+    openDossier(decodeURIComponent(dossierButton.dataset.openDossier)).catch(() => showNotice("完整考证读取失败"));
+  }
+  const closeButton = event.target.closest("[data-close-dossier]");
+  if (closeButton) {
+    event.preventDefault();
+    closeDossier(decodeURIComponent(closeButton.dataset.closeDossier));
+  }
+  const scrollButton = event.target.closest("[data-scroll-section]");
+  if (scrollButton) {
+    document.getElementById(scrollButton.dataset.scrollSection)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  const sixLink = event.target.closest("[data-six-id]");
+  if (sixLink) {
+    event.preventDefault();
+    openSix(decodeURIComponent(sixLink.dataset.sixId));
+  }
 });
 window.addEventListener("hashchange", () => {
+  const dossierMatch = location.hash.match(/^#\/dossier\/(.+)$/);
+  if (dossierMatch) {
+    openDossier(decodeURIComponent(dossierMatch[1])).catch(() => {});
+    return;
+  }
+  const sixMatch = location.hash.match(/^#\/six\/(.+)$/);
+  if (sixMatch) {
+    openSix(decodeURIComponent(sixMatch[1]));
+    return;
+  }
   const match = location.hash.match(/^#\/(formulas|herbs)\/(.+)$/);
   if (!match) return;
   const [, kind, id] = match;
@@ -397,9 +665,13 @@ async function boot() {
     const jinkui = overview.by_book?.["金匮要略"] || 0;
     const reviewed = overview.review_status?.reviewed || 0;
     $("#dataset-note").textContent = `${overview.formulas} 条方 · 伤寒 ${shanghan} / 金匮 ${jinkui} · 逐方校 ${reviewed}/${overview.formulas} · ${overview.herbs} 味药`;
-    const hash = location.hash.match(/^#\/(formulas|herbs)\//);
+    const hash = location.hash.match(/^#\/(formulas|herbs|six)\//);
     if (hash?.[1] === "herbs") setView("herbs");
+    if (hash?.[1] === "six") setView("six");
     await loadFormulas(true);
+    const dossierHash = location.hash.match(/^#\/dossier\/(.+)$/);
+    if (dossierHash) await openDossier(decodeURIComponent(dossierHash[1]));
+    if (hash?.[1] === "six") await loadSixChannels();
     if (state.view === "herbs") await loadHerbs(true);
   } catch (error) {
     showNotice("本地目录未启动或数据缺失");

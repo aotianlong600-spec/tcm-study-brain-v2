@@ -183,6 +183,18 @@ def get_herb(herb_id: str) -> dict | None:
     return result
 
 
+def list_six_channels() -> dict:
+    return {"items": deepcopy(_read("six_channels.json")["items"])}
+
+
+def get_six_channel(channel_id: str) -> dict | None:
+    channel = next(
+        (item for item in _read("six_channels.json")["items"] if item["id"] == channel_id),
+        None,
+    )
+    return deepcopy(channel) if channel else None
+
+
 def overview() -> dict:
     formulas = _index()["formulas"]
     by_book = {}
@@ -202,10 +214,12 @@ def overview() -> dict:
         "by_status": by_status,
         "review_status": review_status,
         "source_pending": by_status.get("missing", 0),
+        "six_channels": len(_read("six_channels.json")["items"]),
         "modules": {
             "formulas": "ready",
             "herbs": "ready",
             "diagnosis": "not_imported",
+            "six_channels": "partial",
             "acupuncture": "not_imported",
             "conditions": "not_imported",
         },

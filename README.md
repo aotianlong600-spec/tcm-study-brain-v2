@@ -9,6 +9,8 @@
 - 倪海厦注神农本草经：351 味药，保留 PDF 页码与分段原文。
 - 每首方保留原文出处、组成、剂量、煎服法、校注和版本差异。
 - `formula_evidence.json` 为每一方保存用法、为什么用、书本候选页、视频候选页和校对状态；目前逐方校完 2 条，其余 297 条明确标为待校。
+- 桂枝汤已有完整二级考证页：太阳病提纲、太阳中风原文、倪注、桂枝汤原方、古文用法、现代煎服步骤和方义证据分开陈列。
+- 新增「六经辨证」板块，六经条目全部建立；太阳病已完成理解总结、原文和原文注解，其余五经保留原文并标为待整理。
 
 针灸、辨证论治和病症模块尚未接入。页面会明确显示待接入，不拿第三方数据填充。
 
@@ -38,5 +40,7 @@ python -m unittest discover -s tests -v
 - `GET /api/formulas/{id}`
 - `GET /api/herbs?q=&category=`
 - `GET /api/herbs/{id}`
+- `GET /api/six-channels`
+- `GET /api/six-channels/{id}`
 
 方剂详情中的 `source_ingredients` 是原文正文，`ingredients` 是当前整理组成；两者不一致时页面会显示同页校注，不静默覆盖。`evidence.review_status=pending` 表示尚未完成倪海厦伤寒/金匮与视频文稿的逐方核对。

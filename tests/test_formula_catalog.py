@@ -29,6 +29,10 @@ class FormulaCatalogTest(unittest.TestCase):
         self.assertEqual(data["expected_count"], 5)
         self.assertEqual(data["source"]["line"], 295)
         self.assertTrue(all(row["dose"] for row in data["ingredients"]))
+        self.assertEqual(data["evidence"]["review_level"], "完整")
+        self.assertEqual(data["evidence"]["six_channel"]["name"], "太阳病")
+        self.assertGreaterEqual(len(data["evidence"]["six_channel"]["original"]), 3)
+        self.assertGreaterEqual(len(data["evidence"]["usage_modern"]["steps"]), 5)
 
     def test_formula_to_herb_link(self):
         data = self.client.get("/api/formulas/shanghan%3A%E6%A1%82%E6%9E%9D%E6%B1%A4").json()
@@ -51,6 +55,16 @@ class FormulaCatalogTest(unittest.TestCase):
         data = self.client.get("/api/overview").json()
         self.assertEqual(data["by_status"]["variant"], 4)
         self.assertEqual(data["by_status"]["missing"], 1)
+
+    def test_six_channel_module_starts_with_taiyang(self):
+        data = self.client.get("/api/six-channels").json()
+        self.assertEqual(len(data["items"]), 6)
+        taiyang = self.client.get("/api/six-channels/taiyang").json()
+        self.assertEqual(taiyang["name"], "太阳病")
+        self.assertEqual(taiyang["status"], "reviewed")
+        self.assertGreaterEqual(len(taiyang["original"]), 3)
+        self.assertGreaterEqual(len(taiyang["annotations"]), 3)
+        self.assertIn("shanghan:桂枝汤", taiyang["related_formula_ids"])
 
     def test_jinkui_is_present_and_marked(self):
         data = self.client.get("/api/formulas?book=金匮要略&page_size=60").json()
