@@ -103,6 +103,7 @@ function ingredientHtml(item) {
 function renderCuratedFormulaDetail(item) {
   const evidence = item.evidence;
   const symptoms = evidence.symptoms || [];
+  const overview = evidence.overview || {};
   const related = item.related_herbs?.length
     ? `<div class="tag-row">${item.related_herbs.map((herb) =>
         `<button class="tag" data-herb-id="${encodeURIComponent(herb.id)}">${escapeHtml(herb.name)}</button>`
@@ -123,10 +124,24 @@ function renderCuratedFormulaDetail(item) {
       <button class="dossier-button" data-open-dossier="${encodeURIComponent(item.id)}">展开完整考证</button>
     </div>
     <div class="tag-row"><span class="tag">${escapeHtml(item.book)}</span><span class="status-pill status-reviewed">已逐方校</span><span class="tag">${escapeHtml(item.type)}</span><span class="tag">${evidence.six_channel.name}</span><span class="tag">${item.ingredients.length} 味</span></div>
+    <div class="section-block top-composition">
+      <div class="section-heading-row"><div class="section-title">药物与剂量</div><button class="text-button" data-open-dossier="${encodeURIComponent(item.id)}">完整原方</button></div>
+      <div class="composition-grid">${item.ingredients.map(ingredientHtml).join("")}</div>
+    </div>
+    <div class="section-block overview-block">
+      <div class="section-title">${escapeHtml(overview.title || "方证摘要")}</div>
+      <div class="overview-copy">${(overview.paragraphs || [evidence.rationale.summary]).map((row) => `<p>${escapeHtml(row)}</p>`).join("")}</div>
+      <div class="symptom-row overview-keypoints">${(overview.key_points || []).map((row) => `<span class="symptom-chip">${escapeHtml(row)}</span>`).join("")}</div>
+    </div>
     <div class="warning-box">古籍剂量和煎服法按原文保留，仅供学习核对；不是个人处方。含附子、乌头、巴豆等药味时须由专业医师处理。</div>
 
-    <div class="section-block decoction-first">
-      <div class="section-heading-row"><div><div class="section-title">煎药法 · 煎服摘要</div><div class="section-copy">${escapeHtml(evidence.usage_modern.summary)}</div></div><button class="text-button" data-open-dossier="${encodeURIComponent(item.id)}">展开书内现代煎药法</button></div>
+    <div class="decoction-pair">
+      <div class="section-block decoction-first">
+        <div class="section-heading-row"><div><div class="section-title">古文煎药法 · 摘要</div><div class="section-copy">${escapeHtml(evidence.usage_original.summary)}</div></div><button class="text-button" data-open-decoction="${encodeURIComponent(item.id)}" data-decoction-mode="ancient">展开完整古文</button></div>
+      </div>
+      <div class="section-block decoction-first">
+        <div class="section-heading-row"><div><div class="section-title">现代煎药法 · 摘要</div><div class="section-copy">${escapeHtml(evidence.usage_modern.summary)}</div></div><button class="text-button" data-open-decoction="${encodeURIComponent(item.id)}" data-decoction-mode="modern">展开现代原文</button></div>
+      </div>
     </div>
 
     <div class="section-block">
@@ -135,13 +150,8 @@ function renderCuratedFormulaDetail(item) {
     </div>
 
     <div class="section-block curated-summary">
-      <div class="section-heading-row"><div class="section-title">六经辨证 · ${escapeHtml(evidence.six_channel.name)}</div><div class="inline-actions"><button class="text-button" data-six-id="${encodeURIComponent(evidence.six_channel.id)}">打开六经辨证</button><button class="text-button" data-open-dossier="${encodeURIComponent(item.id)}">原文与注解</button></div></div>
+      <div class="section-heading-row"><div class="section-title">六经辨证 · ${escapeHtml(evidence.six_channel.name)}</div><div class="inline-actions"><button class="text-button" data-six-id="${encodeURIComponent(evidence.six_channel.id)}">打开六经辨证</button><button class="text-button" data-open-six-dossier="${encodeURIComponent(evidence.six_channel.id)}">原文与注解</button></div></div>
       <div class="section-copy">${escapeHtml(evidence.six_channel.summary)}</div>
-    </div>
-
-    <div class="section-block">
-      <div class="section-heading-row"><div class="section-title">原方组成</div><button class="text-button" data-open-dossier="${encodeURIComponent(item.id)}">完整原方</button></div>
-      <div class="composition-grid">${item.ingredients.map(ingredientHtml).join("")}</div>
     </div>
 
     <div class="section-block">
@@ -253,6 +263,29 @@ function renderDossier(item) {
   </div>`;
   $("#formula-detail").innerHTML = html;
   return html;
+}
+
+function renderDecoctionPage(item, mode) {
+  const evidence = item.evidence;
+  const isAncient = mode === "ancient";
+  const title = isAncient ? "完整古文煎药法" : "现代煎药原文";
+  const summary = isAncient ? evidence.usage_original.summary : evidence.usage_modern.summary;
+  const body = isAncient
+    ? `<div class="dossier-quote source-quote">${escapeHtml(evidence.usage_original.text)}</div><div class="source-note">${escapeHtml(evidence.formula_original.note)}</div>`
+    : `<div class="dossier-quote source-quote">${escapeHtml(evidence.usage_modern.source_text)}</div><h4>整理步骤</h4><ol class="dossier-steps">${evidence.usage_modern.steps.map((row) => `<li>${escapeHtml(row)}</li>`).join("")}</ol><h4>注意</h4><ul class="dossier-warnings">${evidence.usage_modern.cautions.map((row) => `<li>${escapeHtml(row)}</li>`).join("")}</ul>`;
+  $("#formula-detail").innerHTML = `<div class="detail-inner dossier-page decoction-page">
+    <button class="back-to-formula dossier-back" data-close-decoction="${encodeURIComponent(item.id)}">← 返回${escapeHtml(item.name)}</button>
+    <div class="detail-kicker">煎药法 · ${isAncient ? "古文" : "书内现代解释"}</div>
+    <h2 class="detail-title">${escapeHtml(item.name)} · ${title}</h2>
+    <p class="detail-subtitle">${escapeHtml(summary)}</p>
+    <div class="tag-row"><span class="tag">${escapeHtml(item.book)}</span><span class="tag">${isAncient ? "古文原文" : "现代解释"}</span><span class="tag">第 ${escapeHtml((isAncient ? evidence.formula_original.source_pages : evidence.usage_modern.source_pages).join("、"))} 页</span></div>
+    <div class="warning-box">古籍原文和现代解释分开陈列，不作为个人处方或自行煎服依据。</div>
+    ${body}
+    <div class="section-block inline-actions">
+      <button class="text-button" data-open-decoction="${encodeURIComponent(item.id)}" data-decoction-mode="${isAncient ? "modern" : "ancient"}">${isAncient ? "查看现代煎药原文" : "查看完整古文煎药法"}</button>
+      <button class="text-button" data-open-dossier="${encodeURIComponent(item.id)}">查看完整考证</button>
+    </div>
+  </div>`;
 }
 
 function renderFormulaDetail(item) {
@@ -514,7 +547,8 @@ async function loadFormulas(reset = false) {
   state.formulaItems.push(...data.items);
   renderFormulaList();
   const preservedHash = location.hash.startsWith("#/dossier/") || location.hash.startsWith("#/six/");
-  if (!state.selectedFormula && state.formulaItems.length && !preservedHash) {
+  const preserveDecoction = location.hash.includes("/decoction/");
+  if (!state.selectedFormula && state.formulaItems.length && !preservedHash && !preserveDecoction) {
     const hashMatch = location.hash.match(/^#\/formulas\/(.+)$/);
     const targetId = hashMatch ? decodeURIComponent(hashMatch[1]) : state.formulaItems[0].id;
     await selectFormula(targetId);
@@ -579,7 +613,19 @@ async function openDossier(id) {
   renderDossier(state.selectedFormula);
 }
 
+async function openDecoction(id, mode) {
+  state.selectedFormula = await request(`/api/formulas/${encodeURIComponent(id)}`);
+  setView("formulas");
+  location.hash = `#/formulas/${encodeURIComponent(id)}/decoction/${mode}`;
+  renderDecoctionPage(state.selectedFormula, mode);
+}
+
 function closeDossier(id) {
+  location.hash = `#/formulas/${encodeURIComponent(id)}`;
+  renderFormulaDetail(state.selectedFormula);
+}
+
+function closeDecoction(id) {
   location.hash = `#/formulas/${encodeURIComponent(id)}`;
   renderFormulaDetail(state.selectedFormula);
 }
@@ -696,6 +742,16 @@ document.addEventListener("click", (event) => {
     event.preventDefault();
     openSix(decodeURIComponent(sixLink.dataset.sixId));
   }
+  const decoctionButton = event.target.closest("[data-open-decoction]");
+  if (decoctionButton) {
+    event.preventDefault();
+    openDecoction(decodeURIComponent(decoctionButton.dataset.openDecoction), decoctionButton.dataset.decoctionMode || "ancient").catch(() => showNotice("煎药法读取失败"));
+  }
+  const closeDecoctionButton = event.target.closest("[data-close-decoction]");
+  if (closeDecoctionButton) {
+    event.preventDefault();
+    closeDecoction(decodeURIComponent(closeDecoctionButton.dataset.closeDecoction));
+  }
   const sixDossierButton = event.target.closest("[data-open-six-dossier]");
   if (sixDossierButton) {
     event.preventDefault();
@@ -723,6 +779,11 @@ window.addEventListener("hashchange", () => {
     openSix(decodeURIComponent(sixMatch[1]));
     return;
   }
+  const decoctionMatch = location.hash.match(/^#\/formulas\/([^/]+)\/decoction\/(ancient|modern)$/);
+  if (decoctionMatch) {
+    openDecoction(decodeURIComponent(decoctionMatch[1]), decoctionMatch[2]).catch(() => {});
+    return;
+  }
   const match = location.hash.match(/^#\/(formulas|herbs)\/(.+)$/);
   if (!match) return;
   const [, kind, id] = match;
@@ -741,6 +802,8 @@ async function boot() {
     if (hash?.[1] === "herbs") setView("herbs");
     if (hash?.[1] === "six") setView("six");
     await loadFormulas(true);
+    const decoctionHash = location.hash.match(/^#\/formulas\/([^/]+)\/decoction\/(ancient|modern)$/);
+    if (decoctionHash) await openDecoction(decodeURIComponent(decoctionHash[1]), decoctionHash[2]);
     const dossierHash = location.hash.match(/^#\/dossier\/(.+)$/);
     if (dossierHash) await openDossier(decodeURIComponent(dossierHash[1]));
     if (hash?.[1] === "six") {
