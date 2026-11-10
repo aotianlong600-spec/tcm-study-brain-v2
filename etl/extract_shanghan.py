@@ -107,7 +107,10 @@ MANUAL_FORMULAS = [
     {
         "id": "shanghan:猪胆汁方",
         "name": "猪胆汁方",
+        "book": "伤寒论",
         "type": "导",
+        "status": "manual",
+        "status_label": "同段原文补",
         "six_meridian": "阳明",
         "indication": "阳明病津液内竭，大便硬而不可攻，宜导而通之。",
         "ingredients": [
@@ -142,7 +145,10 @@ MANUAL_FORMULAS = [
     {
         "id": "shanghan:烧裈散",
         "name": "烧裈散",
+        "book": "伤寒论",
         "type": "散",
+        "status": "manual",
+        "status_label": "缺字校补",
         "six_meridian": "阴阳易",
         "indication": "伤寒阴阳易之为病，身体重，少气，少腹里急，或引阴中拘挛。",
         "ingredients": [
@@ -172,6 +178,30 @@ MANUAL_FORMULAS = [
             "path": "sources/shanghan_juyi.txt",
             "excerpt": "烧 散方妇人中 近隐处。取烧作灰。上一味。水服方寸匕。日三服。",
             "note": "原文该条有缺字；方名按通行名录作“烧裈散”，组成按同条上下文保留。",
+        },
+    },
+    {
+        "id": "shanghan:土瓜根方",
+        "name": "土瓜根方",
+        "book": "伤寒论",
+        "type": "导",
+        "status": "missing",
+        "status_label": "原文缺",
+        "six_meridian": "阳明",
+        "indication": "阳明病津液内竭，大便硬而不可攻，宜导而通之。",
+        "ingredients": [],
+        "expected_count": 0,
+        "source_expected_count": 0,
+        "source_ingredients": [],
+        "composition_raw": "",
+        "decoction": "",
+        "adjuncts": [],
+        "source": {
+            "title": "伤寒论辑义",
+            "line": 4809,
+            "path": "sources/shanghan_juyi.txt",
+            "excerpt": "土瓜根方缺。肘后方。治大便不通。土瓜根。采根捣汁。筒吹入肛门内。取通。此与上猪胆方同义。",
+            "note": "辑义原文明确标注“土瓜根方缺”；未用后世肘后方用法冒充仲景原方。",
         },
     },
 ]
@@ -460,7 +490,10 @@ def extract(source: Path) -> tuple[list[dict], list[dict]]:
         formula = {
             "id": f"shanghan:{name}",
             "name": name,
+            "book": "伤寒论",
             "type": formula_type,
+            "status": "complete",
+            "status_label": "味数已核",
             "six_meridian": chapter_at(lines, start),
             "indication": indication_before(lines, start, name),
             "ingredients": ingredients,
@@ -481,6 +514,13 @@ def extract(source: Path) -> tuple[list[dict], list[dict]]:
             formula["source"]["note"] = curation["note"]
         if recovered_from:
             formula["source"]["recovery"] = recovered_from
+        if (
+            formula["source_expected_count"] != len(formula["source_ingredients"])
+            or formula["source_expected_count"] != len(formula["ingredients"])
+            or recovered_from
+        ):
+            formula["status"] = "variant"
+            formula["status_label"] = "版本有差异"
         existing = accepted.get(name)
         if existing is None or len(formula["ingredients"]) > len(existing["ingredients"]):
             accepted[name] = formula

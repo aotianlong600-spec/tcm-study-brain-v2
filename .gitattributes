@@ -1,3 +1,5 @@
 * text=auto
 data/*.json text eol=lf
 sources/shanghan_juyi.txt -text
+sources/*.jsonl text eol=lf
+sources/*.json text eol=lf

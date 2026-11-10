@@ -2,7 +2,10 @@
   {
     "id": "shanghan:桂枝汤",
     "name": "桂枝汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -84,7 +87,10 @@
   {
     "id": "shanghan:桂枝加葛根汤",
     "name": "桂枝加葛根汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "variant",
+    "status_label": "版本有差异",
     "six_meridian": "太阳",
     "indication": "桂枝加葛根汤主之",
     "ingredients": [
@@ -185,7 +191,10 @@
   {
     "id": "shanghan:桂枝加附子汤",
     "name": "桂枝加附子汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "桂枝加附子汤主之",
     "ingredients": [
@@ -279,7 +288,10 @@
   {
     "id": "shanghan:桂枝去芍药汤",
     "name": "桂枝去芍药汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "桂枝去芍药汤主之",
     "ingredients": [
@@ -349,7 +361,10 @@
   {
     "id": "shanghan:桂枝去芍药加附子汤",
     "name": "桂枝去芍药加附子汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "桂枝去芍药加附子汤主之",
     "ingredients": [
@@ -431,7 +446,10 @@
   {
     "id": "shanghan:桂枝麻黄各半汤",
     "name": "桂枝麻黄各半汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -537,7 +555,10 @@
   {
     "id": "shanghan:桂枝二麻黄一汤",
     "name": "桂枝二麻黄一汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -643,7 +664,10 @@
   {
     "id": "shanghan:白虎加人参汤",
     "name": "白虎加人参汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "白虎加人参汤主之",
     "ingredients": [
@@ -725,7 +749,10 @@
   {
     "id": "shanghan:桂枝二越婢一汤",
     "name": "桂枝二越婢一汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -831,7 +858,10 @@
   {
     "id": "shanghan:桂枝去桂加茯苓白术汤",
     "name": "桂枝去桂加茯苓白术汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "桂枝去桂加茯苓白术汤主之",
     "ingredients": [
@@ -925,7 +955,10 @@
   {
     "id": "shanghan:甘草干姜汤",
     "name": "甘草干姜汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -971,7 +1004,10 @@
   {
     "id": "shanghan:芍药甘草汤",
     "name": "芍药甘草汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -1017,7 +1053,10 @@
   {
     "id": "shanghan:调胃承气汤",
     "name": "调胃承气汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -1075,7 +1114,10 @@
   {
     "id": "shanghan:四逆汤",
     "name": "四逆汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -1133,7 +1175,10 @@
   {
     "id": "shanghan:葛根汤",
     "name": "葛根汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -1239,7 +1284,10 @@
   {
     "id": "shanghan:葛根加半夏汤",
     "name": "葛根加半夏汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "葛根加半夏汤主之",
     "ingredients": [
@@ -1357,7 +1405,10 @@
   {
     "id": "shanghan:葛根黄芩黄连汤",
     "name": "葛根黄芩黄连汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -1427,7 +1478,10 @@
   {
     "id": "shanghan:麻黄汤",
     "name": "麻黄汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -1497,7 +1551,10 @@
   {
     "id": "shanghan:大青龙汤",
     "name": "大青龙汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "末后大青龙汤主之",
     "ingredients": [
@@ -1603,7 +1660,10 @@
   {
     "id": "shanghan:小青龙汤",
     "name": "小青龙汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "故以小青龙汤主之",
     "ingredients": [
@@ -1721,7 +1781,10 @@
   {
     "id": "shanghan:桂枝加厚朴杏仁汤",
     "name": "桂枝加厚朴杏仁汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -1827,7 +1890,10 @@
   {
     "id": "shanghan:干姜附子汤",
     "name": "干姜附子汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -1873,7 +1939,10 @@
   {
     "id": "shanghan:桂枝加芍药生姜人参新加汤",
     "name": "桂枝加芍药生姜人参新加汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -1967,7 +2036,10 @@
   {
     "id": "shanghan:麻黄杏仁甘草石膏汤",
     "name": "麻黄杏仁甘草石膏汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -2037,7 +2109,10 @@
   {
     "id": "shanghan:桂枝甘草汤",
     "name": "桂枝甘草汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -2083,7 +2158,10 @@
   {
     "id": "shanghan:茯苓桂枝甘草大枣汤",
     "name": "茯苓桂枝甘草大枣汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "茯苓桂枝甘草大枣汤主之",
     "ingredients": [
@@ -2153,7 +2231,10 @@
   {
     "id": "shanghan:茯苓桂枝白术甘草汤",
     "name": "茯苓桂枝白术甘草汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "茯苓桂枝白术甘草汤主之",
     "ingredients": [
@@ -2223,7 +2304,10 @@
   {
     "id": "shanghan:芍药甘草附子汤",
     "name": "芍药甘草附子汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "芍药甘草附子汤主之",
     "ingredients": [
@@ -2281,7 +2365,10 @@
   {
     "id": "shanghan:茯苓四逆汤",
     "name": "茯苓四逆汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -2363,7 +2450,10 @@
   {
     "id": "shanghan:五苓散",
     "name": "五苓散",
+    "book": "伤寒论",
     "type": "散",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -2445,7 +2535,10 @@
   {
     "id": "shanghan:茯苓甘草汤",
     "name": "茯苓甘草汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -2515,7 +2608,10 @@
   {
     "id": "shanghan:栀子豉汤",
     "name": "栀子豉汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -2561,7 +2657,10 @@
   {
     "id": "shanghan:栀子甘草豉汤",
     "name": "栀子甘草豉汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -2619,7 +2718,10 @@
   {
     "id": "shanghan:栀子生姜豉汤",
     "name": "栀子生姜豉汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -2677,7 +2779,10 @@
   {
     "id": "shanghan:栀子厚朴汤",
     "name": "栀子厚朴汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -2735,7 +2840,10 @@
   {
     "id": "shanghan:栀子干姜汤",
     "name": "栀子干姜汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -2781,7 +2889,10 @@
   {
     "id": "shanghan:小柴胡汤",
     "name": "小柴胡汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -2887,7 +2998,10 @@
   {
     "id": "shanghan:小建中汤",
     "name": "小建中汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -2981,7 +3095,10 @@
   {
     "id": "shanghan:大柴胡汤",
     "name": "大柴胡汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "variant",
+    "status_label": "版本有差异",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -3095,7 +3212,10 @@
   {
     "id": "shanghan:柴胡加芒硝汤",
     "name": "柴胡加芒硝汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -3213,7 +3333,10 @@
   {
     "id": "shanghan:桃核承气汤",
     "name": "桃核承气汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -3295,7 +3418,10 @@
   {
     "id": "shanghan:柴胡加龙骨牡蛎汤",
     "name": "柴胡加龙骨牡蛎汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "柴胡加龙骨牡蛎汤主之",
     "ingredients": [
@@ -3461,7 +3587,10 @@
   {
     "id": "shanghan:桂枝去芍药加蜀漆牡蛎龙骨救逆汤",
     "name": "桂枝去芍药加蜀漆牡蛎龙骨救逆汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "桂枝去芍药加蜀漆牡蛎龙骨救逆汤主之",
     "ingredients": [
@@ -3567,7 +3696,10 @@
   {
     "id": "shanghan:桂枝加桂汤",
     "name": "桂枝加桂汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -3649,7 +3781,10 @@
   {
     "id": "shanghan:桂枝甘草龙骨牡蛎汤",
     "name": "桂枝甘草龙骨牡蛎汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "桂枝甘草龙骨牡蛎汤主之",
     "ingredients": [
@@ -3719,7 +3854,10 @@
   {
     "id": "shanghan:抵当汤",
     "name": "抵当汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "而以攻坚破瘀之抵当汤主之",
     "ingredients": [
@@ -3789,7 +3927,10 @@
   {
     "id": "shanghan:抵当丸",
     "name": "抵当丸",
+    "book": "伤寒论",
     "type": "丸",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -3859,7 +4000,10 @@
   {
     "id": "shanghan:大陷胸丸",
     "name": "大陷胸丸",
+    "book": "伤寒论",
     "type": "丸",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -3940,7 +4084,10 @@
   {
     "id": "shanghan:大陷胸汤",
     "name": "大陷胸汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -3998,7 +4145,10 @@
   {
     "id": "shanghan:小陷胸汤",
     "name": "小陷胸汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -4056,7 +4206,10 @@
   {
     "id": "shanghan:文蛤散",
     "name": "文蛤散",
+    "book": "伤寒论",
     "type": "散",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -4090,7 +4243,10 @@
   {
     "id": "shanghan:白散",
     "name": "白散",
+    "book": "伤寒论",
     "type": "散",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -4148,7 +4304,10 @@
   {
     "id": "shanghan:柴胡桂枝汤",
     "name": "柴胡桂枝汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -4278,7 +4437,10 @@
   {
     "id": "shanghan:柴胡桂枝干姜汤",
     "name": "柴胡桂枝干姜汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "柴胡桂枝干姜汤主之",
     "ingredients": [
@@ -4384,7 +4546,10 @@
   {
     "id": "shanghan:半夏泻心汤",
     "name": "半夏泻心汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "宜半夏泻心汤主之",
     "ingredients": [
@@ -4490,7 +4655,10 @@
   {
     "id": "shanghan:十枣汤",
     "name": "十枣汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -4554,7 +4722,10 @@
   {
     "id": "shanghan:大黄黄连泻心汤",
     "name": "大黄黄连泻心汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "大黄黄连泻心汤主之",
     "ingredients": [
@@ -4600,7 +4771,10 @@
   {
     "id": "shanghan:附子泻心汤",
     "name": "附子泻心汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -4670,7 +4844,10 @@
   {
     "id": "shanghan:生姜泻心汤",
     "name": "生姜泻心汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -4788,7 +4965,10 @@
   {
     "id": "shanghan:甘草泻心汤",
     "name": "甘草泻心汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "variant",
+    "status_label": "版本有差异",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -4890,7 +5070,10 @@
   {
     "id": "shanghan:赤石脂禹余粮汤",
     "name": "赤石脂禹余粮汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "赤石脂禹余粮汤主之",
     "ingredients": [
@@ -4936,7 +5119,10 @@
   {
     "id": "shanghan:旋覆代赭石汤",
     "name": "旋覆代赭石汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -5042,7 +5228,10 @@
   {
     "id": "shanghan:桂枝人参汤",
     "name": "桂枝人参汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -5124,7 +5313,10 @@
   {
     "id": "shanghan:瓜蒂散",
     "name": "瓜蒂散",
+    "book": "伤寒论",
     "type": "散",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -5170,7 +5362,10 @@
   {
     "id": "shanghan:黄芩汤",
     "name": "黄芩汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -5240,7 +5435,10 @@
   {
     "id": "shanghan:黄芩加半夏生姜汤",
     "name": "黄芩加半夏生姜汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -5334,7 +5532,10 @@
   {
     "id": "shanghan:黄连汤",
     "name": "黄连汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -5440,7 +5641,10 @@
   {
     "id": "shanghan:桂枝附子汤",
     "name": "桂枝附子汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -5522,7 +5726,10 @@
   {
     "id": "shanghan:白术附子汤",
     "name": "白术附子汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -5604,7 +5811,10 @@
   {
     "id": "shanghan:甘草附子汤",
     "name": "甘草附子汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "故以甘草附子汤主之",
     "ingredients": [
@@ -5674,7 +5884,10 @@
   {
     "id": "shanghan:白虎汤",
     "name": "白虎汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -5744,7 +5957,10 @@
   {
     "id": "shanghan:炙甘草汤",
     "name": "炙甘草汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阳",
     "indication": "",
     "ingredients": [
@@ -5874,7 +6090,10 @@
   {
     "id": "shanghan:大承气汤",
     "name": "大承气汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "阳明",
     "indication": "",
     "ingredients": [
@@ -5944,7 +6163,10 @@
   {
     "id": "shanghan:小承气汤",
     "name": "小承气汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "阳明",
     "indication": "",
     "ingredients": [
@@ -6002,7 +6224,10 @@
   {
     "id": "shanghan:猪苓汤",
     "name": "猪苓汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "阳明",
     "indication": "",
     "ingredients": [
@@ -6084,7 +6309,10 @@
   {
     "id": "shanghan:蜜煎",
     "name": "蜜煎",
+    "book": "伤寒论",
     "type": "煎",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "阳明",
     "indication": "",
     "ingredients": [
@@ -6118,7 +6346,10 @@
   {
     "id": "shanghan:猪胆汁方",
     "name": "猪胆汁方",
+    "book": "伤寒论",
     "type": "导",
+    "status": "manual",
+    "status_label": "同段原文补",
     "six_meridian": "阳明",
     "indication": "阳明病津液内竭，大便硬而不可攻，宜导而通之。",
     "ingredients": [
@@ -6151,9 +6382,36 @@
     }
   },
   {
+    "id": "shanghan:土瓜根方",
+    "name": "土瓜根方",
+    "book": "伤寒论",
+    "type": "导",
+    "status": "missing",
+    "status_label": "原文缺",
+    "six_meridian": "阳明",
+    "indication": "阳明病津液内竭，大便硬而不可攻，宜导而通之。",
+    "ingredients": [],
+    "expected_count": 0,
+    "source_expected_count": 0,
+    "source_ingredients": [],
+    "composition_raw": "",
+    "decoction": "",
+    "adjuncts": [],
+    "source": {
+      "title": "伤寒论辑义",
+      "line": 4809,
+      "path": "sources/shanghan_juyi.txt",
+      "excerpt": "土瓜根方缺。肘后方。治大便不通。土瓜根。采根捣汁。筒吹入肛门内。取通。此与上猪胆方同义。",
+      "note": "辑义原文明确标注“土瓜根方缺”；未用后世肘后方用法冒充仲景原方。"
+    }
+  },
+  {
     "id": "shanghan:茵陈蒿汤",
     "name": "茵陈蒿汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "阳明",
     "indication": "",
     "ingredients": [
@@ -6211,7 +6469,10 @@
   {
     "id": "shanghan:吴茱萸汤",
     "name": "吴茱萸汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "阳明",
     "indication": "",
     "ingredients": [
@@ -6281,7 +6542,10 @@
   {
     "id": "shanghan:麻子仁丸",
     "name": "麻子仁丸",
+    "book": "伤寒论",
     "type": "丸",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "阳明",
     "indication": "",
     "ingredients": [
@@ -6375,7 +6639,10 @@
   {
     "id": "shanghan:栀子蘗皮汤",
     "name": "栀子蘗皮汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "阳明",
     "indication": "",
     "ingredients": [
@@ -6433,7 +6700,10 @@
   {
     "id": "shanghan:麻黄连轺赤小豆汤",
     "name": "麻黄连轺赤小豆汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "阳明",
     "indication": "麻黄连轺赤小豆汤主之",
     "ingredients": [
@@ -6551,7 +6821,10 @@
   {
     "id": "shanghan:桂枝加芍药汤",
     "name": "桂枝加芍药汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阴",
     "indication": "桂枝加芍药汤主之",
     "ingredients": [
@@ -6633,7 +6906,10 @@
   {
     "id": "shanghan:桂枝加大黄汤",
     "name": "桂枝加大黄汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "太阴",
     "indication": "",
     "ingredients": [
@@ -6727,7 +7003,10 @@
   {
     "id": "shanghan:麻黄附子细辛汤",
     "name": "麻黄附子细辛汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "",
     "ingredients": [
@@ -6785,7 +7064,10 @@
   {
     "id": "shanghan:麻黄附子甘草汤",
     "name": "麻黄附子甘草汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "",
     "ingredients": [
@@ -6843,7 +7125,10 @@
   {
     "id": "shanghan:黄连阿胶汤",
     "name": "黄连阿胶汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "",
     "ingredients": [
@@ -6925,7 +7210,10 @@
   {
     "id": "shanghan:附子汤",
     "name": "附子汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "",
     "ingredients": [
@@ -7007,7 +7295,10 @@
   {
     "id": "shanghan:桃花汤",
     "name": "桃花汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "故以温中固脱之桃花汤主之",
     "ingredients": [
@@ -7065,7 +7356,10 @@
   {
     "id": "shanghan:猪肤汤",
     "name": "猪肤汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "",
     "ingredients": [
@@ -7110,7 +7404,10 @@
   {
     "id": "shanghan:甘草汤",
     "name": "甘草汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "",
     "ingredients": [
@@ -7144,7 +7441,10 @@
   {
     "id": "shanghan:桔梗汤",
     "name": "桔梗汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "",
     "ingredients": [
@@ -7190,7 +7490,10 @@
   {
     "id": "shanghan:苦酒汤",
     "name": "苦酒汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "",
     "ingredients": [
@@ -7242,7 +7545,10 @@
   {
     "id": "shanghan:半夏散及汤",
     "name": "半夏散及汤",
+    "book": "伤寒论",
     "type": "散",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "",
     "ingredients": [
@@ -7300,7 +7606,10 @@
   {
     "id": "shanghan:白通汤",
     "name": "白通汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "",
     "ingredients": [
@@ -7358,7 +7667,10 @@
   {
     "id": "shanghan:白通加猪胆汁汤",
     "name": "白通加猪胆汁汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "白通加猪胆汁汤主之",
     "ingredients": [
@@ -7440,7 +7752,10 @@
   {
     "id": "shanghan:真武汤",
     "name": "真武汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "",
     "ingredients": [
@@ -7522,7 +7837,10 @@
   {
     "id": "shanghan:通脉四逆汤",
     "name": "通脉四逆汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "",
     "ingredients": [
@@ -7580,7 +7898,10 @@
   {
     "id": "shanghan:四逆散",
     "name": "四逆散",
+    "book": "伤寒论",
     "type": "散",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "少阴",
     "indication": "",
     "ingredients": [
@@ -7650,7 +7971,10 @@
   {
     "id": "shanghan:乌梅丸",
     "name": "乌梅丸",
+    "book": "伤寒论",
     "type": "丸",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "厥阴",
     "indication": "",
     "ingredients": [
@@ -7792,7 +8116,10 @@
   {
     "id": "shanghan:当归四逆汤",
     "name": "当归四逆汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "厥阴",
     "indication": "故以当归四逆汤主之",
     "ingredients": [
@@ -7898,7 +8225,10 @@
   {
     "id": "shanghan:当归四逆加吴茱萸生姜汤",
     "name": "当归四逆加吴茱萸生姜汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "variant",
+    "status_label": "版本有差异",
     "six_meridian": "厥阴",
     "indication": "",
     "ingredients": [
@@ -8023,7 +8353,10 @@
   {
     "id": "shanghan:麻黄升麻汤",
     "name": "麻黄升麻汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "厥阴",
     "indication": "",
     "ingredients": [
@@ -8213,7 +8546,10 @@
   {
     "id": "shanghan:干姜黄连黄芩人参汤",
     "name": "干姜黄连黄芩人参汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "厥阴",
     "indication": "",
     "ingredients": [
@@ -8283,7 +8619,10 @@
   {
     "id": "shanghan:白头翁汤",
     "name": "白头翁汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "厥阴",
     "indication": "",
     "ingredients": [
@@ -8353,7 +8692,10 @@
   {
     "id": "shanghan:四逆加人参汤",
     "name": "四逆加人参汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "厥阴",
     "indication": "四逆加人参汤主之",
     "ingredients": [
@@ -8423,7 +8765,10 @@
   {
     "id": "shanghan:理中丸",
     "name": "理中丸",
+    "book": "伤寒论",
     "type": "丸",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "厥阴",
     "indication": "",
     "ingredients": [
@@ -8493,7 +8838,10 @@
   {
     "id": "shanghan:通脉四逆加猪胆汁汤",
     "name": "通脉四逆加猪胆汁汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "厥阴",
     "indication": "",
     "ingredients": [
@@ -8563,7 +8911,10 @@
   {
     "id": "shanghan:烧裈散",
     "name": "烧裈散",
+    "book": "伤寒论",
     "type": "散",
+    "status": "manual",
+    "status_label": "缺字校补",
     "six_meridian": "阴阳易",
     "indication": "伤寒阴阳易之为病，身体重，少气，少腹里急，或引阴中拘挛。",
     "ingredients": [
@@ -8598,7 +8949,10 @@
   {
     "id": "shanghan:枳实栀子豉汤",
     "name": "枳实栀子豉汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "厥阴",
     "indication": "故以枳实栀子豉汤主之",
     "ingredients": [
@@ -8656,7 +9010,10 @@
   {
     "id": "shanghan:牡蛎泽泻散",
     "name": "牡蛎泽泻散",
+    "book": "伤寒论",
     "type": "散",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "厥阴",
     "indication": "而以牡蛎泽泻散主之",
     "ingredients": [
@@ -8762,7 +9119,10 @@
   {
     "id": "shanghan:竹叶石膏汤",
     "name": "竹叶石膏汤",
+    "book": "伤寒论",
     "type": "汤",
+    "status": "complete",
+    "status_label": "味数已核",
     "six_meridian": "厥阴",
     "indication": "当以竹叶石膏汤主之",
     "ingredients": [

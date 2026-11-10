@@ -1,0 +1,16 @@
+{
+  "formulas": 299,
+  "review_status": {
+    "reviewed": 2,
+    "pending": 297
+  },
+  "usage_status": {
+    "reviewed": 2,
+    "source_text": 296,
+    "missing": 1
+  },
+  "reviewed_ids": [
+    "shanghan:桂枝汤",
+    "jinkui:四逆加人参汤"
+  ]
+}

@@ -28,20 +28,30 @@ def _resolve_herb(name: str, herbs_by_name: dict[str, dict]) -> dict | None:
 
 
 def _summary(formula: dict) -> dict:
+    source = formula["source"]
     return {
         "id": formula["id"],
         "name": formula["name"],
+        "book": formula.get("book", ""),
         "type": formula["type"],
+        "status": formula.get("status", "complete"),
+        "status_label": formula.get("status_label", ""),
         "six_meridian": formula["six_meridian"],
+        "chapter": formula.get("chapter", ""),
         "ingredient_count": len(formula["ingredients"]),
-        "source_line": formula["source"]["line"],
-        "source_note": formula["source"].get("note", ""),
+        "locator": source.get("line") or source.get("page") or "",
+        "source_title": source.get("title", ""),
+        "source_note": source.get("note", ""),
+        "review_status": formula.get("evidence", {}).get("review_status", "pending"),
     }
 
 
 @lru_cache(maxsize=1)
 def _index() -> dict:
-    formulas = _read("formulas.json")
+    formulas = _read("formulas.json") + _read("jinkui_formulas.json")
+    evidence = _read("formula_evidence.json")
+    for formula in formulas:
+        formula["evidence"] = evidence.get(formula["id"], {})
     herbs = _read("herbs.json")
     herbs_by_name = {item["name"]: item for item in herbs}
 
@@ -66,10 +76,16 @@ def _formula_text(formula: dict) -> str:
     return " ".join(
         [
             formula["name"],
+            formula.get("book", ""),
+            formula.get("chapter", ""),
             formula.get("indication", ""),
             formula.get("composition_raw", ""),
             formula.get("decoction", ""),
+            formula.get("notes", ""),
+            " ".join(formula.get("aliases", [])),
             formula["source"].get("note", ""),
+            formula.get("evidence", {}).get("usage_plain", ""),
+            formula.get("evidence", {}).get("why", ""),
         ]
     )
 
@@ -78,15 +94,30 @@ def _herb_text(herb: dict) -> str:
     return " ".join([herb["name"], *herb.get("names", []), *herb.get("sections", {}).values()])
 
 
-def list_formulas(query: str = "", kind: str = "", meridian: str = "", page: int = 1, page_size: int = 24) -> dict:
+def list_formulas(
+    query: str = "",
+    kind: str = "",
+    meridian: str = "",
+    book: str = "",
+    status: str = "",
+    review: str = "",
+    page: int = 1,
+    page_size: int = 24,
+) -> dict:
     query_norm = _norm(query)
     kind = kind.strip()
     meridian = meridian.strip()
+    book = book.strip()
+    status = status.strip()
+    review = review.strip()
     items = [
         item
         for item in _index()["formulas"]
         if (not kind or item["type"] == kind)
         and (not meridian or item["six_meridian"] == meridian)
+        and (not book or item.get("book") == book)
+        and (not status or item.get("status") == status)
+        and (not review or item.get("evidence", {}).get("review_status") == review)
         and (not query_norm or query_norm in _norm(_formula_text(item)))
     ]
     total = len(items)
@@ -154,19 +185,23 @@ def get_herb(herb_id: str) -> dict | None:
 
 def overview() -> dict:
     formulas = _index()["formulas"]
-    report = _read("formulas_report.json")
-    source_mismatches = [
-        item["name"]
-        for item in formulas
-        if item["source_expected_count"] != len(item["source_ingredients"])
-        or item["source_expected_count"] != len(item["ingredients"])
-    ]
+    by_book = {}
+    by_status = {}
+    review_status = {}
+    for item in formulas:
+        book = item.get("book", "")
+        status = item.get("status", "")
+        by_book[book] = by_book.get(book, 0) + 1
+        by_status[status] = by_status.get(status, 0) + 1
+        review = item.get("evidence", {}).get("review_status", "pending")
+        review_status[review] = review_status.get(review, 0) + 1
     return {
         "formulas": len(formulas),
         "herbs": len(_index()["herbs"]),
-        "source_checked": len(formulas),
-        "source_variants": source_mismatches,
-        "source_pending": len(report.get("pending", [])),
+        "by_book": by_book,
+        "by_status": by_status,
+        "review_status": review_status,
+        "source_pending": by_status.get("missing", 0),
         "modules": {
             "formulas": "ready",
             "herbs": "ready",

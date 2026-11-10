@@ -31,10 +31,13 @@ def formulas(
     q: str = "",
     type: str = "",
     meridian: str = "",
+    book: str = "",
+    status: str = "",
+    review: str = "",
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=24, ge=1, le=60),
 ):
-    return catalog.list_formulas(q, type, meridian, page, page_size)
+    return catalog.list_formulas(q, type, meridian, book, status, review, page, page_size)
 
 
 @app.get("/api/formulas/{formula_id:path}")

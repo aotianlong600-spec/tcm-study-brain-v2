@@ -3,6 +3,9 @@ const state = {
   formulaQuery: "",
   formulaType: "",
   formulaMeridian: "",
+  formulaBook: "",
+  formulaStatus: "",
+  formulaReview: "",
   formulaPage: 1,
   formulaTotal: 0,
   formulaItems: [],
@@ -53,13 +56,14 @@ function setView(view) {
   if (view === "herbs" && !state.herbItems.length) loadHerbs(true);
 }
 
-function listItem({ id, name, type, six_meridian, ingredient_count, source_line, page }, selected, kind) {
+function listItem(formula, selected, kind) {
+  const { id, name, type, six_meridian, chapter, ingredient_count, locator, page, book, status, status_label, review_status } = formula;
   const selectedClass = selected ? " selected" : "";
   const meta = kind === "herb"
     ? `<span>本经 ${escapeHtml(page)} 页</span>`
-    : `<span>${escapeHtml(type)}</span><span>${escapeHtml(six_meridian || "未分篇")}</span><span>${escapeHtml(ingredient_count)} 味</span><span>行 ${escapeHtml(source_line)}</span>`;
+    : `<span class="status-pill status-${escapeHtml(status || "complete")}">${escapeHtml(status_label || "味数已核")}</span><span class="status-pill ${review_status === "reviewed" ? "status-reviewed" : "status-pending"}">${review_status === "reviewed" ? "已逐方校" : "待逐方校"}</span><span>${escapeHtml(book)}</span><span>${escapeHtml(type)}</span><span>${escapeHtml(chapter || six_meridian || "未分篇")}</span><span>${escapeHtml(ingredient_count)} 味</span><span>${book === "伤寒论" ? "行" : "页"} ${escapeHtml(locator)}</span>`;
   return `<button class="entity-item${selectedClass}" data-kind="${kind}" data-id="${encodeURIComponent(id)}">
-    <span class="entity-name"><strong>${escapeHtml(name)}</strong><em>${kind === "herb" ? "本经" : escapeHtml(type)}</em></span>
+    <span class="entity-name"><strong>${escapeHtml(name)}</strong><em>${kind === "herb" ? "本经" : escapeHtml(book)}</em></span>
     <span class="entity-meta">${meta}</span>
   </button>`;
 }
@@ -69,7 +73,7 @@ function renderFormulaList() {
   $("#formula-list").innerHTML = state.formulaItems.map((item) =>
     listItem(item, selectedId === item.id, "formula")
   ).join("") || `<div class="loading">没有匹配的方剂。</div>`;
-  $("#formula-count").textContent = `${state.formulaTotal} 首`;
+  $("#formula-count").textContent = `${state.formulaTotal} 条`;
   $("#formula-more").classList.toggle("hidden", state.formulaItems.length >= state.formulaTotal);
 }
 
@@ -95,7 +99,43 @@ function ingredientHtml(item) {
 
 function renderFormulaDetail(item) {
   const source = item.source || {};
-  const mismatch = item.source_expected_count !== item.ingredients.length;
+  const evidence = item.evidence || {};
+  const status = item.status || "complete";
+  const statusLabel = item.status_label || "味数已核";
+  const reviewStatus = evidence.review_status || "pending";
+  const reviewLabel = reviewStatus === "reviewed" ? "已逐方校" : "待逐方校";
+  const context = item.chapter || item.six_meridian || "未分篇";
+  const mismatch = item.source_expected_count !== item.source_ingredients.length || status === "variant" || status === "manual";
+  const issues = item.quality?.issues || [];
+  const issueBox = status !== "complete"
+    ? `<div class="warning-box"><strong>${escapeHtml(statusLabel)}</strong>${issues.length ? `<br>${issues.map(escapeHtml).join("；")}` : ""}</div>`
+    : "";
+  const notes = item.notes
+    ? `<div class="section-block"><div class="section-title">条文 / 倪注</div><div class="section-copy">${escapeHtml(item.notes)}</div></div>`
+    : "";
+  const usage = evidence.usage_plain || item.decoction || "";
+  const usageLabel = evidence.usage_status === "reviewed" ? "已校用法" : evidence.usage_status === "missing" ? "原文缺" : "原文摘录";
+  const reviewedSources = evidence.review_sources || [];
+  const candidateSources = [
+    ...(evidence.candidate_sources?.book || []).map((row) => ({ ...row, kind: "书本候选" })),
+    ...(evidence.candidate_sources?.video || []).map((row) => ({ ...row, kind: "视频候选" })),
+  ];
+  const why = evidence.why
+    ? `<div class="section-copy">${escapeHtml(evidence.why)}</div>`
+    : `<div class="missing-composition">尚未完成这一方的倪海厦原文逐方校对。下面只列候选出处，不把命中的段落冒充“为什么用”。</div>`;
+  const reviewedHtml = reviewedSources.length
+    ? `<details open><summary>已采用的校对原文（${reviewedSources.length} 条）</summary><div class="evidence-list">${reviewedSources.map((row) =>
+        `<article><div class="source-locator">${escapeHtml(row.kind)} · ${escapeHtml(row.title)} · 第 ${escapeHtml(row.page)} 页</div><p>${escapeHtml(row.excerpt)}</p></article>`
+      ).join("")}</div></details>`
+    : "";
+  const candidateHtml = candidateSources.length
+    ? `<details><summary>候选原文（未判定，${candidateSources.length} 条）</summary><div class="evidence-list">${candidateSources.map((row) =>
+        `<article><div class="source-locator">${escapeHtml(row.kind)} · 第 ${escapeHtml(row.page)} 页</div><p>${escapeHtml(row.excerpt)}</p></article>`
+      ).join("")}</div></details>`
+    : "";
+  const derivative = item.derivative
+    ? `<div class="warning-box">加味方：基础方 ${escapeHtml(item.derivative.base)}；加 ${escapeHtml((item.derivative.additions || []).map((row) => row.name).join("、"))}</div>`
+    : "";
   const related = item.related_herbs?.length
     ? `<div class="tag-row">${item.related_herbs.map((herb) =>
         `<button class="tag" data-herb-id="${encodeURIComponent(herb.id)}">${escapeHtml(herb.name)}</button>`
@@ -107,35 +147,48 @@ function renderFormulaDetail(item) {
       ).join("")}</div></div>`
     : "";
   const variant = mismatch
-    ? `<div class="warning-box">原文校注与当前整理组成有差异。${escapeHtml(source.note || "")}</div>
-       <details><summary>查看原文组成（${item.source_ingredients.length} 味）</summary>
+    ? `<details><summary>查看原文记录（${item.source_ingredients.length} 味）</summary>
        <ul class="variant-list">${item.source_ingredients.map((row) =>
          `<li>${escapeHtml(row.name)} ${escapeHtml(row.dose || "剂量未注")} ${escapeHtml(row.processing || "")}</li>`
        ).join("")}</ul></details>`
-    : source.note ? `<div class="warning-box">${escapeHtml(source.note)}</div>` : "";
+    : "";
+  const composition = item.ingredients.length
+    ? `<div class="composition-grid">${item.ingredients.map(ingredientHtml).join("")}</div>`
+    : `<div class="missing-composition">本条目在原始资料中没有可用的组成行。没有用后世人卫资料补写。</div>`;
   $("#formula-detail").innerHTML = `<div class="detail-inner">
-    <div class="detail-kicker">伤寒论辑义 · 第 ${escapeHtml(source.line)} 行</div>
+    <div class="detail-kicker">${escapeHtml(source.title)} · ${source.line ? `第 ${escapeHtml(source.line)} 行` : `第 ${escapeHtml(source.page)} 页`}</div>
     <h2 class="detail-title">${escapeHtml(item.name)}</h2>
     <p class="detail-subtitle">${escapeHtml(item.indication || "条目原文见下方")}</p>
-    <div class="tag-row"><span class="tag">${escapeHtml(item.type)}</span><span class="tag">${escapeHtml(item.six_meridian || "未分篇")}</span><span class="tag">${item.ingredients.length} 味</span></div>
+    <div class="tag-row"><span class="tag">${escapeHtml(item.book || "方剂")}</span><span class="status-pill status-${escapeHtml(status)}">${escapeHtml(statusLabel)}</span><span class="status-pill ${reviewStatus === "reviewed" ? "status-reviewed" : "status-pending"}">${escapeHtml(reviewLabel)}</span><span class="tag">${escapeHtml(item.type)}</span><span class="tag">${escapeHtml(context)}</span><span class="tag">${item.ingredients.length} 味</span></div>
+    ${issueBox}
+    ${derivative}
     <div class="warning-box">古籍剂量按原文保留，仅供学习核对；含附子、乌头、巴豆等药味时，须由专业医师按炮制与安全规范处理。</div>
     <div class="section-block">
       <div class="section-title">组成 · 原文剂量</div>
-      <div class="composition-grid">${item.ingredients.map(ingredientHtml).join("")}</div>
+      ${composition}
       ${variant}
     </div>
     ${adjuncts}
     <div class="section-block">
-      <div class="section-title">煎服法</div>
-      <div class="section-copy">${escapeHtml(item.decoction || "原文未提供煎服法")}</div>
+      <div class="section-title">用法 · ${escapeHtml(usageLabel)}</div>
+      <div class="section-copy">${escapeHtml(usage || "原文未提供可用用法")}</div>
+      ${evidence.usage_note ? `<div class="review-note">${escapeHtml(evidence.usage_note)}</div>` : ""}
+    </div>
+    <div class="section-block">
+      <div class="section-title">为什么用 · ${escapeHtml(reviewLabel)}</div>
+      ${why}
+      ${reviewedHtml}
+      ${candidateHtml}
+      ${evidence.video_note ? `<div class="review-note">视频文稿：${escapeHtml(evidence.video_note)}</div>` : ""}
     </div>
     <div class="section-block">
       <div class="section-title">相关药物</div>
       ${related || `<div class="section-copy">暂无已建立的本经条目链接。</div>`}
     </div>
+    ${notes}
     <div class="section-block">
       <div class="section-title">原文定位</div>
-      <div class="source-box"><div class="source-locator">${escapeHtml(source.title)} · ${escapeHtml(source.path)} · 第 ${escapeHtml(source.line)} 行</div><p>${escapeHtml(source.excerpt)}</p></div>
+      <div class="source-box"><div class="source-locator">${escapeHtml(source.title)} · ${escapeHtml(source.path)} · ${source.line ? `第 ${escapeHtml(source.line)} 行` : `第 ${escapeHtml(source.page)} 页`}${source.chapter ? ` · ${escapeHtml(source.chapter)}` : ""}</div><p>${escapeHtml(source.excerpt || source.note || "原文片段未提供")}</p></div>
     </div>
   </div>`;
 }
@@ -144,7 +197,7 @@ function renderHerbDetail(item) {
   const sections = Object.entries(item.sections || {}).filter(([, value]) => String(value || "").trim());
   const formulas = item.formulas?.length
     ? item.formulas.map((formula) =>
-        `<button class="herb-formula-link" data-formula-id="${encodeURIComponent(formula.id)}">${escapeHtml(formula.name)}</button>`
+        `<button class="herb-formula-link" data-formula-id="${encodeURIComponent(formula.id)}">${escapeHtml(formula.name)}<small>${escapeHtml(formula.book || "")} · ${escapeHtml(formula.status_label || "")}</small></button>`
       ).join("")
     : `<span class="section-copy">暂无关联方剂。</span>`;
   $("#herb-detail").innerHTML = `<div class="detail-inner">
@@ -168,6 +221,9 @@ async function loadFormulas(reset = false) {
     q: state.formulaQuery,
     type: state.formulaType,
     meridian: state.formulaMeridian,
+    book: state.formulaBook,
+    status: state.formulaStatus,
+    review: state.formulaReview,
     page: String(state.formulaPage),
     page_size: "30",
   });
@@ -252,6 +308,18 @@ $("#formula-type").addEventListener("change", (event) => {
   state.formulaType = event.target.value;
   loadFormulas(true).catch(() => showNotice("方剂目录读取失败"));
 });
+$("#formula-book").addEventListener("change", (event) => {
+  state.formulaBook = event.target.value;
+  loadFormulas(true).catch(() => showNotice("方剂目录读取失败"));
+});
+$("#formula-status").addEventListener("change", (event) => {
+  state.formulaStatus = event.target.value;
+  loadFormulas(true).catch(() => showNotice("方剂目录读取失败"));
+});
+$("#formula-review").addEventListener("change", (event) => {
+  state.formulaReview = event.target.value;
+  loadFormulas(true).catch(() => showNotice("方剂目录读取失败"));
+});
 $("#formula-meridian").addEventListener("change", (event) => {
   state.formulaMeridian = event.target.value;
   loadFormulas(true).catch(() => showNotice("方剂目录读取失败"));
@@ -260,9 +328,15 @@ $("#formula-clear").addEventListener("click", () => {
   state.formulaQuery = "";
   state.formulaType = "";
   state.formulaMeridian = "";
+  state.formulaBook = "";
+  state.formulaStatus = "";
+  state.formulaReview = "";
   $("#formula-query").value = "";
   $("#formula-type").value = "";
   $("#formula-meridian").value = "";
+  $("#formula-book").value = "";
+  $("#formula-status").value = "";
+  $("#formula-review").value = "";
   loadFormulas(true).catch(() => showNotice("方剂目录读取失败"));
 });
 $("#formula-more").addEventListener("click", () => {
@@ -319,7 +393,10 @@ window.addEventListener("hashchange", () => {
 async function boot() {
   try {
     const overview = await request("/api/overview");
-    $("#dataset-note").textContent = `${overview.formulas} 首方 · ${overview.herbs} 味药 · 本地原文`;
+    const shanghan = overview.by_book?.["伤寒论"] || 0;
+    const jinkui = overview.by_book?.["金匮要略"] || 0;
+    const reviewed = overview.review_status?.reviewed || 0;
+    $("#dataset-note").textContent = `${overview.formulas} 条方 · 伤寒 ${shanghan} / 金匮 ${jinkui} · 逐方校 ${reviewed}/${overview.formulas} · ${overview.herbs} 味药`;
     const hash = location.hash.match(/^#\/(formulas|herbs)\//);
     if (hash?.[1] === "herbs") setView("herbs");
     await loadFormulas(true);

@@ -4,11 +4,13 @@
 
 ## 当前数据
 
-- 伤寒论辑义：112 首可用方，全部通过味数校验或有同段原文依据；`土瓜根方` 明确留作待补。
+- 伤寒论辑义：113 条记录。110 首严格通过味数校验，2 首按同段原文补入，`土瓜根方` 原文缺并保留占位。
+- 倪海厦注金匮要略：186 条记录全部进入目录；其中 74 条味数完整、74 条有缺剂量、16 条味数不符、21 条未找到校验锚点、1 条加味方。
 - 倪海厦注神农本草经：351 味药，保留 PDF 页码与分段原文。
-- 每首方保留原文行号、组成、剂量、煎服法、校注和版本差异。
+- 每首方保留原文出处、组成、剂量、煎服法、校注和版本差异。
+- `formula_evidence.json` 为每一方保存用法、为什么用、书本候选页、视频候选页和校对状态；目前逐方校完 2 条，其余 297 条明确标为待校。
 
-金匮方、针灸、辨证论治和病症模块尚未接入。页面会明确显示待接入，不拿第三方数据填充。
+针灸、辨证论治和病症模块尚未接入。页面会明确显示待接入，不拿第三方数据填充。
 
 ## 启动
 
@@ -23,6 +25,8 @@ python -m pip install -r requirements.txt
 
 ```powershell
 python -m etl.extract_shanghan
+python -m etl.import_jinkui
+python -m etl.enrich_evidence
 python scripts\audit_formula.py
 python -m unittest discover -s tests -v
 ```
@@ -30,9 +34,9 @@ python -m unittest discover -s tests -v
 ## API
 
 - `GET /api/overview`
-- `GET /api/formulas?q=&type=&meridian=`
+- `GET /api/formulas?q=&type=&meridian=&book=&status=`
 - `GET /api/formulas/{id}`
 - `GET /api/herbs?q=&category=`
 - `GET /api/herbs/{id}`
 
-方剂详情中的 `source_ingredients` 是原文正文，`ingredients` 是当前整理组成；两者不一致时页面会显示同页校注，不静默覆盖。
+方剂详情中的 `source_ingredients` 是原文正文，`ingredients` 是当前整理组成；两者不一致时页面会显示同页校注，不静默覆盖。`evidence.review_status=pending` 表示尚未完成倪海厦伤寒/金匮与视频文稿的逐方核对。

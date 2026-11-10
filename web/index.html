@@ -13,7 +13,7 @@
         <span class="brand-mark" aria-hidden="true">方</span>
         <div>
           <h1>中医学习大脑</h1>
-          <p>本地方剂 · 伤寒论辑义</p>
+          <p>本地方剂 · 伤寒 + 金匮</p>
         </div>
       </div>
       <div class="header-note">
@@ -35,7 +35,15 @@
         <div class="toolbar">
           <label class="search-box">
             <span>检索方剂</span>
-            <input id="formula-query" type="search" placeholder="方名、主症、组成、煎服法" autocomplete="off">
+            <input id="formula-query" type="search" placeholder="方名、条文、组成、煎服法" autocomplete="off">
+          </label>
+          <label class="filter-box">
+            <span>来源</span>
+            <select id="formula-book">
+              <option value="">伤寒 + 金匮</option>
+              <option value="伤寒论">伤寒论</option>
+              <option value="金匮要略">金匮要略</option>
+            </select>
           </label>
           <label class="filter-box">
             <span>剂型</span>
@@ -46,6 +54,28 @@
               <option value="丸">丸</option>
               <option value="煎">煎</option>
               <option value="导">导</option>
+            </select>
+          </label>
+          <label class="filter-box">
+            <span>完整度</span>
+            <select id="formula-status">
+              <option value="">全部状态</option>
+              <option value="complete">味数已核</option>
+              <option value="variant">版本有差异</option>
+              <option value="manual">同段原文补</option>
+              <option value="partial">有缺口</option>
+              <option value="mismatch">味数不符</option>
+              <option value="unchecked">未找到校验锚点</option>
+              <option value="derived">加味方</option>
+              <option value="missing">原文缺</option>
+            </select>
+          </label>
+          <label class="filter-box">
+            <span>逐方校</span>
+            <select id="formula-review">
+              <option value="">全部</option>
+              <option value="reviewed">已逐方校</option>
+              <option value="pending">待逐方校</option>
             </select>
           </label>
           <label class="filter-box">
@@ -66,7 +96,10 @@
         <div class="workspace">
           <section class="list-panel" aria-labelledby="formula-list-title">
             <div class="panel-heading">
-              <h2 id="formula-list-title">方剂目录</h2>
+              <div>
+                <h2 id="formula-list-title">方剂目录</h2>
+                <small>跨书同名分别保留</small>
+              </div>
               <span id="formula-count" class="count-label">—</span>
             </div>
             <div id="formula-list" class="entity-list"></div>
