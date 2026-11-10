@@ -33,6 +33,8 @@ class FormulaCatalogTest(unittest.TestCase):
         self.assertEqual(data["evidence"]["six_channel"]["name"], "太阳病")
         self.assertGreaterEqual(len(data["evidence"]["six_channel"]["original"]), 3)
         self.assertGreaterEqual(len(data["evidence"]["usage_modern"]["steps"]), 5)
+        self.assertGreaterEqual(len(data["evidence"]["symptoms"]), 8)
+        self.assertGreaterEqual(len(data["evidence"]["page_reading"]), 5)
 
     def test_formula_to_herb_link(self):
         data = self.client.get("/api/formulas/shanghan%3A%E6%A1%82%E6%9E%9D%E6%B1%A4").json()

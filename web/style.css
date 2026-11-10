@@ -340,6 +340,16 @@ summary { color: var(--green-dark); cursor: pointer; font-size: 12px; font-weigh
 .six-understanding { margin-top: 12px; border-left: 2px solid #d8c28f; padding-left: 11px; }
 .six-understanding h4 { margin: 0; color: var(--green-dark); font-size: 13px; }
 .six-understanding p { margin-top: 4px; color: #4e574f; font-size: 13px; }
+.symptom-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+.symptom-chip { display: inline-flex; align-items: center; min-height: 25px; border: 1px solid #d5d9ce; border-radius: 4px; padding: 2px 8px; color: #4d5f55; background: #f6f8f3; font-size: 11px; }
+.decoction-first { margin-top: 22px; }
+.page-reading-list { display: grid; gap: 12px; margin-top: 12px; }
+.page-reading { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 12px; border-top: 1px solid #e3e4dc; padding-top: 12px; }
+.page-reading:first-child { border-top: 0; padding-top: 0; }
+.page-number { color: var(--red); font-family: Georgia, serif; font-size: 12px; }
+.page-kind { color: var(--muted); font-size: 10px; }
+.page-reading-body h4 { margin: 2px 0 0; color: var(--green-dark); font-size: 14px; }
+.page-reading .dossier-quote { margin-top: 8px; }
 
 @media (max-width: 760px) {
   .dossier-title-row { display: block; }

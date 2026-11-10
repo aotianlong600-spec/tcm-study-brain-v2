@@ -20,6 +20,7 @@ def main() -> int:
     formulas = shanghan + jinkui
     herbs = json.loads((DATA / "herbs.json").read_text(encoding="utf-8"))
     evidence = json.loads((DATA / "formula_evidence.json").read_text(encoding="utf-8"))
+    six_channels = json.loads((DATA / "six_channels.json").read_text(encoding="utf-8"))["items"]
     manifest = json.loads((DATA / "source_manifest.json").read_text(encoding="utf-8"))
     errors = []
     warnings = []
@@ -32,6 +33,15 @@ def main() -> int:
         errors.append("同书方剂名重复")
     if len(herbs) != len({item["id"] for item in herbs}):
         errors.append("中药 id 重复")
+    if len(six_channels) != 6:
+        errors.append("六经条目不是 6 条")
+    if not all(item.get("original") for item in six_channels):
+        errors.append("六经存在没有提纲原文的条目")
+    taiyang = next((item for item in six_channels if item["id"] == "taiyang"), None)
+    if not taiyang or taiyang.get("status") != "reviewed":
+        errors.append("太阳病尚未标记为已整理")
+    elif len(taiyang.get("annotations", [])) < 3:
+        errors.append("太阳病原文注解不足")
 
     source_text = (ROOT / "sources" / "shanghan_juyi.txt").read_text(
         encoding="gb18030"
@@ -77,6 +87,7 @@ def main() -> int:
     report = {
         "formulas": len(formulas),
         "herbs": len(herbs),
+        "six_channels": len(six_channels),
         "by_book": by_book,
         "by_status": by_status,
         "by_review": by_review,

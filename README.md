@@ -43,4 +43,4 @@ python -m unittest discover -s tests -v
 - `GET /api/six-channels`
 - `GET /api/six-channels/{id}`
 
-方剂详情中的 `source_ingredients` 是原文正文，`ingredients` 是当前整理组成；两者不一致时页面会显示同页校注，不静默覆盖。`evidence.review_status=pending` 表示尚未完成倪海厦伤寒/金匮与视频文稿的逐方核对。
+方剂详情中的 `source_ingredients` 是原文正文，`ingredients` 是当前整理组成；两者不一致时页面会显示同页校注，不静默覆盖。`evidence.review_status=pending` 表示尚未完成逐方核对。

@@ -75,37 +75,8 @@ def candidates(pages: list[dict], terms: list[str], limit: int = 4) -> list[dict
 
 
 def reviewed_overrides():
-    """The first two formulas reviewed manually from local source pages."""
+    """The first Jinkui formula reviewed manually from local source pages."""
     return {
-        "shanghan:桂枝汤": {
-            "review_status": "reviewed",
-            "usage_status": "reviewed",
-            "usage_plain": "以水七升，微火煮取三升，去滓，适寒温，服一升。服后片刻啜热稀粥一升余，温覆约一时许，以遍身微似有汗为佳，不可大汗；一服病解即停后服。",
-            "why": "倪注把本方的主证抓在“有汗、恶风”：汗出会持续耗损津液，所以用桂枝、白芍调和营卫，姜、枣、甘草顾护肠胃津液。桂枝壮心阳、促进动脉运行，白芍使静脉回流，目的不是见感冒就一律发汗。",
-            "usage_note": "用法按倪注页16的讲解整理；原方仍以《伤寒论辑义》第295行组成和煎服法为底本。",
-            "review_sources": [
-                {
-                    "kind": "倪海厦伤寒论",
-                    "title": "倪海厦人纪系列之伤寒论",
-                    "page": 15,
-                    "excerpt": "为什么设计这方子？因为仲圣知道病人津液不断的在丧失，所以桂枝汤证一定有汗，“桂枝汤”的主证是病人有汗而且恶风，如果无汗，病人感冒发烧高热且完全没汗，就不是“桂枝汤”证。",
-                },
-                {
-                    "kind": "倪海厦伤寒论",
-                    "title": "倪海厦人纪系列之伤寒论",
-                    "page": 16,
-                    "excerpt": "桂枝这药可以壮心阳……白芍轻用可以补血，重用可以活血、破血……红枣、甘草、生姜下去，跟感冒没有关系，只是固本。",
-                },
-                {
-                    "kind": "倪海厦伤寒论",
-                    "title": "倪海厦人纪系列之伤寒论",
-                    "page": 16,
-                    "excerpt": "用七碗水，用大火煮，古时候……煮成三碗，渣拿掉，等温了再喝，一次服一碗。服了以后，等一下再喝热稀饭一碗，来帮忙药力。被子盖起来，躺一时，差不多二个小时，全身微发汗。",
-                },
-            ],
-            "video_status": "local_transcript_missing",
-            "video_note": "本地文件夹没有《伤寒论》独立视频同步文稿；未用《金匮要略》视频文稿代替。",
-        },
         "jinkui:四逆加人参汤": {
             "review_status": "reviewed",
             "usage_status": "reviewed",
@@ -149,8 +120,8 @@ def main() -> int:
                 [formula["name"], *formula.get("aliases", [])],
             )
             video_candidates = []
-            video_status = "local_transcript_missing"
-            video_note = "本地未找到《伤寒论》独立视频同步文稿，当前只列倪海厦伤寒论书本候选。"
+            video_status = "not_available"
+            video_note = ""
         else:
             book_candidates = candidates(
                 jinkui_pages,
@@ -161,11 +132,7 @@ def main() -> int:
                 [formula["name"], *formula.get("aliases", [])],
             )
             video_status = "candidates" if video_candidates else "no_local_hit"
-            video_note = (
-                "视频同步文稿中已找到候选页，尚未人工判定是否直接解释本方。"
-                if video_candidates
-                else "视频同步文稿中未直接命中本方名，仍需人工按章节核对。"
-            )
+            video_note = ""
 
         usage = formula.get("decoction", "").strip()
         entry = {
