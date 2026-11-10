@@ -118,6 +118,7 @@ function renderFormulaDetail(item) {
     <h2 class="detail-title">${escapeHtml(item.name)}</h2>
     <p class="detail-subtitle">${escapeHtml(item.indication || "条目原文见下方")}</p>
     <div class="tag-row"><span class="tag">${escapeHtml(item.type)}</span><span class="tag">${escapeHtml(item.six_meridian || "未分篇")}</span><span class="tag">${item.ingredients.length} 味</span></div>
+    <div class="warning-box">古籍剂量按原文保留，仅供学习核对；含附子、乌头、巴豆等药味时，须由专业医师按炮制与安全规范处理。</div>
     <div class="section-block">
       <div class="section-title">组成 · 原文剂量</div>
       <div class="composition-grid">${item.ingredients.map(ingredientHtml).join("")}</div>
