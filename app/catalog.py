@@ -154,6 +154,7 @@ def get_herb(herb_id: str) -> dict | None:
 
 def overview() -> dict:
     formulas = _index()["formulas"]
+    report = _read("formulas_report.json")
     source_mismatches = [
         item["name"]
         for item in formulas
@@ -165,6 +166,7 @@ def overview() -> dict:
         "herbs": len(_index()["herbs"]),
         "source_checked": len(formulas),
         "source_variants": source_mismatches,
+        "source_pending": len(report.get("pending", [])),
         "modules": {
             "formulas": "ready",
             "herbs": "ready",

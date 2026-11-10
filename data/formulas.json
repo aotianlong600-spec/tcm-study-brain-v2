@@ -6116,6 +6116,41 @@
     }
   },
   {
+    "id": "shanghan:猪胆汁方",
+    "name": "猪胆汁方",
+    "type": "导",
+    "six_meridian": "阳明",
+    "indication": "阳明病津液内竭，大便硬而不可攻，宜导而通之。",
+    "ingredients": [
+      {
+        "name": "大猪胆",
+        "dose": "一枚",
+        "processing": "取汁，和少许法醋，灌谷道",
+        "raw": "大猪胆一枚"
+      }
+    ],
+    "expected_count": 1,
+    "source_expected_count": 1,
+    "source_ingredients": [
+      {
+        "name": "大猪胆",
+        "dose": "一枚",
+        "processing": "取汁，和少许法醋，灌谷道",
+        "raw": "大猪胆一枚"
+      }
+    ],
+    "composition_raw": "大猪胆一枚，泻汁，和少许法醋。",
+    "decoction": "以灌谷道内，如一食顷，当大便出宿食恶物。",
+    "adjuncts": [],
+    "source": {
+      "title": "伤寒论辑义",
+      "line": 4801,
+      "path": "sources/shanghan_juyi.txt",
+      "excerpt": "又大猪胆一枚。泻汁。和少许法醋。以灌谷道内。如一食顷。当大便出宿食恶物。甚效。",
+      "note": "辑义附于蜜煎方后，无独立“上X味”计数锚点；本条按同段原文补入。"
+    }
+  },
+  {
     "id": "shanghan:茵陈蒿汤",
     "name": "茵陈蒿汤",
     "type": "汤",
@@ -8523,6 +8558,41 @@
       "line": 6837,
       "path": "sources/shanghan_juyi.txt",
       "excerpt": "通脉四逆加猪胆汤方甘草（二两炙） 干姜（三两强人可四两） 猪胆汁（半合○玉函。作四合。肘后。作一合。） 附子（大者一枚生去皮破八片）\n\n　　上四味。以水三升。煮取一升二合。去滓。纳猪胆汁。分温再服。其脉即来。无猪胆。以羊胆代之。\n\n　　〔吴〕汗出而厥。阳微欲绝。而四肢拘急。全然不解。又兼无血以柔其筋。脉微欲绝。固为阳之欲亡。亦兼阴气亏损。故用通脉四逆以回阳。而加猪胆汁以益阴。庶几将绝之阴。不致为阳药所劫夺也。注认阳极虚。"
+    }
+  },
+  {
+    "id": "shanghan:烧裈散",
+    "name": "烧裈散",
+    "type": "散",
+    "six_meridian": "阴阳易",
+    "indication": "伤寒阴阳易之为病，身体重，少气，少腹里急，或引阴中拘挛。",
+    "ingredients": [
+      {
+        "name": "妇人中裈近隐处",
+        "dose": "适量",
+        "processing": "取烧作灰",
+        "raw": "妇人中裈近隐处，取烧作灰"
+      }
+    ],
+    "expected_count": 1,
+    "source_expected_count": 1,
+    "source_ingredients": [
+      {
+        "name": "妇人中裈近隐处",
+        "dose": "适量",
+        "processing": "取烧作灰",
+        "raw": "妇人中裈近隐处，取烧作灰"
+      }
+    ],
+    "composition_raw": "妇人中裈近隐处，取烧作灰。",
+    "decoction": "上一味。水服方寸匕，日三服。小便即利，阴头微肿，此为愈矣。",
+    "adjuncts": [],
+    "source": {
+      "title": "伤寒论辑义",
+      "line": 6873,
+      "path": "sources/shanghan_juyi.txt",
+      "excerpt": "烧 散方妇人中 近隐处。取烧作灰。上一味。水服方寸匕。日三服。",
+      "note": "原文该条有缺字；方名按通行名录作“烧裈散”，组成按同条上下文保留。"
     }
   },
   {

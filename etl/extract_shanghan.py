@@ -103,6 +103,87 @@ PROCESSING_OVERRIDES = {
     "大青龙汤": {"石膏": "碎"},
 }
 
+MANUAL_FORMULAS = [
+    {
+        "id": "shanghan:猪胆汁方",
+        "name": "猪胆汁方",
+        "type": "导",
+        "six_meridian": "阳明",
+        "indication": "阳明病津液内竭，大便硬而不可攻，宜导而通之。",
+        "ingredients": [
+            {
+                "name": "大猪胆",
+                "dose": "一枚",
+                "processing": "取汁，和少许法醋，灌谷道",
+                "raw": "大猪胆一枚",
+            }
+        ],
+        "expected_count": 1,
+        "source_expected_count": 1,
+        "source_ingredients": [
+            {
+                "name": "大猪胆",
+                "dose": "一枚",
+                "processing": "取汁，和少许法醋，灌谷道",
+                "raw": "大猪胆一枚",
+            }
+        ],
+        "composition_raw": "大猪胆一枚，泻汁，和少许法醋。",
+        "decoction": "以灌谷道内，如一食顷，当大便出宿食恶物。",
+        "adjuncts": [],
+        "source": {
+            "title": "伤寒论辑义",
+            "line": 4801,
+            "path": "sources/shanghan_juyi.txt",
+            "excerpt": "又大猪胆一枚。泻汁。和少许法醋。以灌谷道内。如一食顷。当大便出宿食恶物。甚效。",
+            "note": "辑义附于蜜煎方后，无独立“上X味”计数锚点；本条按同段原文补入。",
+        },
+    },
+    {
+        "id": "shanghan:烧裈散",
+        "name": "烧裈散",
+        "type": "散",
+        "six_meridian": "阴阳易",
+        "indication": "伤寒阴阳易之为病，身体重，少气，少腹里急，或引阴中拘挛。",
+        "ingredients": [
+            {
+                "name": "妇人中裈近隐处",
+                "dose": "适量",
+                "processing": "取烧作灰",
+                "raw": "妇人中裈近隐处，取烧作灰",
+            }
+        ],
+        "expected_count": 1,
+        "source_expected_count": 1,
+        "source_ingredients": [
+            {
+                "name": "妇人中裈近隐处",
+                "dose": "适量",
+                "processing": "取烧作灰",
+                "raw": "妇人中裈近隐处，取烧作灰",
+            }
+        ],
+        "composition_raw": "妇人中裈近隐处，取烧作灰。",
+        "decoction": "上一味。水服方寸匕，日三服。小便即利，阴头微肿，此为愈矣。",
+        "adjuncts": [],
+        "source": {
+            "title": "伤寒论辑义",
+            "line": 6873,
+            "path": "sources/shanghan_juyi.txt",
+            "excerpt": "烧 散方妇人中 近隐处。取烧作灰。上一味。水服方寸匕。日三服。",
+            "note": "原文该条有缺字；方名按通行名录作“烧裈散”，组成按同条上下文保留。",
+        },
+    },
+]
+
+PENDING_FORMULAS = [
+    {
+        "name": "土瓜根方",
+        "line": 4809,
+        "reason": "辑义明言“土瓜根方缺”；仅存后世肘后方用法，不能冒充仲景原方。",
+    }
+]
+
 TYPE_OVERRIDES = {
     "四逆散": "散",
     "五苓散": "散",
@@ -404,6 +485,8 @@ def extract(source: Path) -> tuple[list[dict], list[dict]]:
         if existing is None or len(formula["ingredients"]) > len(existing["ingredients"]):
             accepted[name] = formula
 
+    for item in MANUAL_FORMULAS:
+        accepted.setdefault(item["name"], item)
     return sorted(accepted.values(), key=lambda item: item["source"]["line"]), rejected
 
 
@@ -422,9 +505,10 @@ def main() -> int:
         {
             "accepted": len(formulas),
             "rejected": rejected,
+            "pending": PENDING_FORMULAS,
             "type_counts": {
                 kind: sum(1 for item in formulas if item["type"] == kind)
-                for kind in ("汤", "散", "丸", "膏", "煎")
+                for kind in ("汤", "散", "丸", "膏", "煎", "导")
             },
         },
     )

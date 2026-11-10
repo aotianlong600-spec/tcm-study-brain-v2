@@ -16,8 +16,9 @@ class FormulaCatalogTest(unittest.TestCase):
 
     def test_overview_is_local_and_bounded(self):
         data = self.client.get("/api/overview").json()
-        self.assertEqual(data["formulas"], 110)
+        self.assertEqual(data["formulas"], 112)
         self.assertEqual(data["herbs"], 351)
+        self.assertEqual(data["source_pending"], 1)
         self.assertEqual(data["modules"]["acupuncture"], "not_imported")
 
     def test_formula_detail_keeps_dose_and_source(self):
