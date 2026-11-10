@@ -353,6 +353,12 @@ summary { color: var(--green-dark); cursor: pointer; font-size: 12px; font-weigh
 .decoction-pair .section-block { min-width: 0; }
 .decoction-pair .section-heading-row { align-items: flex-start; }
 .decoction-page h4 { margin-top: 20px; color: var(--green-dark); font-size: 13px; }
+.topic-stack { display: grid; gap: 14px; }
+.topic-row { display: grid; grid-template-columns: minmax(0, 1fr) 132px; align-items: start; gap: 14px; border-top: 1px solid #e3e5de; padding-top: 14px; }
+.topic-row:first-child { border-top: 0; padding-top: 0; }
+.topic-copy { min-width: 0; }
+.topic-action { width: 100%; white-space: normal; }
+.modern-source-quote { margin-top: 9px; max-height: 190px; overflow: auto; }
 .page-reading-list { display: grid; gap: 12px; margin-top: 12px; }
 .page-reading { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 12px; border-top: 1px solid #e3e4dc; padding-top: 12px; }
 .page-reading:first-child { border-top: 0; padding-top: 0; }
@@ -367,6 +373,8 @@ summary { color: var(--green-dark); cursor: pointer; font-size: 12px; font-weigh
   .dossier-nav { top: 0; margin-left: -4px; margin-right: -4px; }
   .dossier-nav button { font-size: 10px; }
   .decoction-pair { grid-template-columns: 1fr; }
+  .topic-row { grid-template-columns: 1fr; }
+  .topic-action { width: auto; justify-self: start; }
 }
 
 @media (max-width: 760px) {
