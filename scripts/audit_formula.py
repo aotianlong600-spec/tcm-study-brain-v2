@@ -20,6 +20,7 @@ def main() -> int:
     formulas = shanghan + jinkui
     herbs = json.loads((DATA / "herbs.json").read_text(encoding="utf-8"))
     evidence = json.loads((DATA / "formula_evidence.json").read_text(encoding="utf-8"))
+    modules = json.loads((DATA / "formula_modules.json").read_text(encoding="utf-8"))
     six_channels = json.loads((DATA / "six_channels.json").read_text(encoding="utf-8"))["items"]
     manifest = json.loads((DATA / "source_manifest.json").read_text(encoding="utf-8"))
     errors = []
@@ -42,6 +43,18 @@ def main() -> int:
         errors.append("太阳病尚未标记为已整理")
     elif len(taiyang.get("annotations", [])) < 3:
         errors.append("太阳病原文注解不足")
+    if len(modules) != len(formulas):
+        errors.append("方剂模块数量与方剂数量不一致")
+    for formula in formulas:
+        module = modules.get(formula["id"])
+        if not module:
+            errors.append(f"{formula['name']} 缺少独立模块")
+            continue
+        for key in ("overview", "usage_original", "usage_modern", "page_reading"):
+            if not module.get(key):
+                errors.append(f"{formula['name']} 模块缺少 {key}")
+        if not module.get("six_channel"):
+            errors.append(f"{formula['name']} 模块缺少六经/篇章关联")
 
     source_text = (ROOT / "sources" / "shanghan_juyi.txt").read_text(
         encoding="gb18030"
@@ -88,6 +101,7 @@ def main() -> int:
         "formulas": len(formulas),
         "herbs": len(herbs),
         "six_channels": len(six_channels),
+        "formula_modules": len(modules),
         "by_book": by_book,
         "by_status": by_status,
         "by_review": by_review,

@@ -104,6 +104,8 @@ function renderCuratedFormulaDetail(item) {
   const evidence = item.evidence;
   const symptoms = evidence.symptoms || [];
   const overview = evidence.overview || {};
+  const reviewLevel = evidence.review_level || (evidence.review_status === "reviewed" ? "完整" : "原文页索引");
+  const reviewed = evidence.review_status === "reviewed";
   const related = item.related_herbs?.length
     ? `<div class="tag-row">${item.related_herbs.map((herb) =>
         `<button class="tag" data-herb-id="${encodeURIComponent(herb.id)}">${escapeHtml(herb.name)}</button>`
@@ -114,11 +116,14 @@ function renderCuratedFormulaDetail(item) {
         `<span class="proof-chip">${escapeHtml(row.title)} · ${escapeHtml(row.pages || "")}</span>`
       ).join("")
     : `<span class="proof-chip">校对依据待补</span>`;
+  const sixAction = evidence.six_channel?.id
+    ? `<button class="text-button" data-open-six-dossier="${encodeURIComponent(evidence.six_channel.id)}">原文与倪注</button>`
+    : "";
   return `<div class="detail-inner curated-detail">
-    <div class="detail-kicker">${escapeHtml(item.book)} · 第一版逐方校</div>
+    <div class="detail-kicker">${escapeHtml(item.book)} · ${escapeHtml(reviewLevel)}</div>
     <h2 class="detail-title">${escapeHtml(item.name)}</h2>
     <p class="detail-subtitle">${escapeHtml(evidence.rationale.summary)}</p>
-    <div class="tag-row"><span class="tag">${escapeHtml(item.book)}</span><span class="status-pill status-reviewed">已逐方校</span><span class="tag">${escapeHtml(item.type)}</span><span class="tag">${evidence.six_channel.name}</span><span class="tag">${item.ingredients.length} 味</span></div>
+    <div class="tag-row"><span class="tag">${escapeHtml(item.book)}</span><span class="status-pill ${reviewed ? "status-reviewed" : "status-pending"}">${reviewed ? "已逐方校" : "原文页索引"}</span><span class="tag">${escapeHtml(item.type)}</span><span class="tag">${escapeHtml(evidence.six_channel.name)}</span><span class="tag">${item.ingredients.length} 味</span></div>
     <div class="section-block top-composition">
       <div class="section-heading-row"><div class="section-title">药物与剂量</div><button class="text-button" data-formula-page="source" data-formula-id="${encodeURIComponent(item.id)}">原方原文</button></div>
       <div class="composition-grid">${item.ingredients.map(ingredientHtml).join("")}</div>
@@ -147,7 +152,7 @@ function renderCuratedFormulaDetail(item) {
     </div>
 
     <div class="section-block curated-summary">
-      <div class="section-heading-row"><div class="section-title">六经辨证 · ${escapeHtml(evidence.six_channel.name)}</div><button class="text-button" data-open-six-dossier="${encodeURIComponent(evidence.six_channel.id)}">原文与倪注</button></div>
+      <div class="section-heading-row"><div class="section-title">六经辨证 · ${escapeHtml(evidence.six_channel.name)}</div>${sixAction}</div>
       <div class="section-copy">${escapeHtml(evidence.six_channel.summary)}</div>
     </div>
 
@@ -784,7 +789,12 @@ document.addEventListener("click", (event) => {
   }
   const scrollButton = event.target.closest("[data-scroll-section]");
   if (scrollButton) {
-    document.getElementById(scrollButton.dataset.scrollSection)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const section = document.getElementById(scrollButton.dataset.scrollSection);
+    const panel = section?.closest(".detail-panel");
+    if (section && panel) {
+      const top = section.getBoundingClientRect().top - panel.getBoundingClientRect().top + panel.scrollTop - 8;
+      panel.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    }
   }
   const sixLink = event.target.closest("[data-six-id]");
   if (sixLink) {

@@ -18,10 +18,21 @@ SOURCES = ROOT / "sources"
 OUTPUT = DATA / "formula_evidence.json"
 REPORT = DATA / "evidence_report.json"
 CURATED = DATA / "curated_formulas.json"
+CURATED_BATCHES = DATA / "curated_batches"
+CURATED_BATCH_MANIFEST = DATA / "curated_batch_manifest.json"
 
 SHANGHAN_BOOK = "sources/ni_shanghan_pages.jsonl"
 JINKUI_BOOK = "sources/ni_jinkui_pages.jsonl"
 JINKUI_VIDEO = "sources/ni_jinkui_transcript.jsonl"
+
+SEARCH_ALIASES = {
+    "茯苓桂枝白术甘草汤": ["茯苓桂枝白朮甘草汤"],
+    "栀子厚朴汤": ["栀子厚朴"],
+    "栀子干姜汤": ["栀子干姜"],
+    "桂枝甘草龙骨牡蛎汤": ["桂苓甘草龙骨牡蛎汤"],
+    "麻黄连轺赤小豆汤": ["麻黄连翘赤小豆汤"],
+    "烧裈散": ["烧裩散"],
+}
 
 
 def read_json(name: str):
@@ -30,6 +41,26 @@ def read_json(name: str):
 
 def read_pages(path: str) -> list[dict]:
     return [json.loads(line) for line in (ROOT / path).open(encoding="utf-8")]
+
+
+def load_curated() -> dict:
+    merged = json.loads(CURATED.read_text(encoding="utf-8"))
+    manifest = json.loads(CURATED_BATCH_MANIFEST.read_text(encoding="utf-8"))
+    accepted = manifest.get("accepted", [])
+    if not isinstance(accepted, list) or not all(isinstance(name, str) for name in accepted):
+        raise ValueError("curated_batch_manifest.json must contain an accepted string list")
+    for name in accepted:
+        path = CURATED_BATCHES / name
+        if not path.is_file():
+            raise ValueError(f"accepted curated batch is missing: {name}")
+        batch = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(batch, dict):
+            raise ValueError(f"{path.name} must contain an object keyed by formula id")
+        duplicate = sorted(set(merged) & set(batch))
+        if duplicate:
+            raise ValueError(f"{path.name} duplicates curated formulas: {', '.join(duplicate)}")
+        merged.update(batch)
+    return merged
 
 
 def write_json(path: Path, value) -> None:
@@ -109,7 +140,7 @@ def main() -> int:
     jinkui_pages = read_pages(JINKUI_BOOK)
     video_pages = read_pages(JINKUI_VIDEO)
     overrides = reviewed_overrides()
-    curated = json.loads(CURATED.read_text(encoding="utf-8"))
+    curated = load_curated()
     evidence = {}
 
     for formula in formulas:
@@ -117,8 +148,21 @@ def main() -> int:
         if book == "伤寒论":
             book_candidates = candidates(
                 shanghan_pages,
-                [formula["name"], *formula.get("aliases", [])],
+                [
+                    formula["name"],
+                    *formula.get("aliases", []),
+                    *SEARCH_ALIASES.get(formula["name"], []),
+                ],
             )
+            if not book_candidates:
+                book_candidates = candidates(
+                    jinkui_pages,
+                    [
+                        formula["name"],
+                        *formula.get("aliases", []),
+                        *SEARCH_ALIASES.get(formula["name"], []),
+                    ],
+                )
             video_candidates = []
             video_status = "not_available"
             video_note = ""

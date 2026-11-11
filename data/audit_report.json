@@ -2,6 +2,7 @@
   "formulas": 299,
   "herbs": 351,
   "six_channels": 6,
+  "formula_modules": 299,
   "by_book": {
     "伤寒论": 113,
     "金匮要略": 186
@@ -15,8 +16,8 @@
     "derived": 1
   },
   "by_review": {
-    "reviewed": 2,
-    "pending": 297
+    "reviewed": 114,
+    "pending": 185
   },
   "errors": [],
   "warnings": [

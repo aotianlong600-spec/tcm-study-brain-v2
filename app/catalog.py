@@ -50,8 +50,11 @@ def _summary(formula: dict) -> dict:
 def _index() -> dict:
     formulas = _read("formulas.json") + _read("jinkui_formulas.json")
     evidence = _read("formula_evidence.json")
+    modules = _read("formula_modules.json")
     for formula in formulas:
-        formula["evidence"] = evidence.get(formula["id"], {})
+        merged = deepcopy(evidence.get(formula["id"], {}))
+        merged.update(deepcopy(modules.get(formula["id"], {})))
+        formula["evidence"] = merged
     herbs = _read("herbs.json")
     herbs_by_name = {item["name"]: item for item in herbs}
 
