@@ -1,5 +1,7 @@
 * text=auto
 data/*.json text eol=lf
 sources/shanghan_juyi.txt -text
+books/ni-haixia-medicine/** -text
+exports/*.csv -text
 sources/*.jsonl text eol=lf
 sources/*.json text eol=lf

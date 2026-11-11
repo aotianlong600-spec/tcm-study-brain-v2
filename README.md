@@ -13,6 +13,12 @@
 - 桂枝汤已有完整二级考证页：太阳病提纲、太阳中风原文、倪注、桂枝汤原方、古文用法、现代煎服步骤和方义证据分开陈列。
 - 新增「六经辨证」板块，六经条目全部建立；太阳病已完成理解总结、原文和原文注解，其余五经保留原文并标为待整理。
 
+## 完整资料
+
+- [经方与剂量总表](docs/formula-dosage-index.md)
+- [方剂与剂量 CSV](exports/formulas_with_doses.csv)
+- [倪海厦医学资料](books/README.md)
+
 针灸、辨证论治和病症模块尚未接入。页面会明确显示待接入，不拿第三方数据填充。
 
 ## 启动
@@ -31,6 +37,7 @@ python -m etl.extract_shanghan
 python -m etl.import_jinkui
 python -m etl.enrich_evidence
 python -m etl.build_formula_modules
+python scripts\export_formula_doses.py
 python scripts\audit_formula.py
 python -m unittest discover -s tests -v
 ```
