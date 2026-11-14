@@ -9,6 +9,8 @@ from typing import Any
 
 import zhconv
 
+from retrieval.index import _locate_in_body, classify_library_page_role, is_toc_or_frontmatter
+
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "data"
@@ -21,7 +23,7 @@ REL_DATA_DIR = DATA_DIR / "relations"
 SHELF_META = {
     "renji_core": {"label": "人纪四大经典与教程", "order": 1, "description": "倪海厦人纪针灸、神农本草、黄帝内经、伤寒论、金匮要略核心原文与视频文稿"},
     "hantang_clinical": {"label": "汉唐临床方剂与医案", "order": 2, "description": "汉唐经方讲解（HT系列）、汉唐经典文章与医案集、传统中医跟诊实录"},
-    "classical_companions": {"label": "古籍注疏与经方辅注", "order": 3, "description": "血证论、石室秘录、伤寒论辑义、大冢敬节解说、证因方论集要及影印古籍"},
+    "classical_companions": {"label": "古籍注疏与经方辅注", "order": 3, "description": "血证论、石室秘录、伤寒论辑义、大冢敬节解说、证因方论集要、徐灵胎八书、黄帝外经及影印古籍"},
 }
 
 
@@ -179,22 +181,22 @@ BOOK_REGISTRY: list[dict[str, Any]] = [
     {
         "book_id": "xu-lingtai-collection-pdf",
         "title": "《明清名医全书大成·徐灵胎医学全书》",
-        "short_title": "徐灵胎医学全书（影印扫描）",
-        "author_era": "清·徐灵胎（徐大椿）",
+        "short_title": "徐灵胎医学全书",
+        "author_era": "清·徐灵胎（徐大椿） · 含1999现代校注附编",
         "shelf": "classical_companions",
         "tradition_layer": "commentary",
         "module_affinities": ["formulas", "neijing", "herbs"],
-        "description": "原书434页扫描影印版（当前未执行虚假OCR，支持逐页高清扫描浏览与目录线索查阅）。",
+        "description": "共434页（412页WinRT OCR全文+22页空白背面留空），收《难经经释》《神农本草经百种录》《医贯砭》《医学源流论》《伤寒类方》《兰台轨范》《慎疾刍言》《洄溪医案》（王孟英编含「雄按」），并明确标识1999总序校注与《著作辨考》21部伪托考，附原页扫描图像。",
     },
     {
         "book_id": "huangdi-waijing-pdf",
         "title": "《黄帝外经》",
-        "short_title": "黄帝外经（影印扫描）",
-        "author_era": "古传外经本（影印扫描）",
+        "short_title": "黄帝外经（外经微言）",
+        "author_era": "清·陈士铎述（托名岐伯）",
         "shelf": "classical_companions",
         "tradition_layer": "commentary",
         "module_affinities": ["neijing", "acupuncture"],
-        "description": "原书85页扫描影印版（当前未执行虚假OCR，支持逐页高清影印原件浏览）。",
+        "description": "共85页WinRT OCR全文与原页影印对照：p.1–4为现代《概述》考略，正文现存80篇阐发命门真火、五运六气、阴阳颠倒、阴寒格阳、五郁舒肝等内景微言（陈士铎述并间附「凌波按」）。",
     },
 ]
 
@@ -204,11 +206,22 @@ AMBIGUOUS_ENTITY_NAMES = {
     "前言", "目录", "附录", "总论", "大论", "太阳", "阳明", "少阳", "太阴", "少阴", "厥阴",
     "中药", "方剂", "水肿", "头痛", "咳嗽", "失眠", "中风", "眩晕", "喘", "黄疸", "消渴",
     "阴", "阳", "血", "气", "水", "火", "肺", "心", "脾", "肝", "肾", "胃", "胆", "肠",
-    "大豆", "小麦", "大枣", "生姜", "干姜", "甘草", "蜂蜜", "白蜜", "清酒", "白酒", "苦酒",
+    "大豆", "生姜", "清酒", "白酒", "苦酒",
     "白", "青", "黄", "赤", "黑", "寒", "热", "风", "湿", "燥", "虚", "实",
     "太阳经", "阳明经", "少阳经", "太阴经", "少阴经", "厥阴经",
     "大青", "白兔", "人乳", "发", "水", "盐",
 }
+
+CONTEXT_DEPENDENT_HERB_NAMES = {
+    "甘草",
+    "大枣",
+    "干姜",
+    "小麦",
+    "蜂蜜",
+    "白蜜",
+}
+
+_HERB_CONTEXT_RE = re.compile(r"[两钱分枚升合斤克炙炮煎煮药味方汤丸散]|本草|本经|神农|仲景")
 
 
 def _norm_simp(text: str) -> str:
@@ -232,7 +245,7 @@ def _extract_chapters_from_jsonl(book_id: str, rows: list[dict[str, Any]]) -> li
             if sec and sec not in seen_titles and sec != "扫描影像页（未执行虚假OCR）" and len(sec) <= 40:
                 seen_titles.add(sec)
                 chapters.append({"title": sec, "page_no": pno, "unit_label": row.get("unit_label", "")})
-    return chapters[:200]
+    return chapters[:420]
 
 
 def _load_book_rows(book_id: str) -> list[dict[str, Any]]:
@@ -280,13 +293,14 @@ def _collect_entities() -> list[dict[str, Any]]:
         "bencao:ch3-薤白": ["薤白"],
         "bencao:ch3-艾叶": ["艾叶"],
         "bencao:ch3-鸡子黄": ["鸡子黄"],
+        "bencao:石蜜": ["蜂蜜", "白蜜"],
     }
     for h in bencao_list:
         name = (h.get("short_name") or h.get("name") or "").strip()
         if len(name) < 2 or name in AMBIGUOUS_ENTITY_NAMES:
             continue
         aliases = [name] + classical_herb_aliases.get(h["id"], [])
-        # Only unambiguous 2+ char herb names cleanly match body text
+        # Only unambiguous 2+ char herb names (or context-gated culinary herbs) cleanly match body text
         entities.append(
             {
                 "entity_id": h["id"],
@@ -295,6 +309,7 @@ def _collect_entities() -> list[dict[str, Any]]:
                 "label": name,
                 "terms": list(dict.fromkeys(_norm_simp(a) for a in aliases if len(_norm_simp(a)) >= 2)),
                 "priority": 70 + len(name) * 2,
+                "requires_formula_context": name in CONTEXT_DEPENDENT_HERB_NAMES,
             }
         )
 
@@ -364,6 +379,27 @@ def _build_cross_links(catalog_books: list[dict[str, Any]], entities: list[dict[
     entity_refs_raw: dict[str, list[dict[str, Any]]] = defaultdict(list)
 
     shelf_rank = {"hantang_clinical": 1, "classical_companions": 2, "renji_core": 3}
+    school_book_order = [
+        "ni-hantang-formulas-pdf",
+        "xu-lingtai-collection-pdf",
+        "tang-rongchuan-xuezhenglun-pdf",
+        "ni-hantang-articles-cases-pdf",
+        "huangdi-waijing-pdf",
+        "shanghan-juyi-book-txt",
+        "chen-shiduo-shishimilu-txt",
+        "wang-rulin-zhengyinfanglun-doc",
+        "otsuka-shanghan-docx",
+        "ni-shanghan-pdf",
+        "ni-jinkui-pdf",
+        "ni-bencao-pdf",
+        "ni-zhenjiu-pdf",
+        "ni-neijing-vol1-pdf",
+        "ni-neijing-vol2-pdf",
+        "ni-hantang-clinic-notes-pdf",
+        "ni-jinkui-video-pdf",
+    ]
+    school_order_idx = {bid: i for i, bid in enumerate(school_book_order)}
+    dedicated_sec_cues = ("百种录", "伤寒类方", "慎疾刍言", "洄溪医案", "兰台轨范", "ht-", "条辨", "原文", "卷", "篇")
 
     for book in catalog_books:
         if book["search_index_status"] != "indexed":
@@ -375,15 +411,43 @@ def _build_cross_links(catalog_books: list[dict[str, Any]], entities: list[dict[
             body = row.get("body_text") or ""
             if not stext or not body:
                 continue
-            stext_cmp = re.sub(r"[\s「」『』《》【】〔〕]+", "", stext)
-            found_terms = list(dict.fromkeys(pattern.findall(stext_cmp)))
-            if not found_terms:
+            sec = row.get("section_title", "") or ""
+            page_role = classify_library_page_role(sec, body)
+            if page_role == "toc":
                 continue
+            is_meta = is_toc_or_frontmatter(sec, body)
+            stext_cmp = re.sub(r"[\s「」『』《》【】〔〕]+", "", stext)
+            term_spans: dict[str, list[tuple[int, int]]] = defaultdict(list)
+            for match in pattern.finditer(stext_cmp):
+                term_spans[match.group(0)].append((match.start(), match.end()))
+            if not term_spans:
+                continue
+
+            sec_norm = _norm_simp(sec).lower()
+            headings_norm = _norm_simp(" ".join(row.get("headings") or [])).lower()
+            if any(k in sec_norm for k in ("附录", "后记", "跋", "勘误")):
+                role_rank = 2
+            elif any(k in sec_norm for k in dedicated_sec_cues):
+                role_rank = 0
+            else:
+                role_rank = 1
 
             page_ents: list[dict[str, Any]] = []
             seen_eid: set[str] = set()
-            for term in found_terms:
+            for term, spans in term_spans.items():
+                has_herb_context = (
+                    any(
+                        _HERB_CONTEXT_RE.search(
+                            stext_cmp[max(0, start_pos - 24) : min(len(stext_cmp), end_pos + 24)]
+                        )
+                        for start_pos, end_pos in spans
+                    )
+                    if term in CONTEXT_DEPENDENT_HERB_NAMES
+                    else True
+                )
                 for ent in term_to_entities[term]:
+                    if (ent.get("requires_formula_context") or term in CONTEXT_DEPENDENT_HERB_NAMES) and not has_herb_context:
+                        continue
                     eid = ent["entity_id"]
                     if eid in seen_eid:
                         continue
@@ -398,13 +462,16 @@ def _build_cross_links(catalog_books: list[dict[str, Any]], entities: list[dict[
                             "priority": ent["priority"],
                         }
                     )
-                    # Build clean snippet around the matched term in verbatim body
-                    idx = stext.find(term)
-                    if idx < 0 and len(term) >= 2:
-                        m_idx = re.search(r"[\s「」『』《》]*".join(re.escape(ch) for ch in term), stext)
-                        idx = m_idx.start() if m_idx else 0
+                    if is_meta:
+                        continue
+                    sec_match = 1 if any(t.lower() in sec_norm or t.lower() in headings_norm for t in ent["terms"]) else 0
+                    freq = sum(stext_cmp.count(t) for t in ent["terms"])
+                    # Center verbatim body snippet at exact 1:1 offset (handles Traditional/variants)
+                    idx = _locate_in_body(body, term.lower())
+                    if idx < 0:
+                        idx = 0
                     start = max(0, idx - 32)
-                    end = min(len(body), idx + 64)
+                    end = min(len(body), idx + 84)
                     snippet = re.sub(r"\s+", " ", body[start:end]).strip()
                     snippet = re.sub(r"(?<=[\u4e00-\u9fff，。；：、！？])\s+(?=[\u4e00-\u9fff])", "", snippet)
                     entity_refs_raw[eid].append(
@@ -415,28 +482,37 @@ def _build_cross_links(catalog_books: list[dict[str, Any]], entities: list[dict[
                             "tradition_layer": book["tradition_layer"],
                             "page_no": row["page_no"],
                             "unit_label": row["unit_label"],
-                            "section_title": row.get("section_title", ""),
+                            "section_title": sec,
                             "snippet": snippet,
                             "text_sha256": row["text_sha256"],
-                            "_rank": (shelf_rank.get(book["shelf"], 9), row["page_no"]),
+                            "_rank": (-sec_match, role_rank, shelf_rank.get(book["shelf"], 9), -min(freq, 12), row["page_no"]),
                         }
                     )
             page_ents.sort(key=lambda x: (-x["priority"], x["entity_id"]))
             page_key = f"{book_id}:{row['page_no']}"
             page_links[page_key] = [{k: v for k, v in pe.items() if k != "priority"} for pe in page_ents[:24]]
 
-    # Trim and deduplicate reverse links per entity: preserve top matches from each shelf!
+    # Interleave across all schools via round-robin per book (dedicated sections & high-density prose first)
     entity_refs: dict[str, list[dict[str, Any]]] = {}
     for eid, refs in entity_refs_raw.items():
-        refs.sort(key=lambda r: r["_rank"])
-        chosen: list[dict[str, Any]] = []
-        per_book_cap: dict[str, int] = defaultdict(int)
+        by_book: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for r in refs:
-            if per_book_cap[r["book_id"]] >= 3:
-                continue
-            per_book_cap[r["book_id"]] += 1
-            chosen.append({k: v for k, v in r.items() if k != "_rank"})
-            if len(chosen) >= 18:
+            by_book[r["book_id"]].append(r)
+        for blist in by_book.values():
+            blist.sort(key=lambda r: r["_rank"])
+        ordered_books = sorted(
+            by_book.keys(),
+            key=lambda bid: (by_book[bid][0]["_rank"][0], school_order_idx.get(bid, 99), by_book[bid][0]["_rank"][1:]),
+        )
+        chosen: list[dict[str, Any]] = []
+        for round_idx in range(2):
+            for bid in ordered_books:
+                blist = by_book[bid]
+                if round_idx < len(blist):
+                    chosen.append({k: v for k, v in blist[round_idx].items() if k != "_rank"})
+                    if len(chosen) >= 24:
+                        break
+            if len(chosen) >= 24:
                 break
         entity_refs[eid] = chosen
 
@@ -745,7 +821,182 @@ CLUSTER_SPECS: list[dict[str, Any]] = [
         "version_conflicts": "《金匮》乌头汤用“蜜二升煎乌头一升减半去滓再入它药”，白蜜之解乌头毒与缓急止痛在原书中不可或缺，不可省蜜换糖！",
         "safety_note": "高危警示：川乌/草乌（乌头汤主药）属剧毒中药，煎不透必致口舌麻木心律失常窒息，严禁私自抓药煎服！",
     },
+    {
+        "id": "syndrome:zhenhan-jiare",
+        "title": "真寒假热·戴阳格阳 vs 厥深热深（热厥/急下存阴）",
+        "keywords": ["戴阳", "格阳", "面赤如妆", "真寒假热", "热厥", "四肢厥冷", "热深厥深", "自利清水", "急下存阴", "热结旁流"],
+        "neijing_concept_ids": ["concept:nj:yin-yang-biao-li-han-re", "concept:nj:xushi-hanyin-yu-liujingjue"],
+        "neijing_chapter_ids": ["nj:suwen:05", "nj:suwen:31"],
+        "formula_ids": ["shanghan:通脉四逆汤", "shanghan:白通汤", "shanghan:白虎汤", "shanghan:大承气汤"],
+        "bencao_ids": ["bencao:附子", "bencao:干姜", "bencao:石膏", "bencao:大黄"],
+        "acupuncture_condition_ids": ["cond:ch6:s295"],
+        "acupuncture_point_ids": ["acupoint:ren04:关元", "acupoint:ki01:涌泉", "acupoint:li11:曲池"],
+        "clinical_reasoning": "《伤寒》少阴阴盛格阳（戴阳面赤、身反不恶寒、下利清谷、脉微欲绝）与阳明厥深热深（四肢厥冷却脉滑数、口渴尿黄、腹满拒按或自利清水色纯青）乃生死一念之真假寒热临界，全凭脉之沉微无力 vs 滑数沉实、小便清白 vs 深黄而切分。",
+        "differentials": "真寒假热下利清谷脉微用通脉四逆或白通加猪胆汁人尿反佐；里热郁厥滑数用白虎汤，热结旁流自利清水口燥咽干用大承气急下存阴；丹波《辑义》、陈士铎《石室秘录》并重反佐冷服与急下先后。",
+        "version_conflicts": "白通汤加人尿、猪胆汁实为防格拒而设（非虚有热邪）；热厥见四肢冰冷切勿误作寒厥重投生附子。",
+        "safety_note": "危重急症红线：四肢厥逆伴假热或大失液均属临床危重征象，误投正反寒热即立危，严禁自拟配药。",
+    },
+    {
+        "id": "syndrome:waijing-mingmen-wuyu",
+        "title": "命门真火、五郁舒肝与阴寒格阳轴（《黄帝外经》内景互参）",
+        "keywords": ["命门真火", "命门经主", "寒热舒肝", "阴寒格阳", "五脏互根", "五郁", "肺肾", "外经微言"],
+        "neijing_concept_ids": ["concept:nj:wu-xing-sheng-ke", "concept:nj:yinyang-shengjiang-jieli", "concept:nj:yin-yang-biao-li-han-re"],
+        "neijing_chapter_ids": ["nj:suwen:31", "nj:suwen:65"],
+        "formula_ids": ["shanghan:四逆汤", "shanghan:通脉四逆汤", "shanghan:小柴胡汤", "shanghan:麻黄汤"],
+        "bencao_ids": ["bencao:附子", "bencao:干姜", "bencao:茈胡", "bencao:干地黄"],
+        "acupuncture_condition_ids": ["cond:ch6:s295", "cond:ch6:s282"],
+        "acupuncture_point_ids": ["acupoint:du04:命门", "acupoint:ren04:关元", "acupoint:lv03:太冲", "acupoint:ki03:太溪"],
+        "clinical_reasoning": "汇参《黄帝外经·命门真火》《命门经主》《寒热舒肝》与《阴寒格阳篇》：命门为十二经之主、水中真火，阴寒格阳于上作假热当「以热治之」温回肾阳；五郁相因则重在舒肝木郁而兼顾肺肾金水相生、救母保阴。",
+        "differentials": "真寒上浮格阳须热药温肾而忌直折以寒；寒热往来由肝木郁滞不宣者当疏达肝胆枢机以解五郁；肺金受火而咳声嘶哑「金破不鸣」必滋肾子之水以救肺母。",
+        "version_conflicts": "《外经》陈士铎述本将命门立为水火太极枢纽（既非纯火偏温，亦非离水独立），并与《内经》「小心」相互参证；现代按语「凌波按」仅作辅读参考，不混入原文经旨。",
+        "safety_note": "学术互参边界：真寒格阳与实火上炎临床仅隔一线，须凭四肢厥温、脉沉微与洪数及尿色清赤细辨，严禁脱离面诊直套成方。",
+    },
+    {
+        "id": "syndrome:xulingtai-bingshi-xie-liu",
+        "title": "徐灵胎辨治纲领：邪留禁补、古今虚劳与六经类方轴",
+        "keywords": ["慎疾刍言", "医学源流论", "伤寒类方", "洄溪医案", "兰台轨范", "难经经释", "五味子", "邪留禁补"],
+        "neijing_concept_ids": ["concept:nj:biaoben-huanji-zhize", "concept:nj:yin-yang-biao-li-han-re"],
+        "neijing_chapter_ids": ["nj:suwen:28", "nj:suwen:38"],
+        "formula_ids": ["shanghan:小青龙汤", "shanghan:桂枝汤", "shanghan:麻黄汤", "jinkui:小建中汤"],
+        "bencao_ids": ["bencao:五味子", "bencao:人参", "bencao:石膏", "bencao:麻黄"],
+        "acupuncture_condition_ids": ["cond:ch6:s264", "cond:ch6:s282"],
+        "acupuncture_point_ids": ["acupoint:bl13:肺俞", "acupoint:st36:足三里", "acupoint:ki03:太溪"],
+        "clinical_reasoning": "汇参徐灵胎《慎疾刍言》《医学源流论》《伤寒类方》：外感咳嗽风火邪未尽时，误投五味子、熟地、人参、阿胶等滋腻收敛，必致「闭门留寇」；且辨古之虚劳多脾虚腹痛，今之虚劳多阴虚火旺咯血骨蒸，治法截然有别。",
+        "differentials": "外邪喘咳寒饮用五味必配干姜细辛散收并用，非风火热嗽单收药；伤寒百一十三方按十二类方汤证从属归类求源，反对执《医贯》六味八味两方概治百病。",
+        "version_conflicts": "《洄溪医案》收清·王孟英编次并附「雄按」，徐氏重经方宣通祛邪与王氏温病清轻存液间有异见，系统已将正文与「雄按」及1999《著作辨考》21部伪托考清晰隔离。",
+        "safety_note": "高危警示：凡外感初起误补、或肺肾阴虚吐血咯血误温均易致邪陷内闭或迫血妄行；涉及咳血、高热喘促等危急征象须即时现代医疗评估。",
+    },
+    {
+        "id": "syndrome:jiexiong-pizheng",
+        "title": "结胸痞证 vs 脏结死候禁下（三泻心与旋覆代赭）",
+        "keywords": ["脏结", "结胸", "心下硬痛", "饮食如故", "舌白厚湿", "心下痞", "热痞", "寒热错杂痞", "噫气", "旋覆代赭"],
+        "neijing_concept_ids": ["concept:nj:yin-yang-biao-li-han-re", "concept:nj:biaoben-huanji-zhize"],
+        "neijing_chapter_ids": ["nj:suwen:28", "nj:suwen:65"],
+        "formula_ids": ["shanghan:大黄黄连泻心汤", "shanghan:附子泻心汤", "shanghan:旋覆代赭石汤", "shanghan:大陷胸汤", "shanghan:半夏泻心汤"],
+        "bencao_ids": ["bencao:大黄", "bencao:黄连", "bencao:半夏", "bencao:旋复花", "bencao:代赭"],
+        "acupuncture_condition_ids": ["cond:ch6:s281", "cond:ch6:s283"],
+        "acupuncture_point_ids": ["acupoint:ren12:中脘", "acupoint:pc06:内关", "acupoint:st36:足三里"],
+        "clinical_reasoning": "心下硬满须严格区分「结胸（水热实结、不欲食、苔黄燥、脉沉紧滑实）」与「脏结（饮食如故、时时下利、不渴、舌白胎滑、关脉小细沉紧）」，以及无形气痞（按之濡）寒热错杂与胃虚噫气。",
+        "differentials": "大黄黄连泻心麻沸汤轻取无形热痞；兼表阳虚恶寒汗出用附子泻心（三黄浸取+附子别煮汁）；胃虚痰阻噫气用旋覆代赭；见饮食如故舌白滑脏结者绝禁大陷胸猛攻。",
+        "version_conflicts": "大黄黄连泻心汤必用麻沸汤浸渍绞汁（不煎煮），取其轻清上浮泄心下无形热邪而非下大便。",
+        "safety_note": "高危警示：疑属《伤寒》脏结死候时绝禁猛攻甘遂硝黄，大陷胸含峻逐水药甘遂亦属剧毒管制。",
+    },
+    {
+        "id": "syndrome:shaoyin-yantong",
+        "title": "少阴咽痛四法（猪肤/半夏散/甘草桔梗/苦酒）与阴蛾警示",
+        "keywords": ["少阴咽痛", "咽痛", "咽喉肿痛", "咽中痛", "咽伤生疮", "失音", "猪肤", "阴蛾", "苦酒", "梅核气"],
+        "neijing_concept_ids": ["concept:nj:rebing-liujing-chuanbian", "concept:nj:ke-tong-bi-wei-bingji"],
+        "neijing_chapter_ids": ["nj:suwen:31", "nj:suwen:32"],
+        "formula_ids": ["shanghan:猪肤汤", "shanghan:半夏散及汤", "shanghan:甘草汤", "shanghan:桔梗汤", "shanghan:苦酒汤"],
+        "bencao_ids": ["bencao:甘草", "bencao:桔梗", "bencao:半夏", "bencao:牡桂"],
+        "acupuncture_condition_ids": ["cond:ch6:s270"],
+        "acupuncture_point_ids": ["acupoint:ki06:照海", "acupoint:lu11:少商", "acupoint:ren23:廉泉", "acupoint:lu07:列缺"],
+        "clinical_reasoning": "《伤寒》310–313条立少阴咽痛寒热虚实多途并治；脉微细或下利伴咽痛决非一味苦寒清热解毒所能统摄，亦须防《石室秘录》极寒咽闭之「阴蛾」。",
+        "differentials": "阴虚客热下利胸满用猪肤汤；客寒痰阻用半夏散及汤少少咽之；微热用甘草汤，痰热瘀脓用桔梗汤；咽疮不能言用苦酒汤；寒湿白滑阴蛾大忌寒凉封喉。",
+        "version_conflicts": "苦酒汤与半夏散及汤俱取生半夏（洗去滑）配合鸡子清/米醋以开痰敛疮，皆宜缓缓徐咽令药力留驻患处。",
+        "safety_note": "高危警示：半夏生品剧毒且喉肿窒息具急性气道阻塞风险，咽喉急危梗阻须即刻现代急诊处置。",
+    },
+    {
+        "id": "syndrome:chanhou-baozhen-fuke",
+        "title": "女子经期热入血室与妇人脏躁冲任轴",
+        "keywords": ["经期", "月经适来", "月经适断", "热入血室", "经期感冒", "期门", "脏躁", "悲伤欲哭", "妇人杂病"],
+        "neijing_concept_ids": ["concept:nj:rebing-liujing-chuanbian", "concept:nj:jing-qi-shen-xue"],
+        "neijing_chapter_ids": ["nj:suwen:33", "nj:suwen:31"],
+        "formula_ids": ["shanghan:小柴胡汤", "jinkui:甘麦大枣汤", "jinkui:温经汤", "shanghan:桃核承气汤"],
+        "bencao_ids": ["bencao:茈胡", "bencao:当归", "bencao:甘草", "bencao:芍药"],
+        "acupuncture_condition_ids": ["cond:ch6:s288", "cond:ch6:s289", "cond:ch6:s290"],
+        "acupuncture_point_ids": ["acupoint:lv14:期门", "acupoint:sp06:三阴交", "acupoint:ht07:神门", "acupoint:sp10:血海"],
+        "clinical_reasoning": "女子行经期血海空虚而外感发热，最忌汗下伤营致邪陷少阳厥阴之「热入血室」，故《伤寒》《汉唐》定以小柴胡汤和解并刺期门穴；心脾阴血不足之脏躁悲哭则甘润缓急。",
+        "differentials": "经水适来适断寒热谵语唯用小柴胡汤配针期门（严禁麻黄承气）；妇人脏躁喜悲伤欲哭用甘麦大枣汤；瘀热少腹急结如狂用桃核承气；冲任虚寒经乱漏下用温经汤。",
+        "version_conflicts": "柴胡制剂重在《神农本草经》茈胡去肠胃结气与少阳枢机和解，经期绝忌借发汗剂强求退热。",
+        "safety_note": "妇科妊娠/经期辨证属高危生理边界：破血（桃仁大黄水蛭虻虫）、剧烈通利与强发汗药严禁妄用。",
+    },
+    {
+        "id": "syndrome:pizhi-ganzao-fanzhi",
+        "title": "虚劳吐血禁温补（古今虚劳分界）与皮肤外干内湿轴",
+        "keywords": ["吐血", "咯血", "骨蒸", "盗汗", "虚劳", "慎疾刍言", "血证论", "皮肤干燥", "外干内湿", "百合病"],
+        "neijing_concept_ids": ["concept:nj:qibing-xueku-xiaoke", "concept:nj:pibu-luose-wuzangfengzhen"],
+        "neijing_chapter_ids": ["nj:suwen:28", "nj:suwen:38"],
+        "formula_ids": ["jinkui:泻心汤", "jinkui:百合地黄汤", "shanghan:黄连阿胶汤", "shanghan:炙甘草汤"],
+        "bencao_ids": ["bencao:干地黄", "bencao:百合", "bencao:黄连", "bencao:阿胶", "bencao:大黄"],
+        "acupuncture_condition_ids": ["cond:ch6:s264", "cond:ch6:s282"],
+        "acupuncture_point_ids": ["acupoint:lu06:孔最", "acupoint:bl17:膈俞", "acupoint:ki03:太溪", "acupoint:li11:曲池"],
+        "clinical_reasoning": "汇参徐灵胎《慎疾刍言》、唐容川《血证论》与《伤寒》衄家亡血家禁汗论：今之肺肾阴虚火旺吐血骨蒸盗汗脉数，绝非古之脾虚腹痛建中证，误温必毙；汉唐皮肤外干内湿亦忌妄叠加倍白虎凉脾。",
+        "differentials": "火热迫血吐衄心烦用三黄泻心汤；阴虚燥火百合地黄/黄连阿胶/炙甘草养阴宁血（兼刺肺经郄穴孔最）；若见脾胃虚寒大便溏而皮肤干燥反忌叠用白虎。",
+        "version_conflicts": "《金匮》泻心汤作吐血要方（大黄黄连黄芩），与后世单见血即用炭药止血、或见虚即投参附温补思路截然相反（止血须先降逆火防留瘀）。",
+        "safety_note": "高危警示：反复咯血、吐血、大失血均属现代医学重危急症，古典辨证仅作文献学研习对照，绝禁自行停医试方。",
+    },
+    {
+        "id": "syndrome:changyong-fushigongxia",
+        "title": "寒实冷积胁痛、下焦淋血与中焦大寒腹痛轴",
+        "keywords": ["大黄附子汤", "寒实冷积", "胁下偏痛", "小便刺痛", "尿血", "石淋", "膀胱结石", "赤豆当归", "大建中汤"],
+        "neijing_concept_ids": ["concept:nj:taiyin-yangming-biaoli", "concept:nj:biaoben-huanji-zhize"],
+        "neijing_chapter_ids": ["nj:suwen:28", "nj:suwen:61"],
+        "formula_ids": ["jinkui:大黄附子汤", "jinkui:赤豆当归散", "jinkui:大建中汤", "shanghan:猪苓汤"],
+        "bencao_ids": ["bencao:附子", "bencao:大黄", "bencao:细辛", "bencao:滑石", "bencao:当归"],
+        "acupuncture_condition_ids": ["cond:ch6:s285", "cond:ch6:s286"],
+        "acupuncture_point_ids": ["acupoint:ren03:中极", "acupoint:st25:天枢", "acupoint:sj06:支沟", "acupoint:ren12:中脘"],
+        "clinical_reasoning": "腹痛与下焦痛分「实热燥闭（承气）」、「寒实冷积（大黄附子温下）」、「中焦极寒喜温呕不能食（大建中）」，以及下焦湿热淋痛尿血石淋（猪苓/赤豆当归）——《伤寒》亦明训「淋家不可发汗」。",
+        "differentials": "胁下偏痛大便冷闭脉紧弦用大黄附子汤温阳荡积；心胸大寒痛呕不能饮食腹见头足用大建中；小便刺痛尿血湿热结石用猪苓汤配赤豆当归散（忌妄套肠痢方及大热药）。",
+        "version_conflicts": "《金匮》大黄附子汤以附子细辛配大黄（寒实非热实），恰与承气纯寒攻下形成温下与寒下两极对照。",
+        "safety_note": "高危警示：剧烈腹痛需先排查胆道穿孔、肠梗阻、急性尿路梗阻/结石嵌顿；乌头附子细辛均涉毒药剂量门槛，严禁自试。",
+    },
+    {
+        "id": "syndrome:waihan-neihan-chuanzheng",
+        "title": "外寒内饮实喘（抬肩痰鸣）vs 肺肾虚喘短气（邪留禁补轴）",
+        "keywords": ["喘", "抬肩", "痰鸣", "水鸡声", "虚喘", "短气", "外寒内饮", "五味子", "邪留禁补", "小青龙"],
+        "neijing_concept_ids": ["concept:nj:ke-tong-bi-wei-bingji", "concept:nj:biaoben-huanji-zhize"],
+        "neijing_chapter_ids": ["nj:suwen:38", "nj:suwen:28"],
+        "formula_ids": ["shanghan:小青龙汤", "jinkui:射干麻黄汤", "shanghan:桂枝加厚朴杏仁汤", "jinkui:苓甘五味姜辛汤"],
+        "bencao_ids": ["bencao:麻黄", "bencao:细辛", "bencao:五味子", "bencao:干姜", "bencao:厚朴"],
+        "acupuncture_condition_ids": ["cond:ch6:s272", "cond:ch6:s282"],
+        "acupuncture_point_ids": ["acupoint:lu01:中府", "acupoint:ren22:天突", "acupoint:bl13:肺俞", "acupoint:ki03:太溪"],
+        "clinical_reasoning": "汇参《伤寒》《金匮》、陈士铎《石室秘录》与徐灵胎《医学源流论》：肺气闭塞之实喘必见「呼吸抬肩、喉中痰鸣水鸡声」，当以小青龙/射干麻黄散寒涤饮降逆；若属肺肾元虚之虚喘则见「张口短气而不抬肩」，治宜隔一补脾肺、纳肾气（忌猛投麻桂耗气，亦防邪实未清早投五味子、人参闭门留寇）。",
+        "differentials": "表寒饮射肺咽痒水鸡声用射干麻黄汤；心下有水气发热咳喘用小青龙汤；喘家作微恶风用桂枝加厚朴杏仁汤；无表邪而咳吐清稀寒痰用苓甘五味姜辛汤。",
+        "version_conflicts": "徐灵胎重申五味子收敛必合干姜细辛散寒降饮（小青龙配伍铁律），反对单用五味子止外感风火实嗽。",
+        "safety_note": "高危警示：急性重度哮喘发作、紫绀呼吸衰竭须立即现代急诊氧疗抢救；心阳极弱及高血压危象慎用峻烈麻黄发汗剂。",
+    },
+    {
+        "id": "syndrome:baihe-yuhuo-xiehe",
+        "title": "百合病阴虚内热（百脉一宗）vs 余热伤津虚烦",
+        "keywords": ["百合病", "百脉一宗", "口苦", "小便赤", "骨蒸", "干咳少痰", "竹叶石膏", "麦门冬"],
+        "neijing_concept_ids": ["concept:nj:rebing-liujing-chuanbian", "concept:nj:yin-yang-biao-li-han-re"],
+        "neijing_chapter_ids": ["nj:suwen:31", "nj:suwen:28"],
+        "formula_ids": ["jinkui:百合地黄汤", "jinkui:百合知母汤", "jinkui:麦门冬汤", "shanghan:竹叶石膏汤"],
+        "bencao_ids": ["bencao:百合", "bencao:知母", "bencao:干地黄", "bencao:麦门冬", "bencao:石膏"],
+        "acupuncture_condition_ids": ["cond:ch6:s275", "cond:ch6:s282"],
+        "acupuncture_point_ids": ["acupoint:ki03:太溪", "acupoint:pc06:内关", "acupoint:lu01:中府"],
+        "clinical_reasoning": "《金匮》热病后或七情耗阴所致「百脉一宗、悉致其病」（意欲食复不能食、默默欲卧不能卧、如有神灵、口苦小便赤、脉微数），核心乃心肺胃肾阴液枯燥虚热内伏，忌妄投发汗攻下消耗津血，主以百合地黄/百合知母滋养心肺，大逆上气用麦门冬汤，热病后气津两伤用竹叶石膏汤。",
+        "differentials": "未经汗吐下之百合病用百合地黄汤（见大便微黑如漆勿惊）；已发汗后阴虚内燥用百合知母汤；火逆上气咽喉不利止逆下气用麦门冬汤；虚羸少气气逆欲吐用竹叶石膏汤。",
+        "version_conflicts": "《金匮》指出百合病服百合地黄汤后大便当如漆（生地黄之本色使然），属于正治应效之征而非恶变。",
+        "safety_note": "高危警示：伴明显精神神经症状、剧烈呛咳咯血或极度消瘦电解质紊乱时，应先行现代医学全面检查排除器质性急重症。",
+    },
+    {
+        "id": "syndrome:wuhan-shigao-jixu",
+        "title": "大渴无汗禁石膏、背恶寒口中和与阴黄失血先后",
+        "keywords": ["大渴", "无汗", "背恶寒", "口中和", "白虎加人参", "附子汤", "女劳黑瘅", "远血", "近血", "黄土汤"],
+        "neijing_concept_ids": ["concept:nj:yin-yang-biao-li-han-re", "concept:nj:qibing-xueku-xiaoke", "concept:nj:xushi-hanyin-yu-liujingjue"],
+        "neijing_chapter_ids": ["nj:suwen:31", "nj:suwen:28"],
+        "formula_ids": ["shanghan:白虎加人参汤", "shanghan:附子汤", "shanghan:真武汤", "jinkui:黄土汤", "jinkui:赤豆当归散", "jinkui:硝石矾石散", "shanghan:茵陈蒿汤"],
+        "bencao_ids": ["bencao:石膏", "bencao:附子", "bencao:知母", "bencao:茵陈", "bencao:干地黄"],
+        "acupuncture_condition_ids": ["cond:ch6:s264", "cond:ch6:s285", "cond:ch6:s293"],
+        "acupuncture_point_ids": ["acupoint:st36:足三里", "acupoint:sp06:三阴交", "acupoint:du20:百会", "acupoint:du14:大椎"],
+        "clinical_reasoning": "汇参《伤寒》《金匮》、陈士铎《石室秘录》《黄帝外经》、唐容川《血证论》与汪汝麟《证因方论集要》：严分三大疑似死生关——（1）阳明「有汗如雨」始可用白虎石膏，表闭「无汗大渴」严禁石膏遏热；（2）「背恶寒」口不渴（口中和）主少阴附子汤温经，背恶寒而「口燥渴」主白虎加人参汤清气；（3）阳黄湿热（茵陈蒿）vs 阴黄/女劳黑瘅（硝石矾石/温阳），及下血远血（先便后血·黄土汤）、近血（先血后便·赤豆当归散）与九窍大脱先急补气。",
+        "differentials": "背恶寒口中和脉沉用附子汤；背恶寒口燥渴用白虎加人参汤；无汗表闭恶寒喘热勿径用白虎汤；先便后血属远血用黄土汤（严禁妄攻凉泻），先血后便属近血用赤豆当归散；大失血气随血脱先独参/当归补血固脱再求止血。",
+        "version_conflicts": "陈士铎与唐容川皆重申大失血危重时刻「有形之血不能速生，无形之气所当急固」，与常证吐血宜先降气清火（三黄泻心）各有轻重缓急之别。",
+        "safety_note": "高危警示：大失血休克、高热无汗热射病及深度黄疸肝功能衰竭皆属急危重症，绝禁延误现代急诊救治与输液支持。",
+    },
 ]
+
+
+_CLUSTER_BOOK_BOOSTS: dict[str, str] = {
+    "waijing": "huangdi-waijing-pdf",
+    "xu-lingtai": "xu-lingtai-collection-pdf",
+    "pizhi": "tang-rongchuan-xuezhenglun-pdf",
+    "chanhou": "ni-hantang-formulas-pdf",
+    "changyong": "wang-rulin-zhengyinfanglun-doc",
+    "zhenhan": "shanghan-juyi-book-txt",
+}
 
 
 def _auto_find_cluster_library_refs(
@@ -754,19 +1005,27 @@ def _auto_find_cluster_library_refs(
     loaded_books: dict[str, list[dict[str, Any]]],
     formula_names: list[str],
 ) -> list[dict[str, Any]]:
-    """Find verbatim highest-relevance library quotes for a syndrome cluster across non-renji & renji books."""
+    """Find verbatim highest-relevance prose quotes for a syndrome cluster across all school shelves."""
     priority_books = [
         "ni-hantang-articles-cases-pdf",
         "ni-hantang-formulas-pdf",
+        "ni-hantang-clinic-notes-pdf",
         "tang-rongchuan-xuezhenglun-pdf",
+        "xu-lingtai-collection-pdf",
+        "huangdi-waijing-pdf",
+        "wang-rulin-zhengyinfanglun-doc",
         "shanghan-juyi-book-txt",
         "chen-shiduo-shishimilu-txt",
         "otsuka-shanghan-docx",
+        "ni-shanghan-pdf",
+        "ni-jinkui-pdf",
     ]
     book_meta = {b["book_id"]: b for b in catalog_books}
+    norm_fnames = {_norm_simp(n) for n in formula_names if len(n) >= 2}
     terms = [_norm_simp(k) for k in cluster["keywords"] if len(k) >= 2]
-    terms += [_norm_simp(n) for n in formula_names if len(n) >= 2]
+    terms += list(norm_fnames)
     terms = list(dict.fromkeys(terms))
+    preferred_bid = next((bid for key, bid in _CLUSTER_BOOK_BOOSTS.items() if key in cluster["id"]), "")
 
     refs: list[dict[str, Any]] = []
     for bid in priority_books:
@@ -778,27 +1037,40 @@ def _auto_find_cluster_library_refs(
         best_term = ""
         for r in rows:
             stext = r.get("search_text") or ""
-            if not stext or len(r.get("body_text", "")) < 40:
+            body = r.get("body_text") or ""
+            sec = r.get("section_title", "") or ""
+            if not stext or len(body) < 40:
                 continue
+            if is_toc_or_frontmatter(sec, body):
+                continue
+            if _norm_simp(body[:80]).strip().startswith(("目录", "附录", "索引")):
+                continue
+            sec_simp = _norm_simp(sec)
             sc = 0
             top_term = ""
-            for idx, t in enumerate(terms):
+            for t in terms:
                 if t in stext:
-                    weight = 5 if t in formula_names else 2
+                    weight = 5 if t in norm_fnames else 2
                     sc += weight
                     if not top_term or weight > 2:
                         top_term = t
+            if sc and any(t in sec_simp for t in terms):
+                sc += 3
+            if sc and bid == preferred_bid:
+                sc += 6
             if sc > best_score:
                 best_score = sc
                 best_row = r
                 best_term = top_term
         if best_row and best_score >= 4:
             body = best_row["body_text"]
-            stext = best_row["search_text"]
-            pos = stext.find(best_term) if best_term else 0
+            pos = _locate_in_body(body, best_term.lower()) if best_term else 0
+            if pos < 0:
+                pos = 0
             start = max(0, pos - 40)
-            end = min(len(body), pos + 130)
+            end = min(len(body), pos + 140)
             quote = re.sub(r"\s+", " ", body[start:end]).strip()
+            quote = re.sub(r"(?<=[\u4e00-\u9fff，。；：、！？])\s+(?=[\u4e00-\u9fff])", "", quote)
             bm = book_meta[bid]
             refs.append(
                 {
@@ -814,8 +1086,13 @@ def _auto_find_cluster_library_refs(
                     "score": best_score,
                 }
             )
-    refs.sort(key=lambda x: -x["score"])
-    return refs[:5]
+    refs.sort(key=lambda x: (-x["score"], x["book_id"]))
+    top = refs[:6]
+    if preferred_bid and all(r["book_id"] != preferred_bid for r in top):
+        pref_ref = next((r for r in refs if r["book_id"] == preferred_bid), None)
+        if pref_ref:
+            top = top[:5] + [pref_ref]
+    return top
 
 
 def main() -> None:

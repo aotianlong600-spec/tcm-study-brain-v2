@@ -5,6 +5,7 @@ High-risk personal dosing/emergency prompts trigger explicit boundary guidance i
 """
 from __future__ import annotations
 
+from functools import lru_cache
 import json
 from pathlib import Path
 import re
@@ -70,8 +71,13 @@ def _detect_safety_boundary(q: str) -> dict[str, Any]:
     }
 
 
+@lru_cache(maxsize=1)
+def _syndrome_clusters() -> list[dict[str, Any]]:
+    return json.loads((DATA_DIR / "relations" / "syndrome_clusters.json").read_text(encoding="utf-8")).get("items", [])
+
+
 def _match_syndromes(q: str, limit: int = 3) -> list[dict[str, Any]]:
-    clusters = json.loads((DATA_DIR / "relations" / "syndrome_clusters.json").read_text(encoding="utf-8")).get("items", [])
+    clusters = _syndrome_clusters()
     tokens = tokenize_query(q)
     cleaned = norm_simp(q)
     if not tokens:
@@ -160,9 +166,11 @@ def ground_study_query(q: str = "", limit_citations: int = 12) -> dict[str, Any]
         if sc.get("version_conflicts"):
             conflicts.append(f"【{sc['title']}】{sc['version_conflicts']}")
 
-    gaps: list[str] = [
-        f"扫描影印保留卷（{', '.join(lib_res.get('scan_only_notice', []))}）未生成虚假OCR文本，上述自动正文检索不包含这两部影印古籍；请于「书库」板块翻阅原页图像。"
-    ]
+    gaps: list[str] = []
+    if lib_res.get("scan_only_notice"):
+        gaps.append(
+            f"扫描影印保留卷（{', '.join(lib_res['scan_only_notice'])}）未生成虚假OCR文本，上述自动正文检索不包含这两部影印古籍；请于「书库」板块翻阅原页图像。"
+        )
     if not classic_cites:
         gaps.append("本关键词在《人纪核心经典》整句直接命中较少，建议拆分2-3字中医核心词再检。")
     if not hantang_cites:
@@ -185,15 +193,16 @@ def ground_study_query(q: str = "", limit_citations: int = 12) -> dict[str, Any]
         else "汉唐临床医案库本次未检得直接同词医案记录。"
     )
     commentary_summary = (
-        "他家辅注古籍互参（唐容川/陈士铎/丹波元珍/大冢敬节/汪汝麟）："
+        "他家辅注古籍互参（唐容川/陈士铎/徐灵胎/丹波元珍/大冢敬节/汪汝麟/黄帝外经）："
         + "；".join(f"《{c['book_title']}》{c['unit_label']}（{c['section_title'] or '正文'}）" for c in commentary_cites[:3])
         if commentary_cites
         else "辅注古籍中未直接匹配同词段落（或属繁简异写/不同病名归类）。"
     )
+    syndrome_count = len(_syndrome_clusters())
     organizer_diff = (
         "；".join(f"{sc['title']}鉴别要点：{sc['differentials']}" for sc in matched_syndromes)
         if matched_syndromes
-        else "本问暂未落入预置20大跨书证候群核心边界，请依据下方检出的跨板块实体与书库页码继续对照。"
+        else f"本问暂未落入预置 {syndrome_count} 大跨书证候群核心边界，请依据下方检出的跨板块实体与书库页码继续对照。"
     )
 
     return {

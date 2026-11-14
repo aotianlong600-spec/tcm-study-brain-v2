@@ -14,15 +14,15 @@
     "classical_companions": {
       "label": "古籍注疏与经方辅注",
       "order": 3,
-      "description": "血证论、石室秘录、伤寒论辑义、大冢敬节解说、证因方论集要及影印古籍"
+      "description": "血证论、石室秘录、伤寒论辑义、大冢敬节解说、证因方论集要、徐灵胎八书、黄帝外经及影印古籍"
     }
   },
   "stats": {
     "total_books": 17,
-    "indexed_books": 15,
-    "scan_only_books": 2,
+    "indexed_books": 17,
+    "scan_only_books": 0,
     "total_units": 3303,
-    "total_text_units": 2777
+    "total_text_units": 3274
   },
   "books": [
     {
@@ -1080,6 +1080,331 @@
           "title": "治唇口青，生平谷道旁。一名草蒿，一名萎蒿。",
           "page_no": 117,
           "unit_label": "PDF 第 117 页（原书 p.102）"
+        },
+        {
+          "title": "【用量】普通八分至二钱。",
+          "page_no": 118,
+          "unit_label": "PDF 第 118 页（原书 p.103）"
+        },
+        {
+          "title": "二八八、泽漆",
+          "page_no": 118,
+          "unit_label": "PDF 第 118 页（原书 p.103）"
+        },
+        {
+          "title": "二九二、牙子",
+          "page_no": 119,
+          "unit_label": "PDF 第 119 页（原书 p.104）"
+        },
+        {
+          "title": "生川谷。",
+          "page_no": 119,
+          "unit_label": "PDF 第 119 页（原书 p.104）"
+        },
+        {
+          "title": "【主治】羊蹄主杀虫，治疥癣，肿疡，清血热，疗肠风，便秘。",
+          "page_no": 120,
+          "unit_label": "PDF 第 120 页（原书 p.105）"
+        },
+        {
+          "title": "【别录】浸淫疽痔，杀虫。",
+          "page_no": 120,
+          "unit_label": "PDF 第 120 页（原书 p.105）"
+        },
+        {
+          "title": "【大明】治癣，杀一切虫，醋磨贴肿毒。",
+          "page_no": 120,
+          "unit_label": "PDF 第 120 页（原书 p.105）"
+        },
+        {
+          "title": "【用量】普通钱半至三钱。",
+          "page_no": 121,
+          "unit_label": "PDF 第 121 页（原书 p.106）"
+        },
+        {
+          "title": "二九九、鬼臼",
+          "page_no": 121,
+          "unit_label": "PDF 第 121 页（原书 p.106）"
+        },
+        {
+          "title": "三〇四、乌韭",
+          "page_no": 122,
+          "unit_label": "PDF 第 122 页（原书 p.107）"
+        },
+        {
+          "title": "三〇五、鹿藿",
+          "page_no": 122,
+          "unit_label": "PDF 第 122 页（原书 p.107）"
+        },
+        {
+          "title": "三一〇、牛扁",
+          "page_no": 123,
+          "unit_label": "PDF 第 123 页（原书 p.108）"
+        },
+        {
+          "title": "川谷。",
+          "page_no": 123,
+          "unit_label": "PDF 第 123 页（原书 p.108）"
+        },
+        {
+          "title": "【性味】味辛，性温，有毒。",
+          "page_no": 124,
+          "unit_label": "PDF 第 124 页（原书 p.109）"
+        },
+        {
+          "title": "胎伤腹中，利水谷道，排恶疮脓血。",
+          "page_no": 124,
+          "unit_label": "PDF 第 124 页（原书 p.109）"
+        },
+        {
+          "title": "【大明】通关节，头风，消痰杀虫，治骨蒸，开胃，中风口噤。",
+          "page_no": 125,
+          "unit_label": "PDF 第 125 页（原书 p.110）"
+        },
+        {
+          "title": "【宗奭】溽暑久雨时，合苍术烧烟辟瘟疫邪湿气。",
+          "page_no": 125,
+          "unit_label": "PDF 第 125 页（原书 p.110）"
+        },
+        {
+          "title": "【汪机】烧烟熏久痢脱肛。",
+          "page_no": 125,
+          "unit_label": "PDF 第 125 页（原书 p.110）"
+        },
+        {
+          "title": "【禁忌】胃虚寒者禁之。",
+          "page_no": 126,
+          "unit_label": "PDF 第 126 页（原书 p.111）"
+        },
+        {
+          "title": "三一八、郁李仁",
+          "page_no": 126,
+          "unit_label": "PDF 第 126 页（原书 p.111）"
+        },
+        {
+          "title": "三二一、桐叶",
+          "page_no": 127,
+          "unit_label": "PDF 第 127 页（原书 p.112）"
+        },
+        {
+          "title": "肥大三倍。生山谷。",
+          "page_no": 127,
+          "unit_label": "PDF 第 127 页（原书 p.112）"
+        },
+        {
+          "title": "可作浴汤。",
+          "page_no": 128,
+          "unit_label": "PDF 第 128 页（原书 p.113）"
+        },
+        {
+          "title": "三二六、鼠李",
+          "page_no": 128,
+          "unit_label": "PDF 第 128 页（原书 p.113）"
+        },
+        {
+          "title": "【本经原文】治寒热，瘰疬疮。生田野。今少用。",
+          "page_no": 128,
+          "unit_label": "PDF 第 128 页（原书 p.113）"
+        },
+        {
+          "title": "三三四、虾蟆",
+          "page_no": 129,
+          "unit_label": "PDF 第 129 页（原书 p.114）"
+        },
+        {
+          "title": "泽。",
+          "page_no": 129,
+          "unit_label": "PDF 第 129 页（原书 p.114）"
+        },
+        {
+          "title": "三三九、蜈蚣",
+          "page_no": 130,
+          "unit_label": "PDF 第 130 页（原书 p.115）"
+        },
+        {
+          "title": "三虫。生川谷。",
+          "page_no": 130,
+          "unit_label": "PDF 第 130 页（原书 p.115）"
+        },
+        {
+          "title": "者忌之",
+          "page_no": 131,
+          "unit_label": "PDF 第 131 页（原书 p.116）"
+        },
+        {
+          "title": "三四二、贝子",
+          "page_no": 131,
+          "unit_label": "PDF 第 131 页（原书 p.116）"
+        },
+        {
+          "title": "一名蛣蜣。",
+          "page_no": 132,
+          "unit_label": "PDF 第 132 页（原书 p.117）"
+        },
+        {
+          "title": "【产地】产山区树间。",
+          "page_no": 132,
+          "unit_label": "PDF 第 132 页（原书 p.117）"
+        },
+        {
+          "title": "【性味】味咸，性寒。",
+          "page_no": 132,
+          "unit_label": "PDF 第 132 页（原书 p.117）"
+        },
+        {
+          "title": "神精。生阶地、池泽。",
+          "page_no": 133,
+          "unit_label": "PDF 第 133 页（原书 p.118）"
+        },
+        {
+          "title": "三五一、衣鱼",
+          "page_no": 133,
+          "unit_label": "PDF 第 133 页（原书 p.118）"
+        },
+        {
+          "title": "声气。",
+          "page_no": 134,
+          "unit_label": "PDF 第 134 页（原书 p.119）"
+        },
+        {
+          "title": "第三章 增补神农本草经不足部分",
+          "page_no": 135,
+          "unit_label": "PDF 第 135 页（原书 p.120）"
+        },
+        {
+          "title": "【丹溪】多用破血，少用养血。",
+          "page_no": 136,
+          "unit_label": "PDF 第 136 页（原书 p.121）"
+        },
+        {
+          "title": "【用量】普通五分至钱半。",
+          "page_no": 136,
+          "unit_label": "PDF 第 136 页（原书 p.121）"
+        },
+        {
+          "title": "【容川】赤小豆发芽，则能透达脓血。",
+          "page_no": 137,
+          "unit_label": "PDF 第 137 页（原书 p.122）"
+        },
+        {
+          "title": "【用量】普通钱半至三至四钱。",
+          "page_no": 137,
+          "unit_label": "PDF 第 137 页（原书 p.122）"
+        },
+        {
+          "title": "八、饴糖",
+          "page_no": 138,
+          "unit_label": "PDF 第 138 页（原书 p.123）"
+        },
+        {
+          "title": "——补中益气。",
+          "page_no": 138,
+          "unit_label": "PDF 第 138 页（原书 p.123）"
+        },
+        {
+          "title": "【产地】处处有之，乃以米麦制成者。",
+          "page_no": 138,
+          "unit_label": "PDF 第 138 页（原书 p.123）"
+        },
+        {
+          "title": "【产地】处处有之。为鸡食砂岩后排出之大便中，色白者。",
+          "page_no": 139,
+          "unit_label": "PDF 第 139 页（原书 p.124）"
+        },
+        {
+          "title": "【性味】味苦，性微寒，无毒。",
+          "page_no": 139,
+          "unit_label": "PDF 第 139 页（原书 p.124）"
+        },
+        {
+          "title": "【别录】疗风邪，久渴，吐呕，两胁满，头眩目痒。",
+          "page_no": 140,
+          "unit_label": "PDF 第 140 页（原书 p.125）"
+        },
+        {
+          "title": "【甄权】能蚀脓，止心腹血刺痛，女人沥血腰痛血崩。",
+          "page_no": 140,
+          "unit_label": "PDF 第 140 页（原书 p.125）"
+        },
+        {
+          "title": "【倪注】举凡内外伤，诸烂疮，乳痈等都可以用，镇痛止血。",
+          "page_no": 141,
+          "unit_label": "PDF 第 141 页（原书 p.126）"
+        },
+        {
+          "title": "【用量】普通钱半至三钱，大剂一两左右。",
+          "page_no": 141,
+          "unit_label": "PDF 第 141 页（原书 p.126）"
+        },
+        {
+          "title": "【禁忌】无。",
+          "page_no": 141,
+          "unit_label": "PDF 第 141 页（原书 p.126）"
+        },
+        {
+          "title": "折，齆鼻息肉，堕胎。",
+          "page_no": 142,
+          "unit_label": "PDF 第 142 页（原书 p.127）"
+        },
+        {
+          "title": "【甄权】治五淋，利小便，开关格，治人多唾，主水肿浮大。",
+          "page_no": 142,
+          "unit_label": "PDF 第 142 页（原书 p.127）"
+        },
+        {
+          "title": "弯者为白微，长坚易折者为白前。",
+          "page_no": 143,
+          "unit_label": "PDF 第 143 页（原书 p.128）"
+        },
+        {
+          "title": "【性味】辛苦味甘，性微温，无毒。",
+          "page_no": 143,
+          "unit_label": "PDF 第 143 页（原书 p.128）"
+        },
+        {
+          "title": "二十八、灶心土",
+          "page_no": 144,
+          "unit_label": "PDF 第 144 页（原书 p.129）"
+        },
+        {
+          "title": "——治吐血，下血，胃家损伤之重症者。今人称伏龙肝。",
+          "page_no": 144,
+          "unit_label": "PDF 第 144 页（原书 p.129）"
+        },
+        {
+          "title": "【产地】乡下土灶烧之多年者佳，新土无效。",
+          "page_no": 144,
+          "unit_label": "PDF 第 144 页（原书 p.129）"
+        },
+        {
+          "title": "药物索引（拼音顺序）",
+          "page_no": 145,
+          "unit_label": "PDF 第 145 页（原书 p.130）"
+        },
+        {
+          "title": "pinyin_index",
+          "page_no": 146,
+          "unit_label": "PDF 第 146 页（原书 p.131）"
+        },
+        {
+          "title": "药物索引（笔画顺序）",
+          "page_no": 150,
+          "unit_label": "PDF 第 150 页（原书 p.135）"
+        },
+        {
+          "title": "stroke_index",
+          "page_no": 151,
+          "unit_label": "PDF 第 151 页（原书 p.136）"
+        },
+        {
+          "title": "十四划",
+          "page_no": 153,
+          "unit_label": "PDF 第 153 页（原书 p.138）"
+        },
+        {
+          "title": "十六划",
+          "page_no": 154,
+          "unit_label": "PDF 第 154 页（原书 p.139）"
         }
       ]
     },
@@ -4801,6 +5126,216 @@
           "title": "平治法",
           "page_no": 89,
           "unit_label": "第 89 节（L2083-L2108）"
+        },
+        {
+          "title": "论气虚、血虚、肾虚、胃虚、脾虚诸用药方",
+          "page_no": 89,
+          "unit_label": "第 89 节（L2083-L2108）"
+        },
+        {
+          "title": "论单味治病",
+          "page_no": 89,
+          "unit_label": "第 89 节（L2083-L2108）"
+        },
+        {
+          "title": "偶治法",
+          "page_no": 89,
+          "unit_label": "第 89 节（L2083-L2108）"
+        },
+        {
+          "title": "形治法",
+          "page_no": 90,
+          "unit_label": "第 90 节（L2109-L2120）"
+        },
+        {
+          "title": "论目痛 头痛 手痛 脚痛",
+          "page_no": 90,
+          "unit_label": "第 90 节（L2109-L2120）"
+        },
+        {
+          "title": "论气逆痰滞 论气虚痰多 气虚痰寒 气虚痰热",
+          "page_no": 91,
+          "unit_label": "第 91 节（L2121-L2152）"
+        },
+        {
+          "title": "暗治法",
+          "page_no": 91,
+          "unit_label": "第 91 节（L2121-L2152）"
+        },
+        {
+          "title": "论儿门暗疾 论产门生虫 产门生疮",
+          "page_no": 91,
+          "unit_label": "第 91 节（L2121-L2152）"
+        },
+        {
+          "title": "明治法",
+          "page_no": 92,
+          "unit_label": "第 92 节（L2153-L2174）"
+        },
+        {
+          "title": "论治疮毒 论头面上疮 论身上手足疮",
+          "page_no": 92,
+          "unit_label": "第 92 节（L2153-L2174）"
+        },
+        {
+          "title": "卷五（书集）",
+          "page_no": 92,
+          "unit_label": "第 92 节（L2153-L2174）"
+        },
+        {
+          "title": "久治法",
+          "page_no": 92,
+          "unit_label": "第 92 节（L2153-L2174）"
+        },
+        {
+          "title": "论虚寒久治",
+          "page_no": 92,
+          "unit_label": "第 92 节（L2153-L2174）"
+        },
+        {
+          "title": "暂治法",
+          "page_no": 93,
+          "unit_label": "第 93 节（L2175-L2217）"
+        },
+        {
+          "title": "论伤风 伤食 伤暑 伤湿",
+          "page_no": 93,
+          "unit_label": "第 93 节（L2175-L2217）"
+        },
+        {
+          "title": "远治法",
+          "page_no": 93,
+          "unit_label": "第 93 节（L2175-L2217）"
+        },
+        {
+          "title": "论中风 臌胀 痿症 食炭",
+          "page_no": 93,
+          "unit_label": "第 93 节（L2175-L2217）"
+        },
+        {
+          "title": "近治法",
+          "page_no": 94,
+          "unit_label": "第 94 节（L2218-L2244）"
+        },
+        {
+          "title": "轻治法",
+          "page_no": 95,
+          "unit_label": "第 95 节（L2245-L2258）"
+        },
+        {
+          "title": "论小柴胡汤",
+          "page_no": 95,
+          "unit_label": "第 95 节（L2245-L2258）"
+        },
+        {
+          "title": "重治法",
+          "page_no": 96,
+          "unit_label": "第 96 节（L2259-L2298）"
+        },
+        {
+          "title": "论大渴 大汗 大吐 大泻 阴阳脱",
+          "page_no": 96,
+          "unit_label": "第 96 节（L2259-L2298）"
+        },
+        {
+          "title": "瘟疫治法",
+          "page_no": 97,
+          "unit_label": "第 97 节（L2299-L2324）"
+        },
+        {
+          "title": "瘴疠治法",
+          "page_no": 97,
+          "unit_label": "第 97 节（L2299-L2324）"
+        },
+        {
+          "title": "得治法",
+          "page_no": 98,
+          "unit_label": "第 98 节（L2325-L2340）"
+        },
+        {
+          "title": "失治法",
+          "page_no": 98,
+          "unit_label": "第 98 节（L2325-L2340）"
+        },
+        {
+          "title": "意治法",
+          "page_no": 99,
+          "unit_label": "第 99 节（L2341-L2368）"
+        },
+        {
+          "title": "神治法",
+          "page_no": 99,
+          "unit_label": "第 99 节（L2341-L2368）"
+        },
+        {
+          "title": "伤寒相舌秘法",
+          "page_no": 99,
+          "unit_label": "第 99 节（L2341-L2368）"
+        },
+        {
+          "title": "卷五（书集） 伤寒相舌秘法",
+          "page_no": 100,
+          "unit_label": "第 100 节（L2369-L2392）"
+        },
+        {
+          "title": "十四论命门",
+          "page_no": 107,
+          "unit_label": "第 107 节（L2505-L2522）"
+        },
+        {
+          "title": "岐天师儿科治法",
+          "page_no": 109,
+          "unit_label": "第 109 节（L2531-L2546）"
+        },
+        {
+          "title": "张真人传痘疹门",
+          "page_no": 111,
+          "unit_label": "第 111 节（L2575-L2590）"
+        },
+        {
+          "title": "岐真人传儿科秘法",
+          "page_no": 113,
+          "unit_label": "第 113 节（L2617-L2628）"
+        },
+        {
+          "title": "卷六（数集）",
+          "page_no": 116,
+          "unit_label": "第 116 节（L2677-L2689）"
+        },
+        {
+          "title": "伤寒门",
+          "page_no": 116,
+          "unit_label": "第 116 节（L2677-L2689）"
+        },
+        {
+          "title": "中寒门",
+          "page_no": 121,
+          "unit_label": "第 121 节（L2769-L2784）"
+        },
+        {
+          "title": "中暑门",
+          "page_no": 122,
+          "unit_label": "第 122 节（L2785-L2806）"
+        },
+        {
+          "title": "水湿门",
+          "page_no": 123,
+          "unit_label": "第 123 节（L2807-L2834）"
+        },
+        {
+          "title": "热症门",
+          "page_no": 124,
+          "unit_label": "第 124 节（L2835-L2844）"
+        },
+        {
+          "title": "燥症门",
+          "page_no": 125,
+          "unit_label": "第 125 节（L2845-L2871）"
+        },
+        {
+          "title": "内伤门",
+          "page_no": 127,
+          "unit_label": "第 127 节（L2883-L2907）"
         }
       ]
     },
@@ -5330,8 +5865,8 @@
     {
       "book_id": "xu-lingtai-collection-pdf",
       "title": "《明清名医全书大成·徐灵胎医学全书》",
-      "short_title": "徐灵胎医学全书（影印扫描）",
-      "author_era": "清·徐灵胎（徐大椿）",
+      "short_title": "徐灵胎医学全书",
+      "author_era": "清·徐灵胎（徐大椿） · 含1999现代校注附编",
       "shelf": "classical_companions",
       "tradition_layer": "commentary",
       "module_affinities": [
@@ -5339,42 +5874,1989 @@
         "neijing",
         "herbs"
       ],
-      "description": "原书434页扫描影印版（当前未执行虚假OCR，支持逐页高清扫描浏览与目录线索查阅）。",
+      "description": "共434页（412页WinRT OCR全文+22页空白背面留空），收《难经经释》《神农本草经百种录》《医贯砭》《医学源流论》《伤寒类方》《兰台轨范》《慎疾刍言》《洄溪医案》（王孟英编含「雄按」），并明确标识1999总序校注与《著作辨考》21部伪托考，附原页扫描图像。",
       "source_id": "xu-lingtai-collection-pdf",
       "shelf_label": "古籍注疏与经方辅注",
       "file_format": "pdf",
       "relative_path": "books/ni-haixia-medicine/明清名医全书大成(徐灵胎医学全书 ).pdf",
       "sha256": "031a8d91a0accb66163e23bcd23bfe947369f6a797b21ab8f16e8ac80f22d709",
       "total_units": 434,
-      "text_units": 0,
-      "unit_type": "scan_page",
+      "text_units": 412,
+      "unit_type": "pdf_page",
       "has_image_viewer": true,
-      "search_index_status": "scan_browse_only",
-      "chapters": []
+      "search_index_status": "indexed",
+      "chapters": [
+        {
+          "title": "【现代编注】总序·校注说明",
+          "page_no": 1,
+          "unit_label": "PDF 第 1 页"
+        },
+        {
+          "title": "【现代编注】《明清名医全书大成·徐灵胎医学全书》封面与编注总序",
+          "page_no": 2,
+          "unit_label": "PDF 第 2 页"
+        },
+        {
+          "title": "校注说明（1999年整理本）",
+          "page_no": 11,
+          "unit_label": "PDF 第 11 页"
+        },
+        {
+          "title": "【现代编注】徐灵胎小传与校注说明",
+          "page_no": 12,
+          "unit_label": "PDF 第 12 页"
+        },
+        {
+          "title": "全书总目",
+          "page_no": 13,
+          "unit_label": "PDF 第 13 页"
+        },
+        {
+          "title": "《难经经释》（清·徐灵胎）",
+          "page_no": 14,
+          "unit_label": "PDF 第 14 页"
+        },
+        {
+          "title": "《难经经释》序·凡例",
+          "page_no": 16,
+          "unit_label": "PDF 第 16 页（原书 p.3）"
+        },
+        {
+          "title": "《难经经释》序",
+          "page_no": 17,
+          "unit_label": "PDF 第 17 页（原书 p.4）"
+        },
+        {
+          "title": "《难经经释》目录",
+          "page_no": 18,
+          "unit_label": "PDF 第 18 页（原书 p.5）"
+        },
+        {
+          "title": "《难经经释》卷上",
+          "page_no": 20,
+          "unit_label": "PDF 第 20 页（原书 p.7）"
+        },
+        {
+          "title": "《难经经释》卷下",
+          "page_no": 37,
+          "unit_label": "PDF 第 37 页（原书 p.24）"
+        },
+        {
+          "title": "《难经经释》书后",
+          "page_no": 61,
+          "unit_label": "PDF 第 61 页（原书 p.48）"
+        },
+        {
+          "title": "《神农本草经百种录》（清·徐灵胎）",
+          "page_no": 62,
+          "unit_label": "PDF 第 62 页（原书 p.49）"
+        },
+        {
+          "title": "《神农本草经百种录》序",
+          "page_no": 64,
+          "unit_label": "PDF 第 64 页（原书 p.51）"
+        },
+        {
+          "title": "《神农本草经百种录》序·凡例",
+          "page_no": 65,
+          "unit_label": "PDF 第 65 页（原书 p.52）"
+        },
+        {
+          "title": "《神农本草经百种录》目录",
+          "page_no": 66,
+          "unit_label": "PDF 第 66 页（原书 p.53）"
+        },
+        {
+          "title": "《神农本草经百种录》上品起",
+          "page_no": 68,
+          "unit_label": "PDF 第 68 页（原书 p.55）"
+        },
+        {
+          "title": "《神农本草经百种录》正文",
+          "page_no": 69,
+          "unit_label": "PDF 第 69 页（原书 p.56）"
+        },
+        {
+          "title": "《医贯砭》（清·徐灵胎）",
+          "page_no": 86,
+          "unit_label": "PDF 第 86 页（原书 p.73）"
+        },
+        {
+          "title": "《医贯砭》序",
+          "page_no": 88,
+          "unit_label": "PDF 第 88 页（原书 p.75）"
+        },
+        {
+          "title": "《医贯砭》目录",
+          "page_no": 90,
+          "unit_label": "PDF 第 90 页（原书 p.77）"
+        },
+        {
+          "title": "《医贯砭》卷上",
+          "page_no": 92,
+          "unit_label": "PDF 第 92 页（原书 p.79）"
+        },
+        {
+          "title": "十二官论",
+          "page_no": 92,
+          "unit_label": "PDF 第 92 页（原书 p.79）"
+        },
+        {
+          "title": "阴阳论",
+          "page_no": 96,
+          "unit_label": "PDF 第 96 页（原书 p.83）"
+        },
+        {
+          "title": "五行论",
+          "page_no": 99,
+          "unit_label": "PDF 第 99 页（原书 p.86）"
+        },
+        {
+          "title": "中风论",
+          "page_no": 100,
+          "unit_label": "PDF 第 100 页（原书 p.87）"
+        },
+        {
+          "title": "伤寒论",
+          "page_no": 101,
+          "unit_label": "PDF 第 101 页（原书 p.88）"
+        },
+        {
+          "title": "温病论",
+          "page_no": 105,
+          "unit_label": "PDF 第 105 页（原书 p.92）"
+        },
+        {
+          "title": "郁病论",
+          "page_no": 106,
+          "unit_label": "PDF 第 106 页（原书 p.93）"
+        },
+        {
+          "title": "《医贯砭》卷下",
+          "page_no": 108,
+          "unit_label": "PDF 第 108 页（原书 p.95）"
+        },
+        {
+          "title": "论血证",
+          "page_no": 108,
+          "unit_label": "PDF 第 108 页（原书 p.95）"
+        },
+        {
+          "title": "论八味丸",
+          "page_no": 109,
+          "unit_label": "PDF 第 109 页（原书 p.96）"
+        },
+        {
+          "title": "六味丸说",
+          "page_no": 110,
+          "unit_label": "PDF 第 110 页（原书 p.97）"
+        },
+        {
+          "title": "八味丸说",
+          "page_no": 112,
+          "unit_label": "PDF 第 112 页（原书 p.99）"
+        },
+        {
+          "title": "相火龙雷论",
+          "page_no": 112,
+          "unit_label": "PDF 第 112 页（原书 p.99）"
+        },
+        {
+          "title": "阴虚发热论",
+          "page_no": 112,
+          "unit_label": "PDF 第 112 页（原书 p.99）"
+        },
+        {
+          "title": "咳嗽论",
+          "page_no": 113,
+          "unit_label": "PDF 第 113 页（原书 p.100）"
+        },
+        {
+          "title": "吐血论",
+          "page_no": 114,
+          "unit_label": "PDF 第 114 页（原书 p.101）"
+        },
+        {
+          "title": "喘论",
+          "page_no": 114,
+          "unit_label": "PDF 第 114 页（原书 p.101）"
+        },
+        {
+          "title": "喉咽痛论",
+          "page_no": 115,
+          "unit_label": "PDF 第 115 页（原书 p.102）"
+        },
+        {
+          "title": "眼目论",
+          "page_no": 115,
+          "unit_label": "PDF 第 115 页（原书 p.102）"
+        },
+        {
+          "title": "口疮论",
+          "page_no": 116,
+          "unit_label": "PDF 第 116 页（原书 p.103）"
+        },
+        {
+          "title": "消渴论",
+          "page_no": 116,
+          "unit_label": "PDF 第 116 页（原书 p.103）"
+        },
+        {
+          "title": "气虚中满论",
+          "page_no": 117,
+          "unit_label": "PDF 第 117 页（原书 p.104）"
+        },
+        {
+          "title": "噎膈论",
+          "page_no": 118,
+          "unit_label": "PDF 第 118 页（原书 p.105）"
+        },
+        {
+          "title": "梦遗并精滑论",
+          "page_no": 119,
+          "unit_label": "PDF 第 119 页（原书 p.106）"
+        },
+        {
+          "title": "论补中益气汤",
+          "page_no": 119,
+          "unit_label": "PDF 第 119 页（原书 p.106）"
+        },
+        {
+          "title": "伤饮食论",
+          "page_no": 121,
+          "unit_label": "PDF 第 121 页（原书 p.108）"
+        },
+        {
+          "title": "中暑伤暑论",
+          "page_no": 122,
+          "unit_label": "PDF 第 122 页（原书 p.109）"
+        },
+        {
+          "title": "痢疾．论",
+          "page_no": 124,
+          "unit_label": "PDF 第 124 页（原书 p.111）"
+        },
+        {
+          "title": "《医学源流论》（清·徐灵胎）",
+          "page_no": 126,
+          "unit_label": "PDF 第 126 页（原书 p.113）"
+        },
+        {
+          "title": "《医学源流论》自叙",
+          "page_no": 128,
+          "unit_label": "PDF 第 128 页（原书 p.115）"
+        },
+        {
+          "title": "《医学源流论》目录",
+          "page_no": 130,
+          "unit_label": "PDF 第 130 页（原书 p.117）"
+        },
+        {
+          "title": "《医学源流论》卷上",
+          "page_no": 132,
+          "unit_label": "PDF 第 132 页（原书 p.119）"
+        },
+        {
+          "title": "元气存亡论",
+          "page_no": 132,
+          "unit_label": "PDF 第 132 页（原书 p.119）"
+        },
+        {
+          "title": "躯壳经络脏腑论",
+          "page_no": 132,
+          "unit_label": "PDF 第 132 页（原书 p.119）"
+        },
+        {
+          "title": "表里上下论",
+          "page_no": 133,
+          "unit_label": "PDF 第 133 页（原书 p.120）"
+        },
+        {
+          "title": "阴阳升降论",
+          "page_no": 133,
+          "unit_label": "PDF 第 133 页（原书 p.120）"
+        },
+        {
+          "title": "治病必分经络脏腑论",
+          "page_no": 133,
+          "unit_label": "PDF 第 133 页（原书 p.120）"
+        },
+        {
+          "title": "肾藏精论",
+          "page_no": 134,
+          "unit_label": "PDF 第 134 页（原书 p.121）"
+        },
+        {
+          "title": "一脏一腑先绝论",
+          "page_no": 135,
+          "unit_label": "PDF 第 135 页（原书 p.122）"
+        },
+        {
+          "title": "君火相火论",
+          "page_no": 135,
+          "unit_label": "PDF 第 135 页（原书 p.122）"
+        },
+        {
+          "title": "诊脉决死生论",
+          "page_no": 135,
+          "unit_label": "PDF 第 135 页（原书 p.122）"
+        },
+        {
+          "title": "脉症轻重论",
+          "page_no": 136,
+          "unit_label": "PDF 第 136 页（原书 p.123）"
+        },
+        {
+          "title": "脉症与病相反论",
+          "page_no": 136,
+          "unit_label": "PDF 第 136 页（原书 p.123）"
+        },
+        {
+          "title": "臌膈论",
+          "page_no": 137,
+          "unit_label": "PDF 第 137 页（原书 p.124）"
+        },
+        {
+          "title": "寒热虚实真假论",
+          "page_no": 137,
+          "unit_label": "PDF 第 137 页（原书 p.124）"
+        },
+        {
+          "title": "内伤外感论",
+          "page_no": 138,
+          "unit_label": "PDF 第 138 页（原书 p.125）"
+        },
+        {
+          "title": "病情传变论",
+          "page_no": 138,
+          "unit_label": "PDF 第 138 页（原书 p.125）"
+        },
+        {
+          "title": "病同人异论",
+          "page_no": 138,
+          "unit_label": "PDF 第 138 页（原书 p.125）"
+        },
+        {
+          "title": "病症不同论",
+          "page_no": 138,
+          "unit_label": "PDF 第 138 页（原书 p.125）"
+        },
+        {
+          "title": "病同因别论",
+          "page_no": 139,
+          "unit_label": "PDF 第 139 页（原书 p.126）"
+        },
+        {
+          "title": "亡阴亡阳论",
+          "page_no": 139,
+          "unit_label": "PDF 第 139 页（原书 p.126）"
+        },
+        {
+          "title": "卒死论",
+          "page_no": 140,
+          "unit_label": "PDF 第 140 页（原书 p.127）"
+        },
+        {
+          "title": "病有鬼神论",
+          "page_no": 140,
+          "unit_label": "PDF 第 140 页（原书 p.127）"
+        },
+        {
+          "title": "肾虚非阴症论",
+          "page_no": 141,
+          "unit_label": "PDF 第 141 页（原书 p.128）"
+        },
+        {
+          "title": "吐血不死咳嗽必死论",
+          "page_no": 141,
+          "unit_label": "PDF 第 141 页（原书 p.128）"
+        },
+        {
+          "title": "胎产论",
+          "page_no": 141,
+          "unit_label": "PDF 第 141 页（原书 p.128）"
+        },
+        {
+          "title": "病有不必服药论",
+          "page_no": 142,
+          "unit_label": "PDF 第 142 页（原书 p.129）"
+        },
+        {
+          "title": "方药离合论",
+          "page_no": 142,
+          "unit_label": "PDF 第 142 页（原书 p.129）"
+        },
+        {
+          "title": "古方加减论",
+          "page_no": 142,
+          "unit_label": "PDF 第 142 页（原书 p.129）"
+        },
+        {
+          "title": "方剂古今论",
+          "page_no": 143,
+          "unit_label": "PDF 第 143 页（原书 p.130）"
+        },
+        {
+          "title": "单方论",
+          "page_no": 143,
+          "unit_label": "PDF 第 143 页（原书 p.130）"
+        },
+        {
+          "title": "禁方论",
+          "page_no": 144,
+          "unit_label": "PDF 第 144 页（原书 p.131）"
+        },
+        {
+          "title": "古今方剂大小论",
+          "page_no": 144,
+          "unit_label": "PDF 第 144 页（原书 p.131）"
+        },
+        {
+          "title": "药误不即死论",
+          "page_no": 144,
+          "unit_label": "PDF 第 144 页（原书 p.131）"
+        },
+        {
+          "title": "药石性同用异论",
+          "page_no": 145,
+          "unit_label": "PDF 第 145 页（原书 p.132）"
+        },
+        {
+          "title": "劫剂论",
+          "page_no": 145,
+          "unit_label": "PDF 第 145 页（原书 p.132）"
+        },
+        {
+          "title": "制药论",
+          "page_no": 146,
+          "unit_label": "PDF 第 146 页（原书 p.133）"
+        },
+        {
+          "title": "人参论",
+          "page_no": 146,
+          "unit_label": "PDF 第 146 页（原书 p.133）"
+        },
+        {
+          "title": "用药如用兵论",
+          "page_no": 147,
+          "unit_label": "PDF 第 147 页（原书 p.134）"
+        },
+        {
+          "title": "执方治病论",
+          "page_no": 147,
+          "unit_label": "PDF 第 147 页（原书 p.134）"
+        },
+        {
+          "title": "汤药不足尽病论",
+          "page_no": 147,
+          "unit_label": "PDF 第 147 页（原书 p.134）"
+        },
+        {
+          "title": "本草古今论",
+          "page_no": 148,
+          "unit_label": "PDF 第 148 页（原书 p.135）"
+        },
+        {
+          "title": "药性变迁论",
+          "page_no": 148,
+          "unit_label": "PDF 第 148 页（原书 p.135）"
+        },
+        {
+          "title": "药性专长论",
+          "page_no": 148,
+          "unit_label": "PDF 第 148 页（原书 p.135）"
+        },
+        {
+          "title": "药法论",
+          "page_no": 149,
+          "unit_label": "PDF 第 149 页（原书 p.136）"
+        },
+        {
+          "title": "服药法论",
+          "page_no": 149,
+          "unit_label": "PDF 第 149 页（原书 p.136）"
+        },
+        {
+          "title": "医必备药论",
+          "page_no": 149,
+          "unit_label": "PDF 第 149 页（原书 p.136）"
+        },
+        {
+          "title": "乩方论",
+          "page_no": 150,
+          "unit_label": "PDF 第 150 页（原书 p.137）"
+        },
+        {
+          "title": "热药误人最烈论",
+          "page_no": 150,
+          "unit_label": "PDF 第 150 页（原书 p.137）"
+        },
+        {
+          "title": "薄贴论",
+          "page_no": 151,
+          "unit_label": "PDF 第 151 页（原书 p.138）"
+        },
+        {
+          "title": "貌似古方欺人论",
+          "page_no": 151,
+          "unit_label": "PDF 第 151 页（原书 p.138）"
+        },
+        {
+          "title": "《医学源流论》卷下",
+          "page_no": 152,
+          "unit_label": "PDF 第 152 页（原书 p.139）"
+        },
+        {
+          "title": "司天运气论",
+          "page_no": 152,
+          "unit_label": "PDF 第 152 页（原书 p.139）"
+        },
+        {
+          "title": "医道通治道论",
+          "page_no": 152,
+          "unit_label": "PDF 第 152 页（原书 p.139）"
+        },
+        {
+          "title": "五方异治论",
+          "page_no": 153,
+          "unit_label": "PDF 第 153 页（原书 p.140）"
+        },
+        {
+          "title": "病随国运论",
+          "page_no": 153,
+          "unit_label": "PDF 第 153 页（原书 p.140）"
+        },
+        {
+          "title": "针灸失传论",
+          "page_no": 154,
+          "unit_label": "PDF 第 154 页（原书 p.141）"
+        },
+        {
+          "title": "水病针法论",
+          "page_no": 155,
+          "unit_label": "PDF 第 155 页（原书 p.142）"
+        },
+        {
+          "title": "出奇制病论",
+          "page_no": 155,
+          "unit_label": "PDF 第 155 页（原书 p.142）"
+        },
+        {
+          "title": "治病缓急论",
+          "page_no": 155,
+          "unit_label": "PDF 第 155 页（原书 p.142）"
+        },
+        {
+          "title": "治病分合论",
+          "page_no": 156,
+          "unit_label": "PDF 第 156 页（原书 p.143）"
+        },
+        {
+          "title": "发汗不用燥药论",
+          "page_no": 156,
+          "unit_label": "PDF 第 156 页（原书 p.143）"
+        },
+        {
+          "title": "病不可轻汗论",
+          "page_no": 156,
+          "unit_label": "PDF 第 156 页（原书 p.143）"
+        },
+        {
+          "title": "伤风难治论",
+          "page_no": 157,
+          "unit_label": "PDF 第 157 页（原书 p.144）"
+        },
+        {
+          "title": "攻补寒热同用论",
+          "page_no": 157,
+          "unit_label": "PDF 第 157 页（原书 p.144）"
+        },
+        {
+          "title": "临病人问所便论",
+          "page_no": 158,
+          "unit_label": "PDF 第 158 页（原书 p.145）"
+        },
+        {
+          "title": "治病不必顾忌论",
+          "page_no": 158,
+          "unit_label": "PDF 第 158 页（原书 p.145）"
+        },
+        {
+          "title": "病深非浅药能治论",
+          "page_no": 159,
+          "unit_label": "PDF 第 159 页（原书 p.146）"
+        },
+        {
+          "title": "愈病有日期论",
+          "page_no": 159,
+          "unit_label": "PDF 第 159 页（原书 p.146）"
+        },
+        {
+          "title": "治人必考其验否论",
+          "page_no": 159,
+          "unit_label": "PDF 第 159 页（原书 p.146）"
+        },
+        {
+          "title": "防微论",
+          "page_no": 160,
+          "unit_label": "PDF 第 160 页（原书 p.147）"
+        },
+        {
+          "title": "知病必先知症论",
+          "page_no": 160,
+          "unit_label": "PDF 第 160 页（原书 p.147）"
+        },
+        {
+          "title": "补药可通融论",
+          "page_no": 161,
+          "unit_label": "PDF 第 161 页（原书 p.148）"
+        },
+        {
+          "title": "轻药愈病论",
+          "page_no": 161,
+          "unit_label": "PDF 第 161 页（原书 p.148）"
+        },
+        {
+          "title": "腹内痈论",
+          "page_no": 161,
+          "unit_label": "PDF 第 161 页（原书 p.148）"
+        },
+        {
+          "title": "围药论",
+          "page_no": 162,
+          "unit_label": "PDF 第 162 页（原书 p.149）"
+        },
+        {
+          "title": "妇科论",
+          "page_no": 165,
+          "unit_label": "PDF 第 165 页（原书 p.152）"
+        },
+        {
+          "title": "痘科论",
+          "page_no": 165,
+          "unit_label": "PDF 第 165 页（原书 p.152）"
+        },
+        {
+          "title": "幼科论",
+          "page_no": 166,
+          "unit_label": "PDF 第 166 页（原书 p.153）"
+        },
+        {
+          "title": "疡科论",
+          "page_no": 166,
+          "unit_label": "PDF 第 166 页（原书 p.153）"
+        },
+        {
+          "title": "祝由科论",
+          "page_no": 167,
+          "unit_label": "PDF 第 167 页（原书 p.154）"
+        },
+        {
+          "title": "兽医论",
+          "page_no": 167,
+          "unit_label": "PDF 第 167 页（原书 p.154）"
+        },
+        {
+          "title": "四大家论",
+          "page_no": 167,
+          "unit_label": "PDF 第 167 页（原书 p.154）"
+        },
+        {
+          "title": "医家论",
+          "page_no": 168,
+          "unit_label": "PDF 第 168 页（原书 p.155）"
+        },
+        {
+          "title": "医学渊源论",
+          "page_no": 168,
+          "unit_label": "PDF 第 168 页（原书 p.155）"
+        },
+        {
+          "title": "考试医学论",
+          "page_no": 169,
+          "unit_label": "PDF 第 169 页（原书 p.156）"
+        },
+        {
+          "title": "医非人人可学论",
+          "page_no": 169,
+          "unit_label": "PDF 第 169 页（原书 p.156）"
+        },
+        {
+          "title": "名医不可为论",
+          "page_no": 169,
+          "unit_label": "PDF 第 169 页（原书 p.156）"
+        },
+        {
+          "title": "邪说陷溺论",
+          "page_no": 170,
+          "unit_label": "PDF 第 170 页（原书 p.157）"
+        },
+        {
+          "title": "涉猎医书误人论",
+          "page_no": 170,
+          "unit_label": "PDF 第 170 页（原书 p.157）"
+        },
+        {
+          "title": "病家论",
+          "page_no": 171,
+          "unit_label": "PDF 第 171 页（原书 p.158）"
+        },
+        {
+          "title": "医者误人无罪论",
+          "page_no": 172,
+          "unit_label": "PDF 第 172 页（原书 p.159）"
+        },
+        {
+          "title": "《伤寒类方》（清·徐灵胎）",
+          "page_no": 174,
+          "unit_label": "PDF 第 174 页（原书 p.161）"
+        },
+        {
+          "title": "《伤寒类方》序",
+          "page_no": 176,
+          "unit_label": "PDF 第 176 页（原书 p.163）"
+        },
+        {
+          "title": "《伤寒类方》目录",
+          "page_no": 178,
+          "unit_label": "PDF 第 178 页（原书 p.165）"
+        },
+        {
+          "title": "《伤寒类方》正文 · 桂枝汤类起",
+          "page_no": 182,
+          "unit_label": "PDF 第 182 页（原书 p.169）"
+        },
+        {
+          "title": "桂枝汤类一",
+          "page_no": 182,
+          "unit_label": "PDF 第 182 页（原书 p.169）"
+        },
+        {
+          "title": "《伤寒类方》正文（十二类方）",
+          "page_no": 183,
+          "unit_label": "PDF 第 183 页（原书 p.170）"
+        },
+        {
+          "title": "麻黄汤类二",
+          "page_no": 187,
+          "unit_label": "PDF 第 187 页（原书 p.174）"
+        },
+        {
+          "title": "葛根汤类三",
+          "page_no": 189,
+          "unit_label": "PDF 第 189 页（原书 p.176）"
+        },
+        {
+          "title": "柴胡汤类四",
+          "page_no": 190,
+          "unit_label": "PDF 第 190 页（原书 p.177）"
+        },
+        {
+          "title": "栀子汤类五",
+          "page_no": 194,
+          "unit_label": "PDF 第 194 页（原书 p.181）"
+        },
+        {
+          "title": "承气汤类六",
+          "page_no": 195,
+          "unit_label": "PDF 第 195 页（原书 p.182）"
+        },
+        {
+          "title": "泻心汤类七",
+          "page_no": 201,
+          "unit_label": "PDF 第 201 页（原书 p.188）"
+        },
+        {
+          "title": "白虎汤类八",
+          "page_no": 203,
+          "unit_label": "PDF 第 203 页（原书 p.190）"
+        },
+        {
+          "title": "五苓散类九",
+          "page_no": 204,
+          "unit_label": "PDF 第 204 页（原书 p.191）"
+        },
+        {
+          "title": "四逆汤类十",
+          "page_no": 205,
+          "unit_label": "PDF 第 205 页（原书 p.192）"
+        },
+        {
+          "title": "理中汤类十一",
+          "page_no": 208,
+          "unit_label": "PDF 第 208 页（原书 p.195）"
+        },
+        {
+          "title": "杂法方类十二",
+          "page_no": 210,
+          "unit_label": "PDF 第 210 页（原书 p.197）"
+        },
+        {
+          "title": "六经脉证",
+          "page_no": 213,
+          "unit_label": "PDF 第 213 页（原书 p.200）"
+        },
+        {
+          "title": "脏结",
+          "page_no": 215,
+          "unit_label": "PDF 第 215 页（原书 p.202）"
+        },
+        {
+          "title": "冷结",
+          "page_no": 215,
+          "unit_label": "PDF 第 215 页（原书 p.202）"
+        },
+        {
+          "title": "除中",
+          "page_no": 215,
+          "unit_label": "PDF 第 215 页（原书 p.202）"
+        },
+        {
+          "title": "伏气",
+          "page_no": 215,
+          "unit_label": "PDF 第 215 页（原书 p.202）"
+        },
+        {
+          "title": "阴毒",
+          "page_no": 216,
+          "unit_label": "PDF 第 216 页（原书 p.203）"
+        },
+        {
+          "title": "阳毒",
+          "page_no": 216,
+          "unit_label": "PDF 第 216 页（原书 p.203）"
+        },
+        {
+          "title": "温病",
+          "page_no": 216,
+          "unit_label": "PDF 第 216 页（原书 p.203）"
+        },
+        {
+          "title": "两感",
+          "page_no": 216,
+          "unit_label": "PDF 第 216 页（原书 p.203）"
+        },
+        {
+          "title": "温疫",
+          "page_no": 217,
+          "unit_label": "PDF 第 217 页（原书 p.204）"
+        },
+        {
+          "title": "多眠",
+          "page_no": 217,
+          "unit_label": "PDF 第 217 页（原书 p.204）"
+        },
+        {
+          "title": "刺法",
+          "page_no": 217,
+          "unit_label": "PDF 第 217 页（原书 p.204）"
+        },
+        {
+          "title": "《兰台轨范》（清·徐灵胎）",
+          "page_no": 220,
+          "unit_label": "PDF 第 220 页（原书 p.207）"
+        },
+        {
+          "title": "《兰台轨范》序·凡例",
+          "page_no": 222,
+          "unit_label": "PDF 第 222 页（原书 p.209）"
+        },
+        {
+          "title": "《兰台轨范》目录",
+          "page_no": 224,
+          "unit_label": "PDF 第 224 页（原书 p.211）"
+        },
+        {
+          "title": "《兰台轨范》卷一 · 通治方",
+          "page_no": 238,
+          "unit_label": "PDF 第 238 页（原书 p.225）"
+        },
+        {
+          "title": "《兰台轨范》卷一（通治方）",
+          "page_no": 239,
+          "unit_label": "PDF 第 239 页（原书 p.226）"
+        },
+        {
+          "title": "《兰台轨范》卷二",
+          "page_no": 251,
+          "unit_label": "PDF 第 251 页（原书 p.238）"
+        },
+        {
+          "title": "风方",
+          "page_no": 253,
+          "unit_label": "PDF 第 253 页（原书 p.240）"
+        },
+        {
+          "title": "痿方",
+          "page_no": 260,
+          "unit_label": "PDF 第 260 页（原书 p.247）"
+        },
+        {
+          "title": "虚劳方",
+          "page_no": 263,
+          "unit_label": "PDF 第 263 页（原书 p.250）"
+        },
+        {
+          "title": "消证方",
+          "page_no": 266,
+          "unit_label": "PDF 第 266 页（原书 p.253）"
+        },
+        {
+          "title": "伤寒六经治法方",
+          "page_no": 270,
+          "unit_label": "PDF 第 270 页（原书 p.257）"
+        },
+        {
+          "title": "《兰台轨范》卷三",
+          "page_no": 272,
+          "unit_label": "PDF 第 272 页（原书 p.259）"
+        },
+        {
+          "title": "百合病",
+          "page_no": 276,
+          "unit_label": "PDF 第 276 页（原书 p.263）"
+        },
+        {
+          "title": "百合病方",
+          "page_no": 276,
+          "unit_label": "PDF 第 276 页（原书 p.263）"
+        },
+        {
+          "title": "感冒方附",
+          "page_no": 277,
+          "unit_label": "PDF 第 277 页（原书 p.264）"
+        },
+        {
+          "title": "寒热方",
+          "page_no": 278,
+          "unit_label": "PDF 第 278 页（原书 p.265）"
+        },
+        {
+          "title": "霍乱转筋方",
+          "page_no": 280,
+          "unit_label": "PDF 第 280 页（原书 p.267）"
+        },
+        {
+          "title": "痊方",
+          "page_no": 280,
+          "unit_label": "PDF 第 280 页（原书 p.267）"
+        },
+        {
+          "title": "癃闭利淋",
+          "page_no": 281,
+          "unit_label": "PDF 第 281 页（原书 p.268）"
+        },
+        {
+          "title": "癃闭利淋方",
+          "page_no": 281,
+          "unit_label": "PDF 第 281 页（原书 p.268）"
+        },
+        {
+          "title": "《兰台轨范》卷四",
+          "page_no": 284,
+          "unit_label": "PDF 第 284 页（原书 p.271）"
+        },
+        {
+          "title": "疟方",
+          "page_no": 287,
+          "unit_label": "PDF 第 287 页（原书 p.274）"
+        },
+        {
+          "title": "痢方",
+          "page_no": 290,
+          "unit_label": "PDF 第 290 页（原书 p.277）"
+        },
+        {
+          "title": "癫狂痫",
+          "page_no": 291,
+          "unit_label": "PDF 第 291 页（原书 p.278）"
+        },
+        {
+          "title": "癫狂方",
+          "page_no": 292,
+          "unit_label": "PDF 第 292 页（原书 p.279）"
+        },
+        {
+          "title": "痰饮方",
+          "page_no": 294,
+          "unit_label": "PDF 第 294 页（原书 p.281）"
+        },
+        {
+          "title": "咳嗽方",
+          "page_no": 297,
+          "unit_label": "PDF 第 297 页（原书 p.284）"
+        },
+        {
+          "title": "疝方",
+          "page_no": 300,
+          "unit_label": "PDF 第 300 页（原书 p.287）"
+        },
+        {
+          "title": "《兰台轨范》卷五",
+          "page_no": 302,
+          "unit_label": "PDF 第 302 页（原书 p.289）"
+        },
+        {
+          "title": "臌胀水肿",
+          "page_no": 303,
+          "unit_label": "PDF 第 303 页（原书 p.290）"
+        },
+        {
+          "title": "臌胀水肿方",
+          "page_no": 305,
+          "unit_label": "PDF 第 305 页（原书 p.292）"
+        },
+        {
+          "title": "肺痿方",
+          "page_no": 308,
+          "unit_label": "PDF 第 308 页（原书 p.295）"
+        },
+        {
+          "title": "诸血方",
+          "page_no": 309,
+          "unit_label": "PDF 第 309 页（原书 p.296）"
+        },
+        {
+          "title": "噎膈呕吐方",
+          "page_no": 313,
+          "unit_label": "PDF 第 313 页（原书 p.300）"
+        },
+        {
+          "title": "泄泻",
+          "page_no": 315,
+          "unit_label": "PDF 第 315 页（原书 p.302）"
+        },
+        {
+          "title": "泄泻方",
+          "page_no": 316,
+          "unit_label": "PDF 第 316 页（原书 p.303）"
+        },
+        {
+          "title": "《兰台轨范》卷六",
+          "page_no": 317,
+          "unit_label": "PDF 第 317 页（原书 p.304）"
+        },
+        {
+          "title": "积聚癥痞",
+          "page_no": 317,
+          "unit_label": "PDF 第 317 页（原书 p.304）"
+        },
+        {
+          "title": "积聚瘤痞方",
+          "page_no": 318,
+          "unit_label": "PDF 第 318 页（原书 p.305）"
+        },
+        {
+          "title": "虫方",
+          "page_no": 322,
+          "unit_label": "PDF 第 322 页（原书 p.309）"
+        },
+        {
+          "title": "头痛方",
+          "page_no": 324,
+          "unit_label": "PDF 第 324 页（原书 p.311）"
+        },
+        {
+          "title": "心胃痛方",
+          "page_no": 325,
+          "unit_label": "PDF 第 325 页（原书 p.312）"
+        },
+        {
+          "title": "腰痛",
+          "page_no": 327,
+          "unit_label": "PDF 第 327 页（原书 p.314）"
+        },
+        {
+          "title": "腰痛方",
+          "page_no": 327,
+          "unit_label": "PDF 第 327 页（原书 p.314）"
+        },
+        {
+          "title": "腹痛方",
+          "page_no": 328,
+          "unit_label": "PDF 第 328 页（原书 p.315）"
+        },
+        {
+          "title": "脚气当灸之穴",
+          "page_no": 330,
+          "unit_label": "PDF 第 330 页（原书 p.317）"
+        },
+        {
+          "title": "脚气方",
+          "page_no": 330,
+          "unit_label": "PDF 第 330 页（原书 p.317）"
+        },
+        {
+          "title": "《兰台轨范》卷七",
+          "page_no": 332,
+          "unit_label": "PDF 第 332 页（原书 p.319）"
+        },
+        {
+          "title": "疫疠鬼疰",
+          "page_no": 332,
+          "unit_label": "PDF 第 332 页（原书 p.319）"
+        },
+        {
+          "title": "疫疠方",
+          "page_no": 333,
+          "unit_label": "PDF 第 333 页（原书 p.320）"
+        },
+        {
+          "title": "诸疸方",
+          "page_no": 335,
+          "unit_label": "PDF 第 335 页（原书 p.322）"
+        },
+        {
+          "title": "情志卧梦",
+          "page_no": 337,
+          "unit_label": "PDF 第 337 页（原书 p.324）"
+        },
+        {
+          "title": "情志卧梦方",
+          "page_no": 338,
+          "unit_label": "PDF 第 338 页（原书 p.325）"
+        },
+        {
+          "title": "耳方",
+          "page_no": 339,
+          "unit_label": "PDF 第 339 页（原书 p.326）"
+        },
+        {
+          "title": "口齿方",
+          "page_no": 342,
+          "unit_label": "PDF 第 342 页（原书 p.329）"
+        },
+        {
+          "title": "杂病",
+          "page_no": 344,
+          "unit_label": "PDF 第 344 页（原书 p.331）"
+        },
+        {
+          "title": "《兰台轨范》卷八",
+          "page_no": 349,
+          "unit_label": "PDF 第 349 页（原书 p.336）"
+        },
+        {
+          "title": "《兰台轨范》卷八（妇人·小儿·外科）",
+          "page_no": 350,
+          "unit_label": "PDF 第 350 页（原书 p.337）"
+        },
+        {
+          "title": "妇人方",
+          "page_no": 351,
+          "unit_label": "PDF 第 351 页（原书 p.338）"
+        },
+        {
+          "title": "脉法",
+          "page_no": 355,
+          "unit_label": "PDF 第 355 页（原书 p.342）"
+        },
+        {
+          "title": "面部症",
+          "page_no": 356,
+          "unit_label": "PDF 第 356 页（原书 p.343）"
+        },
+        {
+          "title": "目部症",
+          "page_no": 356,
+          "unit_label": "PDF 第 356 页（原书 p.343）"
+        },
+        {
+          "title": "五脏虚实寒热",
+          "page_no": 356,
+          "unit_label": "PDF 第 356 页（原书 p.343）"
+        },
+        {
+          "title": "变蒸",
+          "page_no": 356,
+          "unit_label": "PDF 第 356 页（原书 p.343）"
+        },
+        {
+          "title": "急惊风症冶",
+          "page_no": 356,
+          "unit_label": "PDF 第 356 页（原书 p.343）"
+        },
+        {
+          "title": "慢惊风症治",
+          "page_no": 356,
+          "unit_label": "PDF 第 356 页（原书 p.343）"
+        },
+        {
+          "title": "发搐症治",
+          "page_no": 357,
+          "unit_label": "PDF 第 357 页（原书 p.344）"
+        },
+        {
+          "title": "癫痫症治",
+          "page_no": 357,
+          "unit_label": "PDF 第 357 页（原书 p.344）"
+        },
+        {
+          "title": "附面部三指诊症图",
+          "page_no": 357,
+          "unit_label": "PDF 第 357 页（原书 p.344）"
+        },
+        {
+          "title": "附虎口三关脉图",
+          "page_no": 357,
+          "unit_label": "PDF 第 357 页（原书 p.344）"
+        },
+        {
+          "title": "五脏疮疹症治",
+          "page_no": 358,
+          "unit_label": "PDF 第 358 页（原书 p.345）"
+        },
+        {
+          "title": "丹瘤",
+          "page_no": 359,
+          "unit_label": "PDF 第 359 页（原书 p.346）"
+        },
+        {
+          "title": "伤风兼变症治二",
+          "page_no": 359,
+          "unit_label": "PDF 第 359 页（原书 p.346）"
+        },
+        {
+          "title": "诸经发热症治三",
+          "page_no": 359,
+          "unit_label": "PDF 第 359 页（原书 p.346）"
+        },
+        {
+          "title": "吐泻症治",
+          "page_no": 359,
+          "unit_label": "PDF 第 359 页（原书 p.346）"
+        },
+        {
+          "title": "五脏内外疳症主治",
+          "page_no": 359,
+          "unit_label": "PDF 第 359 页（原书 p.346）"
+        },
+        {
+          "title": "腹痛肿胀诸症",
+          "page_no": 359,
+          "unit_label": "PDF 第 359 页（原书 p.346）"
+        },
+        {
+          "title": "五脏杂症主治",
+          "page_no": 360,
+          "unit_label": "PDF 第 360 页（原书 p.347）"
+        },
+        {
+          "title": "《慎疾刍言》（清·徐灵胎）",
+          "page_no": 368,
+          "unit_label": "PDF 第 368 页（原书 p.355）"
+        },
+        {
+          "title": "二二」",
+          "page_no": 368,
+          "unit_label": "PDF 第 368 页（原书 p.355）"
+        },
+        {
+          "title": "《慎疾刍言》序",
+          "page_no": 370,
+          "unit_label": "PDF 第 370 页（原书 p.357）"
+        },
+        {
+          "title": "《慎疾刍言》目录",
+          "page_no": 372,
+          "unit_label": "PDF 第 372 页（原书 p.359）"
+        },
+        {
+          "title": "《慎疾刍言》正文 · 补剂起",
+          "page_no": 374,
+          "unit_label": "PDF 第 374 页（原书 p.361）"
+        },
+        {
+          "title": "补剂",
+          "page_no": 374,
+          "unit_label": "PDF 第 374 页（原书 p.361）"
+        },
+        {
+          "title": "用药",
+          "page_no": 374,
+          "unit_label": "PDF 第 374 页（原书 p.361）"
+        },
+        {
+          "title": "中风",
+          "page_no": 375,
+          "unit_label": "PDF 第 375 页（原书 p.362）"
+        },
+        {
+          "title": "瘌疾",
+          "page_no": 376,
+          "unit_label": "PDF 第 376 页（原书 p.363）"
+        },
+        {
+          "title": "阴症",
+          "page_no": 377,
+          "unit_label": "PDF 第 377 页（原书 p.364）"
+        },
+        {
+          "title": "妇人",
+          "page_no": 377,
+          "unit_label": "PDF 第 377 页（原书 p.364）"
+        },
+        {
+          "title": "外科",
+          "page_no": 378,
+          "unit_label": "PDF 第 378 页（原书 p.365）"
+        },
+        {
+          "title": "制剂",
+          "page_no": 379,
+          "unit_label": "PDF 第 379 页（原书 p.366）"
+        },
+        {
+          "title": "煎药服药法",
+          "page_no": 379,
+          "unit_label": "PDF 第 379 页（原书 p.366）"
+        },
+        {
+          "title": "秘方",
+          "page_no": 380,
+          "unit_label": "PDF 第 380 页（原书 p.367）"
+        },
+        {
+          "title": "诡诞",
+          "page_no": 381,
+          "unit_label": "PDF 第 381 页（原书 p.368）"
+        },
+        {
+          "title": "宗传",
+          "page_no": 381,
+          "unit_label": "PDF 第 381 页（原书 p.368）"
+        },
+        {
+          "title": "《慎疾刍言》正文",
+          "page_no": 382,
+          "unit_label": "PDF 第 382 页（原书 p.369）"
+        },
+        {
+          "title": "《洄溪医案》（徐灵胎著 · 王孟英编）",
+          "page_no": 384,
+          "unit_label": "PDF 第 384 页（原书 p.371）"
+        },
+        {
+          "title": "《洄溪医案》王孟英序",
+          "page_no": 386,
+          "unit_label": "PDF 第 386 页（原书 p.373）"
+        },
+        {
+          "title": "《洄溪医案》目录",
+          "page_no": 388,
+          "unit_label": "PDF 第 388 页（原书 p.375）"
+        },
+        {
+          "title": "《洄溪医案》正文（含「雄按」）",
+          "page_no": 390,
+          "unit_label": "PDF 第 390 页（原书 p.377）"
+        },
+        {
+          "title": "恶风",
+          "page_no": 391,
+          "unit_label": "PDF 第 391 页（原书 p.378）"
+        },
+        {
+          "title": "周痹",
+          "page_no": 391,
+          "unit_label": "PDF 第 391 页（原书 p.378）"
+        },
+        {
+          "title": "刖足伤寒",
+          "page_no": 392,
+          "unit_label": "PDF 第 392 页（原书 p.379）"
+        },
+        {
+          "title": "外感停食",
+          "page_no": 392,
+          "unit_label": "PDF 第 392 页（原书 p.379）"
+        },
+        {
+          "title": "时证",
+          "page_no": 393,
+          "unit_label": "PDF 第 393 页（原书 p.380）"
+        },
+        {
+          "title": "失魂",
+          "page_no": 393,
+          "unit_label": "PDF 第 393 页（原书 p.380）"
+        },
+        {
+          "title": "《洄溪医案》正文〔含王孟英「雄按」〕",
+          "page_no": 394,
+          "unit_label": "PDF 第 394 页（原书 p.381）"
+        },
+        {
+          "title": "暑邪热呃",
+          "page_no": 397,
+          "unit_label": "PDF 第 397 页（原书 p.384）"
+        },
+        {
+          "title": "疟痢",
+          "page_no": 398,
+          "unit_label": "PDF 第 398 页（原书 p.385）"
+        },
+        {
+          "title": "畏寒",
+          "page_no": 398,
+          "unit_label": "PDF 第 398 页（原书 p.385）"
+        },
+        {
+          "title": "痰喘",
+          "page_no": 399,
+          "unit_label": "PDF 第 399 页（原书 p.386）"
+        },
+        {
+          "title": "痰喘亡阴",
+          "page_no": 400,
+          "unit_label": "PDF 第 400 页（原书 p.387）"
+        },
+        {
+          "title": "水肿",
+          "page_no": 402,
+          "unit_label": "PDF 第 402 页（原书 p.389）"
+        },
+        {
+          "title": "怔忡",
+          "page_no": 403,
+          "unit_label": "PDF 第 403 页（原书 p.390）"
+        },
+        {
+          "title": "瘀留经络",
+          "page_no": 404,
+          "unit_label": "PDF 第 404 页（原书 p.391）"
+        },
+        {
+          "title": "肠红",
+          "page_no": 404,
+          "unit_label": "PDF 第 404 页（原书 p.391）"
+        },
+        {
+          "title": "瘀血冲厥",
+          "page_no": 405,
+          "unit_label": "PDF 第 405 页（原书 p.392）"
+        },
+        {
+          "title": "胎中毒火",
+          "page_no": 406,
+          "unit_label": "PDF 第 406 页（原书 p.393）"
+        },
+        {
+          "title": "子利",
+          "page_no": 406,
+          "unit_label": "PDF 第 406 页（原书 p.393）"
+        },
+        {
+          "title": "产后风热",
+          "page_no": 406,
+          "unit_label": "PDF 第 406 页（原书 p.393）"
+        },
+        {
+          "title": "产后血臌",
+          "page_no": 407,
+          "unit_label": "PDF 第 407 页（原书 p.394）"
+        },
+        {
+          "title": "产后肠痈",
+          "page_no": 407,
+          "unit_label": "PDF 第 407 页（原书 p.394）"
+        },
+        {
+          "title": "恶痘",
+          "page_no": 407,
+          "unit_label": "PDF 第 407 页（原书 p.394）"
+        },
+        {
+          "title": "肠痈",
+          "page_no": 408,
+          "unit_label": "PDF 第 408 页（原书 p.395）"
+        },
+        {
+          "title": "项疸",
+          "page_no": 409,
+          "unit_label": "PDF 第 409 页（原书 p.396）"
+        },
+        {
+          "title": "对口",
+          "page_no": 410,
+          "unit_label": "PDF 第 410 页（原书 p.397）"
+        },
+        {
+          "title": "对心发",
+          "page_no": 411,
+          "unit_label": "PDF 第 411 页（原书 p.398）"
+        },
+        {
+          "title": "【现代附编】出版尾页",
+          "page_no": 414,
+          "unit_label": "PDF 第 414 页（原书 p.401）"
+        },
+        {
+          "title": "【现代附编】徐灵胎医学学术思想研究",
+          "page_no": 416,
+          "unit_label": "PDF 第 416 页（原书 p.403）"
+        },
+        {
+          "title": "【现代学术研究】徐灵胎医学学术思想研究",
+          "page_no": 417,
+          "unit_label": "PDF 第 417 页（原书 p.404）"
+        },
+        {
+          "title": "【现代附编】徐灵胎著作辨考",
+          "page_no": 423,
+          "unit_label": "PDF 第 423 页（原书 p.410）"
+        },
+        {
+          "title": "【现代学术研究】徐灵胎著作辨考（含伪托考）",
+          "page_no": 424,
+          "unit_label": "PDF 第 424 页（原书 p.411）"
+        },
+        {
+          "title": "【现代附编】徐灵胎研究论文题录（1950～1997）",
+          "page_no": 432,
+          "unit_label": "PDF 第 432 页（原书 p.419）"
+        },
+        {
+          "title": "【现代研究题录】1950～1997年研究论文题录",
+          "page_no": 433,
+          "unit_label": "PDF 第 433 页（原书 p.420）"
+        },
+        {
+          "title": "【现代研究题录】1950～1997年研究论文题录（末页重印 p.420）",
+          "page_no": 434,
+          "unit_label": "PDF 第 434 页（原书 p.420（重页））"
+        }
+      ]
     },
     {
       "book_id": "huangdi-waijing-pdf",
       "title": "《黄帝外经》",
-      "short_title": "黄帝外经（影印扫描）",
-      "author_era": "古传外经本（影印扫描）",
+      "short_title": "黄帝外经（外经微言）",
+      "author_era": "清·陈士铎述（托名岐伯）",
       "shelf": "classical_companions",
       "tradition_layer": "commentary",
       "module_affinities": [
         "neijing",
         "acupuncture"
       ],
-      "description": "原书85页扫描影印版（当前未执行虚假OCR，支持逐页高清影印原件浏览）。",
+      "description": "共85页WinRT OCR全文与原页影印对照：p.1–4为现代《概述》考略，正文现存80篇阐发命门真火、五运六气、阴阳颠倒、阴寒格阳、五郁舒肝等内景微言（陈士铎述并间附「凌波按」）。",
       "source_id": "huangdi-waijing-pdf",
       "shelf_label": "古籍注疏与经方辅注",
       "file_format": "pdf",
       "relative_path": "books/ni-haixia-medicine/黄帝外经.pdf",
       "sha256": "b8b6647b0d24e83abdd757c40c6b492b4ecc200fa2a7061a5e7e4552337b5bcb",
       "total_units": 85,
-      "text_units": 0,
-      "unit_type": "scan_page",
+      "text_units": 85,
+      "unit_type": "pdf_page",
       "has_image_viewer": true,
-      "search_index_status": "scan_browse_only",
-      "chapters": []
+      "search_index_status": "indexed",
+      "chapters": [
+        {
+          "title": "【卷首概述】《外经微言》整理考略",
+          "page_no": 1,
+          "unit_label": "PDF 第 1 页"
+        },
+        {
+          "title": "阴阳颠倒篇",
+          "page_no": 4,
+          "unit_label": "PDF 第 4 页"
+        },
+        {
+          "title": "顺逆探原篇",
+          "page_no": 5,
+          "unit_label": "PDF 第 5 页（原书 p.5）"
+        },
+        {
+          "title": "回天生育篇",
+          "page_no": 6,
+          "unit_label": "PDF 第 6 页（原书 p.6）"
+        },
+        {
+          "title": "天人寿夭篇",
+          "page_no": 7,
+          "unit_label": "PDF 第 7 页（原书 p.7）"
+        },
+        {
+          "title": "命根养生篇",
+          "page_no": 8,
+          "unit_label": "PDF 第 8 页（原书 p.8）"
+        },
+        {
+          "title": "救母篇",
+          "page_no": 8,
+          "unit_label": "PDF 第 8 页（原书 p.8）"
+        },
+        {
+          "title": "红铅损益篇",
+          "page_no": 11,
+          "unit_label": "PDF 第 11 页（原书 p.11）"
+        },
+        {
+          "title": "初生微论篇",
+          "page_no": 12,
+          "unit_label": "PDF 第 12 页（原书 p.12）"
+        },
+        {
+          "title": "骨阴篇",
+          "page_no": 12,
+          "unit_label": "PDF 第 12 页（原书 p.12）"
+        },
+        {
+          "title": "媾精受妊篇",
+          "page_no": 13,
+          "unit_label": "PDF 第 13 页（原书 p.13）"
+        },
+        {
+          "title": "社生篇",
+          "page_no": 14,
+          "unit_label": "PDF 第 14 页（原书 p.14）"
+        },
+        {
+          "title": "天厌火衰篇",
+          "page_no": 15,
+          "unit_label": "PDF 第 15 页（原书 p.15）"
+        },
+        {
+          "title": "经脉相行篇",
+          "page_no": 16,
+          "unit_label": "PDF 第 16 页（原书 p.16）"
+        },
+        {
+          "title": "经脉终始篇",
+          "page_no": 17,
+          "unit_label": "PDF 第 17 页（原书 p.17）"
+        },
+        {
+          "title": "经气本标篇",
+          "page_no": 18,
+          "unit_label": "PDF 第 18 页（原书 p.18）"
+        },
+        {
+          "title": "脏腑阐微篇",
+          "page_no": 19,
+          "unit_label": "PDF 第 19 页（原书 p.19）"
+        },
+        {
+          "title": "考订经脉篇",
+          "page_no": 20,
+          "unit_label": "PDF 第 20 页（原书 p.20）"
+        },
+        {
+          "title": "包络配腑篇",
+          "page_no": 28,
+          "unit_label": "PDF 第 28 页（原书 p.28）"
+        },
+        {
+          "title": "胆腑命名篇",
+          "page_no": 29,
+          "unit_label": "PDF 第 29 页（原书 p.29）"
+        },
+        {
+          "title": "任督死生篇",
+          "page_no": 30,
+          "unit_label": "PDF 第 30 页（原书 p.30）"
+        },
+        {
+          "title": "阴阳二跷篇",
+          "page_no": 31,
+          "unit_label": "PDF 第 31 页（原书 p.31）"
+        },
+        {
+          "title": "奇恒篇",
+          "page_no": 31,
+          "unit_label": "PDF 第 31 页（原书 p.31）"
+        },
+        {
+          "title": "小络篇",
+          "page_no": 32,
+          "unit_label": "PDF 第 32 页（原书 p.32）"
+        },
+        {
+          "title": "肺金篇",
+          "page_no": 32,
+          "unit_label": "PDF 第 32 页（原书 p.32）"
+        },
+        {
+          "title": "肝木篇",
+          "page_no": 34,
+          "unit_label": "PDF 第 34 页（原书 p.34）"
+        },
+        {
+          "title": "肾水篇",
+          "page_no": 35,
+          "unit_label": "PDF 第 35 页（原书 p.35）"
+        },
+        {
+          "title": "心火篇",
+          "page_no": 36,
+          "unit_label": "PDF 第 36 页（原书 p.36）"
+        },
+        {
+          "title": "脾土篇",
+          "page_no": 38,
+          "unit_label": "PDF 第 38 页（原书 p.38）"
+        },
+        {
+          "title": "胃土篇",
+          "page_no": 39,
+          "unit_label": "PDF 第 39 页（原书 p.39）"
+        },
+        {
+          "title": "包络火篇",
+          "page_no": 40,
+          "unit_label": "PDF 第 40 页（原书 p.40）"
+        },
+        {
+          "title": "三焦火篇",
+          "page_no": 41,
+          "unit_label": "PDF 第 41 页（原书 p.41）"
+        },
+        {
+          "title": "胆木篇",
+          "page_no": 42,
+          "unit_label": "PDF 第 42 页（原书 p.42）"
+        },
+        {
+          "title": "膀胱水篇",
+          "page_no": 43,
+          "unit_label": "PDF 第 43 页（原书 p.43）"
+        },
+        {
+          "title": "大肠金篇",
+          "page_no": 44,
+          "unit_label": "PDF 第 44 页（原书 p.44）"
+        },
+        {
+          "title": "小肠火篇",
+          "page_no": 45,
+          "unit_label": "PDF 第 45 页（原书 p.45）"
+        },
+        {
+          "title": "命门真火篇",
+          "page_no": 46,
+          "unit_label": "PDF 第 46 页（原书 p.46）"
+        },
+        {
+          "title": "命门经主篇",
+          "page_no": 47,
+          "unit_label": "PDF 第 47 页（原书 p.47）"
+        },
+        {
+          "title": "五行生克篇",
+          "page_no": 48,
+          "unit_label": "PDF 第 48 页（原书 p.48）"
+        },
+        {
+          "title": "小心真主篇",
+          "page_no": 50,
+          "unit_label": "PDF 第 50 页（原书 p.50）"
+        },
+        {
+          "title": "水不克火篇",
+          "page_no": 51,
+          "unit_label": "PDF 第 51 页（原书 p.51）"
+        },
+        {
+          "title": "三关升降篇",
+          "page_no": 51,
+          "unit_label": "PDF 第 51 页（原书 p.51）"
+        },
+        {
+          "title": "表微篇",
+          "page_no": 52,
+          "unit_label": "PDF 第 52 页（原书 p.52）"
+        },
+        {
+          "title": "呼吸篇",
+          "page_no": 53,
+          "unit_label": "PDF 第 53 页（原书 p.53）"
+        },
+        {
+          "title": "脉动篇",
+          "page_no": 53,
+          "unit_label": "PDF 第 53 页（原书 p.53）"
+        },
+        {
+          "title": "瞳子散大篇",
+          "page_no": 54,
+          "unit_label": "PDF 第 54 页（原书 p.54）"
+        },
+        {
+          "title": "诊原篇",
+          "page_no": 55,
+          "unit_label": "PDF 第 55 页（原书 p.55）"
+        },
+        {
+          "title": "精气引血篇",
+          "page_no": 55,
+          "unit_label": "PDF 第 55 页（原书 p.55）"
+        },
+        {
+          "title": "天人一气篇",
+          "page_no": 56,
+          "unit_label": "PDF 第 56 页（原书 p.56）"
+        },
+        {
+          "title": "地气合人篇",
+          "page_no": 57,
+          "unit_label": "PDF 第 57 页（原书 p.57）"
+        },
+        {
+          "title": "三才并论篇",
+          "page_no": 58,
+          "unit_label": "PDF 第 58 页（原书 p.58）"
+        },
+        {
+          "title": "五运六气离合篇",
+          "page_no": 59,
+          "unit_label": "PDF 第 59 页（原书 p.59）"
+        },
+        {
+          "title": "六气分门篇",
+          "page_no": 60,
+          "unit_label": "PDF 第 60 页（原书 p.60）"
+        },
+        {
+          "title": "六气独胜篇",
+          "page_no": 61,
+          "unit_label": "PDF 第 61 页（原书 p.61）"
+        },
+        {
+          "title": "四时六气异同篇",
+          "page_no": 63,
+          "unit_label": "PDF 第 63 页（原书 p.63）"
+        },
+        {
+          "title": "司天在泉分合篇",
+          "page_no": 64,
+          "unit_label": "PDF 第 64 页（原书 p.64）"
+        },
+        {
+          "title": "从化篇",
+          "page_no": 65,
+          "unit_label": "PDF 第 65 页（原书 p.65）"
+        },
+        {
+          "title": "冬夏火热篇",
+          "page_no": 65,
+          "unit_label": "PDF 第 65 页（原书 p.65）"
+        },
+        {
+          "title": "暑火二气篇",
+          "page_no": 66,
+          "unit_label": "PDF 第 66 页（原书 p.66）"
+        },
+        {
+          "title": "阴阳上下篇",
+          "page_no": 66,
+          "unit_label": "PDF 第 66 页（原书 p.66）"
+        },
+        {
+          "title": "营卫交重篇",
+          "page_no": 67,
+          "unit_label": "PDF 第 67 页（原书 p.67）"
+        },
+        {
+          "title": "五脏互根篇",
+          "page_no": 68,
+          "unit_label": "PDF 第 68 页（原书 p.68）"
+        },
+        {
+          "title": "八风固本篇",
+          "page_no": 68,
+          "unit_label": "PDF 第 68 页（原书 p.68）"
+        },
+        {
+          "title": "八风命名篇",
+          "page_no": 69,
+          "unit_label": "PDF 第 69 页（原书 p.69）"
+        },
+        {
+          "title": "太乙篇",
+          "page_no": 70,
+          "unit_label": "PDF 第 70 页（原书 p.70）"
+        },
+        {
+          "title": "亲阳亲阴篇",
+          "page_no": 71,
+          "unit_label": "PDF 第 71 页（原书 p.71）"
+        },
+        {
+          "title": "异传篇",
+          "page_no": 71,
+          "unit_label": "PDF 第 71 页（原书 p.71）"
+        },
+        {
+          "title": "伤寒知变篇",
+          "page_no": 73,
+          "unit_label": "PDF 第 73 页（原书 p.73）"
+        },
+        {
+          "title": "伤寒同异篇",
+          "page_no": 74,
+          "unit_label": "PDF 第 74 页（原书 p.74）"
+        },
+        {
+          "title": "风寒殊异篇",
+          "page_no": 74,
+          "unit_label": "PDF 第 74 页（原书 p.74）"
+        },
+        {
+          "title": "阴寒格阳篇",
+          "page_no": 76,
+          "unit_label": "PDF 第 76 页（原书 p.76）"
+        },
+        {
+          "title": "春温似疫篇",
+          "page_no": 77,
+          "unit_label": "PDF 第 77 页（原书 p.77）"
+        },
+        {
+          "title": "补泻阴阳篇",
+          "page_no": 77,
+          "unit_label": "PDF 第 77 页（原书 p.77）"
+        },
+        {
+          "title": "善养篇",
+          "page_no": 78,
+          "unit_label": "PDF 第 78 页（原书 p.78）"
+        },
+        {
+          "title": "亡阳亡阴篇",
+          "page_no": 79,
+          "unit_label": "PDF 第 79 页（原书 p.79）"
+        },
+        {
+          "title": "昼夜轻重篇",
+          "page_no": 80,
+          "unit_label": "PDF 第 80 页（原书 p.80）"
+        },
+        {
+          "title": "解阳解阴篇",
+          "page_no": 81,
+          "unit_label": "PDF 第 81 页（原书 p.81）"
+        },
+        {
+          "title": "真假疑似篇",
+          "page_no": 82,
+          "unit_label": "PDF 第 82 页（原书 p.82）"
+        },
+        {
+          "title": "从逆窥源篇",
+          "page_no": 83,
+          "unit_label": "PDF 第 83 页（原书 p.83）"
+        },
+        {
+          "title": "移寒篇",
+          "page_no": 84,
+          "unit_label": "PDF 第 84 页（原书 p.84）"
+        },
+        {
+          "title": "寒热舒肝篇",
+          "page_no": 85,
+          "unit_label": "PDF 第 85 页（原书 p.85）"
+        }
+      ]
     }
   ]
 }

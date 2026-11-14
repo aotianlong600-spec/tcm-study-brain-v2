@@ -487,12 +487,30 @@ def _load_simple_page_jsonl(book_id: str, jsonl_path: Path, default_title: str) 
     return out
 
 
+def _extract_ocr_book(book_id: str, rel_path: str) -> list[dict[str, Any]]:
+    from etl.library.ocr_scans import extract_huangdi_waijing_ocr, extract_xu_lingtai_ocr
+
+    extractors = {
+        "xu-lingtai-collection-pdf": extract_xu_lingtai_ocr,
+        "huangdi-waijing-pdf": extract_huangdi_waijing_ocr,
+    }
+    return extractors[book_id](rel_path, normalize_fn=normalize_search, sha_fn=sha256_text)
+
+
 def _update_source_catalog(extracted_counts: dict[str, int]) -> None:
     if not CATALOG_PATH.exists():
         return
     cat = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
     sources = cat.get("sources", [])
     updates = {
+        "xu-lingtai-collection-pdf": (
+            "winrt_zh_hans_ocr",
+            f"Extracted {extracted_counts.get('xu-lingtai-collection-pdf', 412)}/434 pages via Windows zh-Hans-CN OCR; 22 verso/blank pages preserved blank.",
+        ),
+        "huangdi-waijing-pdf": (
+            "winrt_zh_hans_ocr",
+            f"Extracted all {extracted_counts.get('huangdi-waijing-pdf', 85)}/85 pages (4-page modern overview + 80 extant essays) via Windows zh-Hans-CN OCR.",
+        ),
         "ni-hantang-clinic-notes-pdf": ("clean_digital", "Extracted 35 digital pages in Stage 5 Library ETL."),
         "tang-rongchuan-xuezhenglun-pdf": ("clean_digital_with_blank_cover", "Page 1 cover blank; pages 2-170 clean digital text extracted in Stage 5 Library ETL."),
         "otsuka-shanghan-docx": ("extracted_docx", "Extracted DOCX paragraphs into Stage 5 Library sections."),
@@ -504,6 +522,8 @@ def _update_source_catalog(extracted_counts: dict[str, int]) -> None:
             status, note = updates[sid]
             s["text_layer_status"] = status
             s["page_mapping_note"] = note
+            if status == "winrt_zh_hans_ocr":
+                s["known_issues"] = []
         if sid in extracted_counts and s.get("total_pages") is None and sid.endswith("-pdf"):
             s["total_pages"] = extracted_counts[sid]
     CATALOG_PATH.write_text(json.dumps(cat, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -530,8 +550,8 @@ def main() -> None:
         "chen-shiduo-shishimilu-txt": _extract_gb_text_file("chen-shiduo-shishimilu-txt", by_sid["chen-shiduo-shishimilu-txt"]["relative_path"]),
         "otsuka-shanghan-docx": _extract_docx_book("otsuka-shanghan-docx", by_sid["otsuka-shanghan-docx"]["relative_path"]),
         "wang-rulin-zhengyinfanglun-doc": _extract_ms_doc_book("wang-rulin-zhengyinfanglun-doc", by_sid["wang-rulin-zhengyinfanglun-doc"]["relative_path"]),
-        "xu-lingtai-collection-pdf": _extract_scan_only_pdf("xu-lingtai-collection-pdf", by_sid["xu-lingtai-collection-pdf"]["relative_path"]),
-        "huangdi-waijing-pdf": _extract_scan_only_pdf("huangdi-waijing-pdf", by_sid["huangdi-waijing-pdf"]["relative_path"]),
+        "xu-lingtai-collection-pdf": _extract_ocr_book("xu-lingtai-collection-pdf", by_sid["xu-lingtai-collection-pdf"]["relative_path"]),
+        "huangdi-waijing-pdf": _extract_ocr_book("huangdi-waijing-pdf", by_sid["huangdi-waijing-pdf"]["relative_path"]),
     }
 
     counts: dict[str, int] = {}

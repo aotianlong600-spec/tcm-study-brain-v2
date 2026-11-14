@@ -351,7 +351,10 @@
       const modsHtml = (ch.modifications || [])
         .map(
           (m) => `<div class="s4-mod-card">
-            <div class="s4-mod-head"><strong>${esc(m.base_formula_name)} → ${esc(m.target_formula_name)}</strong></div>
+            <div class="s4-mod-head">
+              <strong>${esc(m.base_formula_name)} → ${esc(m.target_formula_name)}</strong>
+              <button type="button" class="text-button ctx-ref-btn" data-ctx-loc="1" data-ctx-hint="金匮要略" data-ctx-q="${esc(m.target_formula_name || m.base_formula_name)}">查原书上下文 ↗</button>
+            </div>
             <div class="s4-mod-diff">条件：${esc(m.condition || "")} · 变化：${esc(m.changes?.summary || "")}</div>
             ${m.rationale ? `<div class="s4-mod-rationale">${esc(m.rationale)}</div>` : ""}
           </div>`
@@ -493,6 +496,7 @@
               ${rel.formula_id ? `<button type="button" class="text-button" data-s4-open-formula="${encodeURIComponent(rel.formula_id)}">打开经方 ↗</button>` : ""}
               ${rel.chapter_id && !rel.formula_id ? `<button type="button" class="text-button" data-s4-jinkui-chapter="${encodeURIComponent(rel.chapter_id)}">打开金匮篇目 ↗</button>` : ""}
               <button type="button" class="text-button" data-s4-acup-seg="${esc(seg)}" data-s4-acup-id="${encodeURIComponent(rel.target_id)}">赴针灸：${esc(rel.target_name || rel.target_id)} ↗</button>
+              <button type="button" class="text-button ctx-ref-btn" data-ctx-loc="1" data-ctx-hint="针灸" data-ctx-q="${esc((rel.quote || rel.target_name || fname).slice(0, 20))}">查原书上下文 ↗</button>
             </div>
           </div>`;
         })

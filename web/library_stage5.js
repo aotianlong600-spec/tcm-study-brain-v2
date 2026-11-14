@@ -13,16 +13,21 @@
     bencao: { cls: "badge-bencao", text: "本草" },
     acupuncture: { cls: "badge-acup", text: "针灸" },
     neijing: { cls: "badge-neijing", text: "内经" },
+    hantang: { cls: "badge-hantang", text: "汉唐" },
   };
 
   const st = {
     activeView: "", // "" | "stage5" | "library"
     // Stage 5 state
-    s5Mode: "compose", // "compose" | "diagnose" | "ground" | "syndromes"
+    s5Mode: "compose", // "compose" | "diagnose" | "ground" | "syndromes" | "hantang"
     s5Query: "",
     s5Pulses: [],
     s5Syndromes: [],
     s5Data: null,
+    htSubTab: "formulas", // "formulas" | "spine_palp" | "western" | "redlines" | "cases"
+    htCategory: "all",
+    htSafety: "all",
+    htOverview: null,
     // Book Library state
     libShelf: "",
     libBooks: [],
@@ -30,6 +35,14 @@
     selectedBook: null,
     currentPageNo: 1,
     pageData: null,
+    readLayout: "continuous", // "continuous" (连续上下翻) | "single" (单页精看)
+    loadedPages: [],
+    loadedStartPage: 1,
+    loadedEndPage: 1,
+    loadingChunk: false,
+    lastSearchQuery: "",
+    scanSyncTimer: null,
+    scanObserver: null,
     viewMode: "split", // "text" | "split" | "image"
     reflowText: true,
     highlightQuery: "",
@@ -135,6 +148,19 @@
       setTimeout(() => {
         window.acupunctureUI?.handleHash?.(targetHash).catch(() => {});
       }, 80);
+      return;
+    }
+    if (module === "hantang") {
+      let htQuery = String(entityId || "").replace(/^hantang:/i, "").toUpperCase();
+      htQuery = htQuery.replace(/^HT-0*(\d+)$/, "HT-$1");
+      st.s5Query = htQuery;
+      st.htSubTab = "formulas";
+      st.htCategory = "all";
+      st.htSafety = "all";
+      const inp = $("#s5-query-input");
+      if (inp) inp.value = htQuery;
+      activateTopView("stage5", false);
+      await activateStage5("hantang", false);
     }
   }
 
@@ -154,7 +180,11 @@
     const stats = ov.stats || {};
     const statsEl = $("#lib-overview-stats");
     if (statsEl) {
-      statsEl.textContent = `共 ${stats.total_books || 17} 册 · ${stats.indexed_books || 15} 册可全文检索 · ${stats.scan_only_books || 2} 册影印扫描 · ${stats.linked_pages || 0} 页双向联动`;
+      const totalBooks = stats.total_books ?? 17;
+      const indexedBooks = stats.indexed_books ?? 17;
+      const scanOnlyBooks = stats.scan_only_books ?? 0;
+      const scanNote = scanOnlyBooks > 0 ? ` · ${scanOnlyBooks} 册影印扫描` : " · 全库均已OCR/文本数字化";
+      statsEl.textContent = `共 ${totalBooks} 册 · ${indexedBooks} 册可全文检索${scanNote} · ${stats.linked_pages || 0} 页双向联动`;
     }
     const cntEl = $("#lib-books-count");
     if (cntEl) cntEl.textContent = `${st.libBooks.length} 册`;
@@ -194,17 +224,28 @@
   async function selectBook(bookId, pageNo = 1, skipHash = false) {
     st.selectedBookId = bookId;
     st.searchActive = false;
+    st.loadedPages = [];
+    st.loadedStartPage = 1;
+    st.loadedEndPage = 1;
     $("#lib-search-results-panel")?.classList.add("hidden");
     $("#lib-reader-workspace")?.classList.remove("hidden");
     renderBookList();
 
-    const book = await api(`/api/library/books/${encodeURIComponent(bookId)}`);
+    let book;
+    try {
+      book = await api(`/api/library/books/${encodeURIComponent(bookId)}`);
+    } catch (err) {
+      showMsg(`未能打开典籍：${err?.message || bookId}`);
+      return;
+    }
     st.selectedBook = book;
     if (book.search_index_status === "scan_browse_only") {
       st.viewMode = "image";
     } else if (st.viewMode === "image") {
       st.viewMode = "split";
     }
+    const tocInp = $("#lib-toc-filter");
+    if (tocInp) tocInp.value = "";
     renderBookToc(book);
     await loadBookPage(bookId, pageNo, skipHash);
   }
@@ -249,15 +290,243 @@
     listEl.innerHTML = (itemsHtml || `<div class="empty-mini">可直接输入页码翻阅（共 ${book.total_units} 单元）</div>`) + topEntHtml;
   }
 
-  async function loadBookPage(bookId, pageNo, skipHash = false) {
-    const safePage = Math.max(1, Number(pageNo) || 1);
-    const page = await api(`/api/library/books/${encodeURIComponent(bookId)}/pages/${safePage}`);
+  function buildEntityLinksBarHtml(page) {
+    if (!page) return "";
+    return (page.entity_links || []).length
+      ? `<span class="lib-links-label">本页知识联动（第 ${page.page_no} 页）· 点击直达对应学习板块：</span>
+         <div class="lib-chip-cloud">
+           ${page.entity_links
+             .map((lk) => {
+               const mb = MODULE_BADGE[lk.module] || { cls: "badge-formula", text: lk.kind };
+               return `<button class="entity-jump-chip ${mb.cls}" type="button" data-jump-module="${esc(lk.module)}" data-jump-id="${esc(lk.entity_id)}">${esc(mb.text)} · ${esc(lk.label)}</button>`;
+             })
+             .join("")}
+         </div>`
+      : `<span class="muted-line">第 ${page.page_no} 页暂未检测到明确跨模块条目名称</span>`;
+  }
+
+  function updateSyncedScanImage(page) {
+    if (!page || !page.has_image_viewer || !page.image_url) return;
+    const capEl = $("#lib-synced-scan-cap");
+    if (capEl) capEl.textContent = `原书影印图 · 第 ${page.page_no} / ${page.total_units} 页`;
+    const prevBtn = $("#lib-scan-prev");
+    const nextBtn = $("#lib-scan-next");
+    if (prevBtn) prevBtn.disabled = page.page_no <= 1;
+    if (nextBtn) nextBtn.disabled = page.page_no >= page.total_units;
+
+    const wrap = $("#lib-synced-scan-img-wrap");
+    if (!wrap) return;
+    const curImg = wrap.querySelector("img");
+    const existingUrl = curImg?.dataset.tcmApiImg || curImg?.getAttribute("src") || "";
+    if (existingUrl === page.image_url) return;
+    const imgAttrs = window.tcmImgAttrs ? window.tcmImgAttrs(page.image_url) : `src="${esc(page.image_url)}"`;
+    wrap.innerHTML = `<img id="lib-synced-scan-img" class="lib-scan-img" ${imgAttrs} alt="${esc(page.book_title)} 第${page.page_no}页原图" loading="lazy" />`;
+  }
+
+  function syncActivePageIndicators(pageNo, { updateScan = false } = {}) {
+    const target = Number(pageNo) || 1;
+    const page = st.loadedPages.find((p) => p.page_no === target) || st.pageData;
+    if (!page) return;
+    const changed = st.currentPageNo !== page.page_no;
     st.currentPageNo = page.page_no;
     st.pageData = page;
+
+    const subEl = $("#lib-reader-sub");
+    if (subEl) {
+      const rangeNote =
+        st.readLayout === "continuous" && st.loadedPages.length > 1
+          ? `（已载入第 ${st.loadedStartPage}–${st.loadedEndPage} 页上下文）`
+          : "";
+      subEl.textContent = `${page.unit_label}${page.section_title ? ` · ${page.section_title}` : ""} ${rangeNote}`;
+    }
+    const jumpInp = $("#lib-jump-input");
+    if (jumpInp && document.activeElement !== jumpInp) jumpInp.value = page.page_no;
+    const prevBtn = $("#lib-prev-btn");
+    const nextBtn = $("#lib-next-btn");
+    if (prevBtn) prevBtn.disabled = page.page_no <= 1;
+    if (nextBtn) nextBtn.disabled = page.page_no >= page.total_units;
+    const shaEl = $("#lib-active-sha");
+    if (shaEl) shaEl.textContent = `SHA: ${(page.text_sha256 || "").slice(0, 12)}`;
+    const linksBar = $("#lib-active-links-bar");
+    if (linksBar && changed) {
+      linksBar.className = (page.entity_links || []).length ? "lib-page-links-bar" : "lib-page-links-bar muted-line";
+      linksBar.innerHTML = buildEntityLinksBarHtml(page);
+    }
+
+    document.querySelectorAll("#lib-toc-list .lib-toc-item").forEach((el) => {
+      el.classList.toggle("is-current", Number(el.dataset.libGoPage) === page.page_no);
+    });
+    document.querySelectorAll("#lib-continuous-stream .lib-page-block").forEach((el) => {
+      el.classList.toggle("is-active-page", Number(el.dataset.libPageAnchor) === page.page_no);
+    });
+
+    if (changed && st.activeView === "library") {
+      history.replaceState(null, "", `#/library/${encodeURIComponent(st.selectedBookId)}/${page.page_no}`);
+    }
+    if (updateScan && st.viewMode === "split" && page.has_image_viewer) {
+      clearTimeout(st.scanSyncTimer);
+      st.scanSyncTimer = setTimeout(() => updateSyncedScanImage(page), 140);
+    }
+  }
+
+  function scrollToPageAnchor(pageNo, preferHighlight = false) {
+    const stream = $("#lib-continuous-stream");
+    if (!stream) return;
+    const block = stream.querySelector(`[data-lib-page-anchor="${pageNo}"]`);
+    if (!block) return;
+    const hl = preferHighlight ? block.querySelector(".lib-hl") : null;
+    if (hl) {
+      hl.scrollIntoView({ behavior: "smooth", block: "center" });
+    } else {
+      const top = Math.max(0, block.offsetTop - stream.offsetTop - 8);
+      stream.scrollTo({ top, behavior: "auto" });
+    }
+    block.classList.add("is-flash-target");
+    setTimeout(() => block.classList.remove("is-flash-target"), 1400);
+  }
+
+  async function loadBookPage(bookId, pageNo, skipHash = false) {
+    const safePage = Math.max(1, Number(pageNo) || 1);
+    if (st.readLayout === "single") {
+      const page = await api(`/api/library/books/${encodeURIComponent(bookId)}/pages/${safePage}`);
+      st.currentPageNo = page.page_no;
+      st.pageData = page;
+      st.loadedPages = [page];
+      st.loadedStartPage = page.page_no;
+      st.loadedEndPage = page.page_no;
+      if (!skipHash && st.activeView === "library") {
+        location.hash = `#/library/${encodeURIComponent(bookId)}/${page.page_no}`;
+      }
+      renderReaderPage();
+      return;
+    }
+
+    // Continuous context mode: if already within loaded window of same book, scroll smoothly without reload!
+    if (
+      st.selectedBookId === bookId &&
+      st.loadedPages.length > 0 &&
+      safePage >= st.loadedStartPage &&
+      safePage <= st.loadedEndPage &&
+      $("#lib-continuous-stream")
+    ) {
+      syncActivePageIndicators(safePage, { updateScan: true });
+      scrollToPageAnchor(safePage, Boolean(st.highlightQuery));
+      if (!skipHash && st.activeView === "library") {
+        location.hash = `#/library/${encodeURIComponent(bookId)}/${safePage}`;
+      }
+      return;
+    }
+
+    const before = st.selectedBook?.search_index_status === "scan_browse_only" ? 1 : 2;
+    const after = st.selectedBook?.search_index_status === "scan_browse_only" ? 3 : 4;
+    const ctx = await api(
+      `/api/library/books/${encodeURIComponent(bookId)}/context?page_no=${safePage}&before=${before}&after=${after}`
+    );
+    st.loadedPages = ctx.pages || [];
+    st.loadedStartPage = ctx.start_page || 1;
+    st.loadedEndPage = ctx.end_page || st.loadedPages.length;
+    st.currentPageNo = ctx.target_page || safePage;
+    st.pageData = st.loadedPages.find((p) => p.page_no === st.currentPageNo) || st.loadedPages[0];
     if (!skipHash && st.activeView === "library") {
-      location.hash = `#/library/${encodeURIComponent(bookId)}/${page.page_no}`;
+      location.hash = `#/library/${encodeURIComponent(bookId)}/${st.currentPageNo}`;
     }
     renderReaderPage();
+    scrollToPageAnchor(st.currentPageNo, Boolean(st.highlightQuery));
+  }
+
+  async function loadContextDirection(direction) {
+    if (st.loadingChunk || !st.selectedBook || st.readLayout !== "continuous") return;
+    const total = st.pageData?.total_units || st.selectedBook.total_units || 1;
+    const stream = $("#lib-continuous-stream");
+    if (!stream) return;
+
+    if (direction === "up") {
+      if (st.loadedStartPage <= 1) return;
+      st.loadingChunk = true;
+      const prevBtn = $("#lib-load-prev-chunk");
+      if (prevBtn) prevBtn.textContent = "正在载入上文书页...";
+      try {
+        const anchorCenter = Math.max(1, st.loadedStartPage - 3);
+        const ctx = await api(
+          `/api/library/books/${encodeURIComponent(st.selectedBookId)}/context?page_no=${anchorCenter}&before=2&after=2`
+        );
+        const older = (ctx.pages || []).filter((p) => p.page_no < st.loadedStartPage);
+        if (older.length) {
+          const prevScrollHeight = stream.scrollHeight;
+          const prevScrollTop = stream.scrollTop;
+          const baseFirst = st.loadedPages[0];
+          st.loadedPages = [...older, ...st.loadedPages];
+          st.loadedStartPage = st.loadedPages[0].page_no;
+          // Insert older blocks right after top loader sentinel and preserve viewport pixel offset!
+          const topWrap = $("#lib-top-sentinel");
+          if (topWrap) {
+            const fragHtml = older
+              .map((p, idx) => renderContinuousPageBlock(p, idx === 0 ? null : older[idx - 1], st.highlightQuery, true))
+              .join("");
+            topWrap.insertAdjacentHTML("afterend", fragHtml);
+            if (baseFirst) {
+              // Refresh continuation badge on previously first block if needed
+              const oldFirstDom = stream.querySelector(`[data-lib-page-anchor="${baseFirst.page_no}"]`);
+              if (oldFirstDom) oldFirstDom.outerHTML = renderContinuousPageBlock(baseFirst, older[older.length - 1], st.highlightQuery, true);
+            }
+            // Trim bottom if buffer grows huge (> 36 pages)
+            if (st.loadedPages.length > 36) {
+              const dropCount = st.loadedPages.length - 36;
+              const dropped = st.loadedPages.splice(st.loadedPages.length - dropCount, dropCount);
+              st.loadedEndPage = st.loadedPages[st.loadedPages.length - 1].page_no;
+              dropped.forEach((dp) => stream.querySelector(`[data-lib-page-anchor="${dp.page_no}"]`)?.remove());
+            }
+            const delta = stream.scrollHeight - prevScrollHeight;
+            stream.scrollTop = prevScrollTop + delta;
+            installContinuousScanLazyObserver();
+            refreshSentinelControls();
+          } else {
+            renderReaderPage();
+          }
+        }
+      } finally {
+        st.loadingChunk = false;
+      }
+    } else if (direction === "down") {
+      if (st.loadedEndPage >= total) return;
+      st.loadingChunk = true;
+      const nextBtn = $("#lib-load-next-chunk");
+      if (nextBtn) nextBtn.textContent = "正在载入下文书页...";
+      try {
+        const anchorCenter = Math.min(total, st.loadedEndPage + 3);
+        const ctx = await api(
+          `/api/library/books/${encodeURIComponent(st.selectedBookId)}/context?page_no=${anchorCenter}&before=2&after=4`
+        );
+        const newer = (ctx.pages || []).filter((p) => p.page_no > st.loadedEndPage);
+        if (newer.length) {
+          const prevLast = st.loadedPages[st.loadedPages.length - 1];
+          st.loadedPages = [...st.loadedPages, ...newer];
+          st.loadedEndPage = st.loadedPages[st.loadedPages.length - 1].page_no;
+          const bottomWrap = $("#lib-bottom-sentinel");
+          if (bottomWrap) {
+            const fragHtml = newer
+              .map((p, idx) => renderContinuousPageBlock(p, idx === 0 ? prevLast : newer[idx - 1], st.highlightQuery, true))
+              .join("");
+            bottomWrap.insertAdjacentHTML("beforebegin", fragHtml);
+            if (st.loadedPages.length > 36) {
+              const prevHeight = stream.scrollHeight;
+              const prevTop = stream.scrollTop;
+              const dropCount = st.loadedPages.length - 36;
+              const dropped = st.loadedPages.splice(0, dropCount);
+              st.loadedStartPage = st.loadedPages[0].page_no;
+              dropped.forEach((dp) => stream.querySelector(`[data-lib-page-anchor="${dp.page_no}"]`)?.remove());
+              stream.scrollTop = Math.max(0, prevTop - (prevHeight - stream.scrollHeight));
+            }
+            installContinuousScanLazyObserver();
+            refreshSentinelControls();
+          } else {
+            renderReaderPage();
+          }
+        }
+      } finally {
+        st.loadingChunk = false;
+      }
+    }
   }
 
   function highlightEscapedHtml(text, query) {
@@ -360,16 +629,810 @@
     return paragraphs;
   }
 
-  function renderBookTextPane(bodyText, query) {
+  function renderBookTextPane(bodyText, query, wrapBox = true, reflow = st.reflowText) {
     const cleanText = bodyText || "（本页为空白页或封面页）";
-    if (!st.reflowText) {
-      return `<div class="lib-text-pane"><pre class="lib-verbatim-text">${highlightEscapedHtml(cleanText, query)}</pre></div>`;
+    if (!reflow) {
+      const inner = `<pre class="${wrapBox ? "lib-verbatim-text" : "lib-verbatim-inline"}">${highlightEscapedHtml(cleanText, query)}</pre>`;
+      return wrapBox ? `<div class="lib-text-pane">${inner}</div>` : inner;
     }
     const paras = reflowBookParagraphs(cleanText);
     const html = paras
       .map((p) => `<p class="lib-para lib-para-${p.kind}">${highlightEscapedHtml(p.text, query)}</p>`)
       .join("");
-    return `<div class="lib-text-pane"><div class="lib-formatted-body">${html}</div></div>`;
+    return wrapBox
+      ? `<div class="lib-text-pane"><div class="lib-formatted-body">${html}</div></div>`
+      : `<div class="lib-continuous-paras">${html}</div>`;
+  }
+
+  function isCrossPageContinuation(prevPage, currPage, reflow = st.reflowText) {
+    if (!prevPage || !currPage || !reflow) return false;
+    const prevClean = String(prevPage.body_text || "").trim();
+    const currClean = String(currPage.body_text || "").trim();
+    if (!prevClean || !currClean) return false;
+    // If previous page did not end with sentence-ending punctuation and current does not open with a chapter/formula heading
+    const endsOpen = !/[。！？!?】」』：:]$/.test(prevClean.slice(-6));
+    const startsHeading = /^(第[一二三四五六七八九十百零\d]+[条章节卷篇]|[一二三四五六七八九十]+、|HT-\d+|【|〔|问曰|答曰)/.test(currClean);
+    return endsOpen && !startsHeading;
+  }
+
+  function renderContinuousPageBlock(page, prevPage, query, immediateScanFallback = false, opts = {}) {
+    const viewMode = opts.viewMode || st.viewMode;
+    const reflowText = opts.reflowText !== undefined ? opts.reflowText : st.reflowText;
+    const activePageNo = opts.activePageNo || st.currentPageNo;
+    const syncAttr = opts.syncAttr || "data-lib-sync-scan";
+    const isScanOnly = page.search_index_status === "scan_browse_only";
+    const isImageOnlyMode = isScanOnly || viewMode === "image";
+    const isActive = page.page_no === activePageNo;
+    const isCont = !isImageOnlyMode && isCrossPageContinuation(prevPage, page, reflowText);
+    const secLabel = page.section_title ? ` · ${esc(page.section_title)}` : "";
+
+    if (isImageOnlyMode) {
+      const nearTarget = immediateScanFallback || Math.abs(page.page_no - activePageNo) <= 1;
+      const imgAttrs = nearTarget
+        ? window.tcmImgAttrs
+          ? window.tcmImgAttrs(page.image_url)
+          : `src="${esc(page.image_url)}"`
+        : `data-defer-api-img="${esc(page.image_url)}"`;
+      return `
+        <article class="lib-page-block lib-scan-block ${isActive ? "is-active-page" : ""}" data-lib-page-anchor="${page.page_no}">
+          <div class="lib-page-divider">
+            <span class="lib-page-badge">第 ${page.page_no} / ${page.total_units} 页${secLabel}</span>
+            <span class="sha-pill">SHA ${esc((page.text_sha256 || "").slice(0, 8))}</span>
+          </div>
+          <div class="lib-scan-card-body">
+            <img class="lib-scan-img ${nearTarget ? "" : "is-lazy-scan"}" ${imgAttrs} alt="${esc(page.book_title)} 第${page.page_no}页原图" loading="lazy" />
+          </div>
+        </article>`;
+    }
+
+    const hasBodyText = Boolean(String(page.body_text || "").trim());
+    const contentHtml =
+      !hasBodyText && page.has_image_viewer && page.image_url
+        ? `<div class="ctx-empty-scan-fallback">
+             <div class="ctx-empty-scan-note">本页为扫描原图或分隔页（无纯文字层），已直接为您呈现原书扫描页面：</div>
+             <img class="lib-scan-img" ${window.tcmImgAttrs ? window.tcmImgAttrs(page.image_url) : `src="${esc(page.image_url)}"`} alt="${esc(page.book_title)} 第${page.page_no}页原图" loading="lazy" />
+           </div>`
+        : renderBookTextPane(page.body_text, query, false, reflowText);
+
+    return `
+      <article class="lib-page-block ${isCont ? "is-cont-page" : ""} ${isActive ? "is-active-page" : ""}" data-lib-page-anchor="${page.page_no}">
+        <div class="lib-page-divider ${isCont ? "is-continuation" : ""}">
+          <span class="lib-page-badge">
+            ${isCont ? `↳ 接上页续读 · 第 ${page.page_no} 页` : `${esc(page.unit_label)}（${page.page_no}/${page.total_units}）`}${secLabel}
+          </span>
+          <div class="lib-page-div-actions">
+            ${
+              viewMode === "split" && page.has_image_viewer
+                ? `<button class="ghost-btn tiny-btn" type="button" ${syncAttr}="${page.page_no}" title="同步右侧原书扫图到此页">对照此页原图</button>`
+                : ""
+            }
+          </div>
+        </div>
+        ${contentHtml}
+      </article>`;
+  }
+
+  function refreshSentinelControls() {
+    const total = st.pageData?.total_units || st.selectedBook?.total_units || 1;
+    const prevBtn = $("#lib-load-prev-chunk");
+    if (prevBtn) {
+      if (st.loadedStartPage <= 1) {
+        prevBtn.disabled = true;
+        prevBtn.textContent = "已到本书第一页";
+      } else {
+        prevBtn.disabled = false;
+        const fromP = Math.max(1, st.loadedStartPage - 5);
+        prevBtn.textContent = `▲ 向上翻阅 / 载入前文（第 ${fromP}–${st.loadedStartPage - 1} 页）`;
+      }
+    }
+    const nextBtn = $("#lib-load-next-chunk");
+    if (nextBtn) {
+      if (st.loadedEndPage >= total) {
+        nextBtn.disabled = true;
+        nextBtn.textContent = `已到全书末尾（共 ${total} 单元）`;
+      } else {
+        nextBtn.disabled = false;
+        const toP = Math.min(total, st.loadedEndPage + 5);
+        nextBtn.textContent = `▼ 向下连续读后文（第 ${st.loadedEndPage + 1}–${toP} 页）`;
+      }
+    }
+  }
+
+  function installScanLazyObserverIn(stream, observerHolder, key = "scanObserver") {
+    if (observerHolder[key]) {
+      observerHolder[key].disconnect();
+      observerHolder[key] = null;
+    }
+    if (!stream) return;
+    const lazyImgs = Array.from(stream.querySelectorAll("img[data-defer-api-img]"));
+    if (!lazyImgs.length) return;
+
+    const promote = (img) => {
+      const url = img.getAttribute("data-defer-api-img");
+      if (!url) return;
+      img.removeAttribute("data-defer-api-img");
+      img.classList.remove("is-lazy-scan");
+      if (window.__TCM_STATIC_WEB__ || window.tcmImgAttrs) {
+        img.setAttribute("data-tcm-api-img", url);
+      } else {
+        img.setAttribute("src", url);
+      }
+    };
+
+    if (typeof IntersectionObserver !== "function") {
+      lazyImgs.forEach(promote);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((ent) => {
+          if (ent.isIntersecting) {
+            promote(ent.target);
+            obs.unobserve(ent.target);
+          }
+        });
+      },
+      { root: stream, rootMargin: "450px 0px" }
+    );
+    lazyImgs.forEach((im) => obs.observe(im));
+    observerHolder[key] = obs;
+  }
+
+  function installContinuousScanLazyObserver() {
+    installScanLazyObserverIn($("#lib-continuous-stream"), st, "scanObserver");
+  }
+
+  const XREF_SHELF_BADGES = {
+    hantang_clinical: { cls: "shelf-hantang", text: "汉唐" },
+    classical_companions: { cls: "shelf-classical", text: "古籍" },
+    renji_core: { cls: "shelf-renji", text: "人纪" },
+  };
+
+  function renderShelfBadge(shelf) {
+    const b = XREF_SHELF_BADGES[shelf];
+    return b ? `<span class="lib-xref-badge ${b.cls}">${b.text}</span>` : "";
+  }
+
+  function renderLibRefRow(ref, { bodyHtml = "", probe = "" } = {}) {
+    const bid = esc(ref.book_id || "");
+    const pno = Number(ref.page_no || 1);
+    const qProbe = esc((probe || ref.quote || ref.snippet || "").slice(0, 24));
+    return `<div class="s5-book-ref-row">
+      <button class="s5-book-ref-btn s5-book-ref-main" type="button" data-ctx-loc="1" data-ctx-book="${bid}" data-ctx-page="${pno}" data-ctx-q="${qProbe}" title="在当前页打开可上下滑动的原文参照抽屉">
+        ${bodyHtml}
+      </button>
+      <div class="s5-book-ref-ops">
+        <button class="ghost-btn tiny-btn ctx-ref-btn" type="button" data-ctx-loc="1" data-ctx-book="${bid}" data-ctx-page="${pno}" data-ctx-q="${qProbe}">滑动上下文</button>
+        <button class="ghost-btn tiny-btn" type="button" data-lib-open="${bid}:${pno}" data-lib-hl="${qProbe}" title="跳转至藏书阁全屏阅读">藏书阁 ↗</button>
+      </div>
+    </div>`;
+  }
+
+  // -------------------- Context Reference Drawer (原文上下文滑动对照抽屉) --------------------
+  const ctxSt = {
+    open: false,
+    bookId: "",
+    bookTitle: "",
+    bookFullTitle: "",
+    shelfLabel: "",
+    totalUnits: 1,
+    activePageNo: 1,
+    startPage: 1,
+    endPage: 1,
+    pages: [],
+    chapters: [],
+    matchedPages: [],
+    indexFilter: "",
+    indexSearchQuery: "",
+    indexSearchHits: null,
+    showIndex: typeof window !== "undefined" ? window.innerWidth >= 900 : true,
+    hasImageViewer: false,
+    searchIndexStatus: "searchable",
+    viewMode: "text", // "text" | "split" | "image"
+    reflowText: true,
+    highlightQuery: "",
+    matchedQuery: "",
+    loadingChunk: false,
+    observer: null,
+    scanSyncTimer: null,
+    activeReqSeq: 0,
+  };
+
+  function closeContextDrawer() {
+    ctxSt.open = false;
+    ctxSt.activeReqSeq += 1;
+    if (ctxSt.observer) {
+      ctxSt.observer.disconnect();
+      ctxSt.observer = null;
+    }
+    const backdrop = $("#ctx-drawer-backdrop");
+    if (backdrop) {
+      backdrop.classList.add("hidden");
+      backdrop.setAttribute("aria-hidden", "true");
+    }
+    document.body.classList.remove("ctx-drawer-open");
+  }
+
+  function refreshCtxSentinels() {
+    const total = ctxSt.totalUnits || 1;
+    const prevBtn = $("#ctx-load-prev");
+    if (prevBtn) {
+      if (ctxSt.startPage <= 1) {
+        prevBtn.disabled = true;
+        prevBtn.textContent = "已到本书第一页";
+      } else {
+        prevBtn.disabled = false;
+        const fromP = Math.max(1, ctxSt.startPage - 5);
+        prevBtn.textContent = `▲ 向上载入前文（第 ${fromP}–${ctxSt.startPage - 1} 页）`;
+      }
+    }
+    const nextBtn = $("#ctx-load-next");
+    if (nextBtn) {
+      if (ctxSt.endPage >= total) {
+        nextBtn.disabled = true;
+        nextBtn.textContent = `已到全书末尾（共 ${total} 页/单元）`;
+      } else {
+        nextBtn.disabled = false;
+        const toP = Math.min(total, ctxSt.endPage + 5);
+        nextBtn.textContent = `▼ 向下继续载入后文（第 ${ctxSt.endPage + 1}–${toP} 页）`;
+      }
+    }
+  }
+
+  function updateCtxSyncedScan(page) {
+    if (!page || !page.image_url) return;
+    const cap = $("#ctx-synced-scan-cap");
+    if (cap) cap.textContent = `原书扫图 · 第 ${page.page_no} / ${ctxSt.totalUnits} 页`;
+    const prevB = $("#ctx-scan-prev");
+    const nextB = $("#ctx-scan-next");
+    if (prevB) prevB.disabled = page.page_no <= 1;
+    if (nextB) nextB.disabled = page.page_no >= ctxSt.totalUnits;
+    const wrap = $("#ctx-synced-scan-img-wrap");
+    if (!wrap) return;
+    const curImg = wrap.querySelector("img");
+    if (curImg && (curImg.getAttribute("data-tcm-api-img") === page.image_url || curImg.getAttribute("src") === page.image_url)) {
+      return;
+    }
+    const imgAttrs = window.tcmImgAttrs
+      ? window.tcmImgAttrs(page.image_url)
+      : `src="${esc(page.image_url)}"`;
+    wrap.innerHTML = `<img id="ctx-synced-scan-img" class="lib-scan-img" ${imgAttrs} alt="${esc(ctxSt.bookTitle)} 第${page.page_no}页原图" loading="lazy" />`;
+  }
+
+  function syncCtxActivePage(pageNo, { updateScan = false } = {}) {
+    const target = Number(pageNo) || 1;
+    const page = ctxSt.pages.find((p) => p.page_no === target);
+    if (!page) return;
+    ctxSt.activePageNo = page.page_no;
+    const sub = $("#ctx-drawer-sub");
+    if (sub) {
+      const rangeStr = ctxSt.pages.length > 1 ? `（当前已展开第 ${ctxSt.startPage}–${ctxSt.endPage} 页，上下滑动自动续载）` : "";
+      sub.textContent = `${page.unit_label || `第 ${page.page_no} 页`}${page.section_title ? ` · ${page.section_title}` : ""} ${rangeStr}`;
+    }
+    const jumpInp = $("#ctx-jump-inp");
+    if (jumpInp && document.activeElement !== jumpInp) {
+      jumpInp.value = page.page_no;
+    }
+    document.querySelectorAll("#ctx-stream .lib-page-block").forEach((el) => {
+      el.classList.toggle("is-active-page", Number(el.dataset.libPageAnchor) === page.page_no);
+    });
+    document.querySelectorAll(".ctx-hit-pill[data-ctx-jump-page]").forEach((el) => {
+      el.classList.toggle("active", Number(el.dataset.ctxJumpPage) === page.page_no);
+    });
+    document.querySelectorAll("#ctx-index-list .ctx-index-item[data-ctx-jump-page]").forEach((el) => {
+      el.classList.toggle("is-current", Number(el.dataset.ctxJumpPage) === page.page_no);
+    });
+    if (updateScan && ctxSt.viewMode === "split" && page.has_image_viewer) {
+      clearTimeout(ctxSt.scanSyncTimer);
+      ctxSt.scanSyncTimer = setTimeout(() => updateCtxSyncedScan(page), 120);
+    }
+  }
+
+  function scrollCtxToTarget(pageNo, preferHighlight = true) {
+    const stream = $("#ctx-stream");
+    if (!stream) return;
+    const block = stream.querySelector(`[data-lib-page-anchor="${pageNo}"]`);
+    const hl = preferHighlight ? (block?.querySelector(".lib-hl") || stream.querySelector(".lib-hl")) : null;
+    if (hl) {
+      hl.scrollIntoView({ behavior: "auto", block: "center" });
+    } else if (block) {
+      const top = Math.max(0, block.offsetTop - stream.offsetTop - 8);
+      stream.scrollTo({ top, behavior: "auto" });
+    }
+    if (block) {
+      block.classList.add("is-flash-target");
+      setTimeout(() => block.classList.remove("is-flash-target"), 1400);
+    }
+  }
+
+  function renderCtxIndexListHtml() {
+    if (ctxSt.indexSearchHits) {
+      const hits = ctxSt.indexSearchHits;
+      const clearRow = `<div class="ctx-index-head" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>全书搜索命中（${hits.length} 页）</span>
+        <button id="ctx-index-reset-btn" class="ghost-btn tiny-btn" type="button">返回目录</button>
+      </div>`;
+      if (!hits.length) {
+        return clearRow + `<div class="empty-mini">本书内未检出「${esc(ctxSt.indexSearchQuery)}」，可换简短词再搜或返回目录。</div>`;
+      }
+      return (
+        clearRow +
+        hits
+          .map(
+            (h) => `<button class="ctx-index-item ${Number(h.page_no) === Number(ctxSt.activePageNo) ? "is-current" : ""}" type="button" data-ctx-jump-page="${h.page_no}" data-ctx-jump-hl="${esc(ctxSt.indexSearchQuery)}">
+              <div class="ctx-index-item-top">
+                <strong>${esc(h.section_title || h.unit_label || `第 ${h.page_no} 页`)}</strong>
+                <em>p.${h.page_no}</em>
+              </div>
+              <span class="ctx-index-snippet">${esc((h.snippet || "").slice(0, 48))}</span>
+            </button>`
+          )
+          .join("")
+      );
+    }
+
+    const nf = (ctxSt.indexFilter || "").trim().toLowerCase();
+    const list = (ctxSt.chapters || []).filter(
+      (c) => !nf || String(c.title || "").toLowerCase().includes(nf) || String(c.page_no) === nf
+    );
+    if (!list.length) {
+      return `<div class="empty-mini">暂无匹配目录，可输入关键词后点「搜正文」全书定位，或直接输入页码跳转。</div>`;
+    }
+    return list
+      .map(
+        (c) => `<button class="ctx-index-item ${Number(c.page_no) === Number(ctxSt.activePageNo) ? "is-current" : ""}" type="button" data-ctx-jump-page="${c.page_no}">
+          <div class="ctx-index-item-top">
+            <strong>${esc(c.title)}</strong>
+            <em>p.${c.page_no}</em>
+          </div>
+        </button>`
+      )
+      .join("");
+  }
+
+  function updateCtxIndexDomOnly() {
+    const listEl = $("#ctx-index-list");
+    if (listEl) listEl.innerHTML = renderCtxIndexListHtml();
+  }
+
+  async function searchInsideCtxBook(q) {
+    const query = (q || "").trim();
+    if (!query || !ctxSt.bookId) {
+      ctxSt.indexSearchQuery = "";
+      ctxSt.indexSearchHits = null;
+      updateCtxIndexDomOnly();
+      return;
+    }
+    ctxSt.indexSearchQuery = query;
+    const res = await api(`/api/library/search?book_id=${encodeURIComponent(ctxSt.bookId)}&q=${encodeURIComponent(query)}&limit=36`);
+    ctxSt.indexSearchHits = res.items || [];
+    ctxSt.showIndex = true;
+    const listEl = $("#ctx-index-list");
+    if (listEl) {
+      updateCtxIndexDomOnly();
+    } else {
+      renderContextDrawer();
+    }
+    if (ctxSt.indexSearchHits.length) {
+      await jumpCtxToPage(ctxSt.indexSearchHits[0].page_no, query);
+    }
+  }
+
+  async function jumpCtxToPage(targetPageNo, optionalHl = "") {
+    if (!ctxSt.bookId) return;
+    const safeP = Math.max(1, Math.min(ctxSt.totalUnits || 1, Number(targetPageNo) || 1));
+    const hlChanged = Boolean(optionalHl && optionalHl !== ctxSt.highlightQuery);
+    if (optionalHl) {
+      ctxSt.highlightQuery = optionalHl;
+      ctxSt.matchedQuery = optionalHl;
+    }
+
+    if (!hlChanged && safeP >= ctxSt.startPage && safeP <= ctxSt.endPage && ctxSt.pages.length > 0) {
+      syncCtxActivePage(safeP, { updateScan: true });
+      scrollCtxToTarget(safeP, Boolean(ctxSt.highlightQuery));
+      return;
+    }
+
+    const reqSeq = ++ctxSt.activeReqSeq;
+    const ctx = await api(
+      `/api/library/books/${encodeURIComponent(ctxSt.bookId)}/context?page_no=${safeP}&before=2&after=4`
+    );
+    if (reqSeq !== ctxSt.activeReqSeq || !ctxSt.open) return;
+    ctxSt.activePageNo = ctx.target_page || safeP;
+    ctxSt.startPage = ctx.start_page || 1;
+    ctxSt.endPage = ctx.end_page || 1;
+    ctxSt.pages = ctx.pages || [];
+    ctxSt.totalUnits = ctx.total_units || ctxSt.totalUnits;
+    renderContextDrawer();
+    requestAnimationFrame(() => scrollCtxToTarget(ctxSt.activePageNo, Boolean(ctxSt.highlightQuery)));
+  }
+
+  async function loadCtxDirection(direction) {
+    if (ctxSt.loadingChunk || !ctxSt.bookId) return;
+    const stream = $("#ctx-stream");
+    const total = ctxSt.totalUnits || 1;
+    if (!stream) return;
+
+    if (direction === "up") {
+      if (ctxSt.startPage <= 1) return;
+      ctxSt.loadingChunk = true;
+      const prevBtn = $("#ctx-load-prev");
+      if (prevBtn) prevBtn.textContent = "正在载入前文书页...";
+      try {
+        const anchorCenter = Math.max(1, ctxSt.startPage - 3);
+        const ctx = await api(
+          `/api/library/books/${encodeURIComponent(ctxSt.bookId)}/context?page_no=${anchorCenter}&before=2&after=4`
+        );
+        const older = (ctx.pages || []).filter((p) => p.page_no < ctxSt.startPage);
+        if (older.length) {
+          const prevScrollHeight = stream.scrollHeight;
+          const prevScrollTop = stream.scrollTop;
+          const baseFirst = ctxSt.pages[0];
+          ctxSt.pages = [...older, ...ctxSt.pages];
+          ctxSt.startPage = ctxSt.pages[0].page_no;
+          const topWrap = $("#ctx-top-sentinel");
+          if (topWrap) {
+            const fragHtml = older
+              .map((p, idx) =>
+                renderContinuousPageBlock(p, idx === 0 ? null : older[idx - 1], ctxSt.highlightQuery, true, {
+                  viewMode: ctxSt.viewMode,
+                  reflowText: ctxSt.reflowText,
+                  activePageNo: ctxSt.activePageNo,
+                  syncAttr: "data-ctx-sync-scan",
+                })
+              )
+              .join("");
+            topWrap.insertAdjacentHTML("afterend", fragHtml);
+            if (baseFirst) {
+              const oldFirstDom = stream.querySelector(`[data-lib-page-anchor="${baseFirst.page_no}"]`);
+              if (oldFirstDom) {
+                oldFirstDom.outerHTML = renderContinuousPageBlock(baseFirst, older[older.length - 1], ctxSt.highlightQuery, true, {
+                  viewMode: ctxSt.viewMode,
+                  reflowText: ctxSt.reflowText,
+                  activePageNo: ctxSt.activePageNo,
+                  syncAttr: "data-ctx-sync-scan",
+                });
+              }
+            }
+            if (ctxSt.pages.length > 36) {
+              const dropCount = ctxSt.pages.length - 36;
+              const dropped = ctxSt.pages.splice(ctxSt.pages.length - dropCount, dropCount);
+              ctxSt.endPage = ctxSt.pages[ctxSt.pages.length - 1].page_no;
+              dropped.forEach((dp) => stream.querySelector(`[data-lib-page-anchor="${dp.page_no}"]`)?.remove());
+            }
+            stream.scrollTop = prevScrollTop + (stream.scrollHeight - prevScrollHeight);
+            installScanLazyObserverIn(stream, ctxSt, "observer");
+            refreshCtxSentinels();
+          }
+        }
+      } finally {
+        ctxSt.loadingChunk = false;
+      }
+    } else if (direction === "down") {
+      if (ctxSt.endPage >= total) return;
+      ctxSt.loadingChunk = true;
+      const nextBtn = $("#ctx-load-next");
+      if (nextBtn) nextBtn.textContent = "正在载入下文书页...";
+      try {
+        const anchorCenter = Math.min(total, ctxSt.endPage + 3);
+        const ctx = await api(
+          `/api/library/books/${encodeURIComponent(ctxSt.bookId)}/context?page_no=${anchorCenter}&before=2&after=4`
+        );
+        const newer = (ctx.pages || []).filter((p) => p.page_no > ctxSt.endPage);
+        if (newer.length) {
+          const prevLast = ctxSt.pages[ctxSt.pages.length - 1];
+          ctxSt.pages = [...ctxSt.pages, ...newer];
+          ctxSt.endPage = ctxSt.pages[ctxSt.pages.length - 1].page_no;
+          const bottomWrap = $("#ctx-bottom-sentinel");
+          if (bottomWrap) {
+            const fragHtml = newer
+              .map((p, idx) =>
+                renderContinuousPageBlock(p, idx === 0 ? prevLast : newer[idx - 1], ctxSt.highlightQuery, true, {
+                  viewMode: ctxSt.viewMode,
+                  reflowText: ctxSt.reflowText,
+                  activePageNo: ctxSt.activePageNo,
+                  syncAttr: "data-ctx-sync-scan",
+                })
+              )
+              .join("");
+            bottomWrap.insertAdjacentHTML("beforebegin", fragHtml);
+            if (ctxSt.pages.length > 36) {
+              const prevHeight = stream.scrollHeight;
+              const prevTop = stream.scrollTop;
+              const dropCount = ctxSt.pages.length - 36;
+              const dropped = ctxSt.pages.splice(0, dropCount);
+              ctxSt.startPage = ctxSt.pages[0].page_no;
+              dropped.forEach((dp) => stream.querySelector(`[data-lib-page-anchor="${dp.page_no}"]`)?.remove());
+              stream.scrollTop = Math.max(0, prevTop - (prevHeight - stream.scrollHeight));
+            }
+            installScanLazyObserverIn(stream, ctxSt, "observer");
+            refreshCtxSentinels();
+          }
+        }
+      } finally {
+        ctxSt.loadingChunk = false;
+      }
+    }
+  }
+
+  function attachCtxScrollHandler() {
+    const stream = $("#ctx-stream");
+    if (!stream || stream.dataset.scrollBound === "1") return;
+    stream.dataset.scrollBound = "1";
+    let rafId = null;
+    stream.addEventListener("scroll", () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        if (!ctxSt.open) return;
+        const blocks = Array.from(stream.querySelectorAll(".lib-page-block[data-lib-page-anchor]"));
+        if (blocks.length) {
+          const threshold = stream.scrollTop + 90;
+          let activeP = Number(blocks[0].dataset.libPageAnchor);
+          for (const blk of blocks) {
+            if (blk.offsetTop - stream.offsetTop <= threshold) {
+              activeP = Number(blk.dataset.libPageAnchor);
+            } else {
+              break;
+            }
+          }
+          syncCtxActivePage(activeP, { updateScan: true });
+        }
+        if (!ctxSt.loadingChunk) {
+          if (stream.scrollTop < 110 && ctxSt.startPage > 1) {
+            loadCtxDirection("up").catch(() => {});
+          } else if (stream.scrollHeight - stream.scrollTop - stream.clientHeight < 180 && ctxSt.endPage < ctxSt.totalUnits) {
+            loadCtxDirection("down").catch(() => {});
+          }
+        }
+      });
+    });
+  }
+
+  function renderContextDrawer() {
+    const drawer = $("#ctx-reader-drawer");
+    if (!drawer) return;
+    const isScanOnly = ctxSt.searchIndexStatus === "scan_browse_only";
+    if (isScanOnly) ctxSt.viewMode = "image";
+    const showText = !isScanOnly && ctxSt.viewMode !== "image";
+    const showImage = ctxSt.hasImageViewer && (isScanOnly || ctxSt.viewMode === "image" || ctxSt.viewMode === "split");
+    const activePage = ctxSt.pages.find((p) => p.page_no === ctxSt.activePageNo) || ctxSt.pages[0];
+    drawer.classList.toggle("is-split", showText && showImage);
+
+    const indexPaneHtml = ctxSt.showIndex
+      ? `<aside id="ctx-index-pane" class="ctx-index-pane" aria-label="本书原文索引">
+           <div class="ctx-index-head">📖 原书索引（点击即看原文）</div>
+           <div class="ctx-index-search-row">
+             <input id="ctx-index-search" type="search" value="${esc(ctxSt.indexSearchQuery || ctxSt.indexFilter || "")}" placeholder="筛目录或回车全书搜..." />
+             <button id="ctx-index-search-btn" class="ghost-btn tiny-btn" type="button" title="在全书正文中搜索关键词">搜正文</button>
+           </div>
+           <div id="ctx-index-list" class="ctx-index-list">
+             ${renderCtxIndexListHtml()}
+           </div>
+         </aside>`
+      : "";
+
+    const hitsHtml =
+      (ctxSt.matchedPages || []).length > 1
+        ? `<div class="ctx-hits-strip">
+             <span class="ctx-hits-lbl">相关位置索引（点即跳看）：</span>
+             ${ctxSt.matchedPages
+               .map(
+                 (m) =>
+                   `<button class="ctx-hit-pill ${Number(m.page_no) === Number(ctxSt.activePageNo) ? "active" : ""}" type="button" data-ctx-jump-page="${m.page_no}" title="${esc(m.snippet || "")}">p.${m.page_no}${m.section_title ? ` · ${esc(String(m.section_title).slice(0, 10))}` : ""}</button>`
+               )
+               .join("")}
+           </div>`
+        : "";
+
+    const streamHtml = `
+      <div id="ctx-stream" class="lib-continuous-stream ctx-stream ${!showText ? "is-scan-stream" : ""}">
+        <div id="ctx-top-sentinel" class="lib-chunk-sentinel"><button id="ctx-load-prev" class="ghost-btn small-btn" type="button"></button></div>
+        ${ctxSt.pages
+          .map((p, idx) =>
+            renderContinuousPageBlock(p, idx > 0 ? ctxSt.pages[idx - 1] : null, ctxSt.highlightQuery, false, {
+              viewMode: ctxSt.viewMode,
+              reflowText: ctxSt.reflowText,
+              activePageNo: ctxSt.activePageNo,
+              syncAttr: "data-ctx-sync-scan",
+            })
+          )
+          .join("")}
+        <div id="ctx-bottom-sentinel" class="lib-chunk-sentinel"><button id="ctx-load-next" class="ghost-btn small-btn" type="button"></button></div>
+      </div>`;
+
+    const scanPaneHtml =
+      showText && showImage && activePage
+        ? `<div class="lib-image-pane lib-synced-scan-pane ctx-synced-scan">
+             <div class="lib-synced-scan-head">
+               <span id="ctx-synced-scan-cap" class="lib-image-caption">原书扫图 · 第 ${activePage.page_no} / ${ctxSt.totalUnits} 页</span>
+               <div class="lib-pager-controls">
+                 <button class="ghost-btn tiny-btn" type="button" id="ctx-scan-prev" ${activePage.page_no <= 1 ? "disabled" : ""}>‹ 上页图</button>
+                 <button class="ghost-btn tiny-btn" type="button" id="ctx-scan-next" ${activePage.page_no >= ctxSt.totalUnits ? "disabled" : ""}>下页图 ›</button>
+               </div>
+             </div>
+             <div id="ctx-synced-scan-img-wrap">
+               <img id="ctx-synced-scan-img" class="lib-scan-img" ${window.tcmImgAttrs ? window.tcmImgAttrs(activePage.image_url) : `src="${esc(activePage.image_url)}"`} alt="${esc(ctxSt.bookTitle)} 第${activePage.page_no}页原图" loading="lazy" />
+             </div>
+           </div>`
+        : "";
+
+    drawer.innerHTML = `
+      <div class="ctx-drawer-head">
+        <div class="ctx-drawer-title-group">
+          <div class="ctx-drawer-badges">
+            <span class="lib-shelf-pill">${esc(ctxSt.shelfLabel || "古籍原文")}</span>
+            ${ctxSt.matchedQuery ? `<span class="ctx-match-pill">高亮定位「${esc(ctxSt.matchedQuery)}」</span>` : ""}
+          </div>
+          <h2>${esc(ctxSt.bookFullTitle || ctxSt.bookTitle)}</h2>
+          <p id="ctx-drawer-sub" class="ctx-drawer-sub">${esc(activePage?.unit_label || `第 ${ctxSt.activePageNo} 页`)}${activePage?.section_title ? ` · ${esc(activePage.section_title)}` : ""} （当前已展开第 ${ctxSt.startPage}–${ctxSt.endPage} 页，上下滑动自动续载）</p>
+        </div>
+        <div class="ctx-drawer-head-ops">
+          <button id="ctx-open-lib-btn" class="ghost-btn small-btn" type="button" title="在主屏藏书阁全屏展开当前页">进入藏书阁全屏 ↗</button>
+          <button id="ctx-close-btn" class="ghost-btn small-btn ctx-close-btn" type="button" aria-label="关闭原文上下文抽屉">关闭 ✕</button>
+        </div>
+      </div>
+      <div class="ctx-drawer-toolbar">
+        <div class="ctx-toolbar-left">
+          <button id="ctx-toggle-index" class="mode-pill ${ctxSt.showIndex ? "active" : ""}" type="button">📑 本书索引 (${(ctxSt.chapters || []).length})</button>
+          <span class="lib-mode-sep" aria-hidden="true"></span>
+          ${
+            isScanOnly
+              ? `<span class="lib-scan-notice">影印原件卷：已自动打开高清原书扫图（支持上下连续滑览）</span>`
+              : `
+                <button class="mode-pill ${ctxSt.viewMode === "text" ? "active" : ""}" type="button" data-ctx-vmode="text">纯读原文</button>
+                ${
+                  ctxSt.hasImageViewer
+                    ? `<button class="mode-pill ${ctxSt.viewMode === "split" ? "active" : ""}" type="button" data-ctx-vmode="split">正文 + 原页扫图</button>
+                       <button class="mode-pill ${ctxSt.viewMode === "image" ? "active" : ""}" type="button" data-ctx-vmode="image">仅看扫图</button>`
+                    : ""
+                }
+                <span class="lib-mode-sep" aria-hidden="true"></span>
+                <button class="mode-pill ${ctxSt.reflowText ? "active" : ""}" type="button" data-ctx-reflow="true" title="自动重排硬断行并跨页接续">智能连续精读</button>
+                <button class="mode-pill ${!ctxSt.reflowText ? "active" : ""}" type="button" data-ctx-reflow="false" title="保留原文档逐行格式">原页断行</button>
+              `
+          }
+        </div>
+        <div class="ctx-toolbar-right">
+          <span>第</span>
+          <input id="ctx-jump-inp" class="ctx-page-jump-inp" type="number" min="1" max="${ctxSt.totalUnits}" value="${ctxSt.activePageNo}" />
+          <span>/ ${ctxSt.totalUnits} 页</span>
+          <button id="ctx-jump-go" class="ghost-btn tiny-btn" type="button">跳转</button>
+        </div>
+      </div>
+      ${hitsHtml}
+      <div class="ctx-drawer-body ${showText && showImage ? "two-col" : "one-col"} ${ctxSt.showIndex ? "has-index" : ""}">
+        ${indexPaneHtml}
+        ${streamHtml}
+        ${scanPaneHtml}
+      </div>
+    `;
+    refreshCtxSentinels();
+    attachCtxScrollHandler();
+    installScanLazyObserverIn($("#ctx-stream"), ctxSt, "observer");
+  }
+
+  async function openContextDrawer(opts = {}) {
+    const reqSeq = ++ctxSt.activeReqSeq;
+    ctxSt.open = true;
+    ctxSt.indexFilter = "";
+    ctxSt.indexSearchQuery = "";
+    ctxSt.indexSearchHits = null;
+    const backdrop = $("#ctx-drawer-backdrop");
+    const drawer = $("#ctx-reader-drawer");
+    if (!backdrop || !drawer) return;
+    drawer.classList.remove("is-split");
+    drawer.innerHTML = `
+      <div class="ctx-drawer-head">
+        <div class="ctx-drawer-title-group">
+          <div class="ctx-drawer-badges"><span class="lib-shelf-pill">原书索引中</span></div>
+          <h2>正在精确定位原书页码与上下文…</h2>
+          <p class="ctx-drawer-sub">${opts.q ? `检索片段：「${esc(opts.q)}」` : "正在加载前后连续页段"}</p>
+        </div>
+        <button id="ctx-close-btn" class="ghost-btn small-btn ctx-close-btn" type="button">关闭 ✕</button>
+      </div>
+      <div class="ctx-drawer-loading"><div class="loading">正在拉取原书目录索引与前后连续页面…</div></div>`;
+    backdrop.classList.remove("hidden");
+    backdrop.setAttribute("aria-hidden", "false");
+    document.body.classList.add("ctx-drawer-open");
+
+    try {
+      const params = new URLSearchParams({ before: "2", after: "4" });
+      if (opts.bookId) params.set("book_id", String(opts.bookId));
+      if (opts.pageNo) params.set("page_no", String(opts.pageNo));
+      if (opts.line) params.set("line", String(opts.line));
+      if (opts.bookHint) params.set("book_hint", String(opts.bookHint));
+      if (opts.q) params.set("q", String(opts.q));
+
+      const data = await api(`/api/library/locate?${params.toString()}`);
+      if (reqSeq !== ctxSt.activeReqSeq || !ctxSt.open) return;
+
+      ctxSt.bookId = data.resolved_book_id || data.book_id || "";
+      ctxSt.bookTitle = data.book_title || "";
+      ctxSt.bookFullTitle = data.book_full_title || data.book_title || "";
+      ctxSt.shelfLabel = data.shelf_label || "";
+      ctxSt.totalUnits = data.total_units || 1;
+      ctxSt.activePageNo = data.target_page || data.resolved_page_no || 1;
+      ctxSt.startPage = data.start_page || 1;
+      ctxSt.endPage = data.end_page || 1;
+      ctxSt.pages = data.pages || [];
+      ctxSt.chapters = data.chapters || [];
+      ctxSt.matchedPages = data.matched_pages || [];
+      ctxSt.hasImageViewer = Boolean(data.has_image_viewer);
+      ctxSt.searchIndexStatus = data.search_index_status || "searchable";
+      ctxSt.matchedQuery = data.matched_query || opts.q || "";
+      ctxSt.highlightQuery = ctxSt.matchedQuery;
+      if (ctxSt.searchIndexStatus === "scan_browse_only") {
+        ctxSt.viewMode = "image";
+      } else if (opts.viewMode) {
+        ctxSt.viewMode = opts.viewMode;
+      } else if (!ctxSt.hasImageViewer && ctxSt.viewMode !== "text") {
+        ctxSt.viewMode = "text";
+      }
+
+      renderContextDrawer();
+      requestAnimationFrame(() => scrollCtxToTarget(ctxSt.activePageNo, true));
+    } catch (err) {
+      if (reqSeq !== ctxSt.activeReqSeq || !ctxSt.open) return;
+      const fallbackQ = esc(opts.q || opts.bookHint || "");
+      const fallbackP = Number(opts.pageNo || 1) || 1;
+      drawer.innerHTML = `
+        <div class="ctx-drawer-head">
+          <div class="ctx-drawer-title-group">
+            <h2>未能自动索引到该书库原页</h2>
+            <p class="ctx-drawer-sub">${esc(err?.message || "该引用暂无匹配原页或属于未数字化卷")}</p>
+          </div>
+          <button id="ctx-close-btn" class="ghost-btn small-btn ctx-close-btn" type="button">关闭 ✕</button>
+        </div>
+        <div class="ctx-drawer-loading">
+          <p class="section-copy">提示：可直接选择对应典籍打开原文并检索「${fallbackQ || "目录"}」，或前往顶部「书库」全库检索。</p>
+          <div class="ctx-hits-strip" style="margin-top:12px;">
+            <button type="button" class="ctx-hit-pill" data-ctx-loc="1" data-ctx-book="ni-shanghan-pdf" data-ctx-page="${fallbackP}" data-ctx-q="${fallbackQ}">打开《伤寒论》p.${fallbackP}</button>
+            <button type="button" class="ctx-hit-pill" data-ctx-loc="1" data-ctx-book="ni-jinkui-pdf" data-ctx-page="${fallbackP}" data-ctx-q="${fallbackQ}">打开《金匮要略》p.${fallbackP}</button>
+            <button type="button" class="ctx-hit-pill" data-ctx-loc="1" data-ctx-book="ni-bencao-pdf" data-ctx-page="${fallbackP}" data-ctx-q="${fallbackQ}">打开《神农本草经》p.${fallbackP}</button>
+            <button type="button" class="ctx-hit-pill" data-ctx-loc="1" data-ctx-book="ni-neijing-vol1-pdf" data-ctx-page="${fallbackP}" data-ctx-q="${fallbackQ}">打开《黄帝内经》p.${fallbackP}</button>
+            <button type="button" class="ctx-hit-pill" data-ctx-loc="1" data-ctx-book="ni-acupuncture-v2-20100703" data-ctx-page="${fallbackP}" data-ctx-q="${fallbackQ}">打开《针灸教程》p.${fallbackP}</button>
+          </div>
+        </div>`;
+    }
+  }
+  window.tcmOpenContextDrawer = openContextDrawer;
+
+  function attachContinuousStreamScrollHandler() {
+    const stream = $("#lib-continuous-stream");
+    if (!stream || stream.dataset.scrollBound === "1") return;
+    stream.dataset.scrollBound = "1";
+    let rafId = null;
+    stream.addEventListener("scroll", () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        if (st.readLayout !== "continuous") return;
+        const blocks = Array.from(stream.querySelectorAll(".lib-page-block[data-lib-page-anchor]"));
+        if (blocks.length) {
+          const threshold = stream.scrollTop + 90;
+          let activeP = Number(blocks[0].dataset.libPageAnchor);
+          for (const blk of blocks) {
+            if (blk.offsetTop - stream.offsetTop <= threshold) {
+              activeP = Number(blk.dataset.libPageAnchor);
+            } else {
+              break;
+            }
+          }
+          syncActivePageIndicators(activeP, { updateScan: true });
+        }
+
+        // Auto-load previous or next context window near scroll edges
+        const total = st.pageData?.total_units || st.selectedBook?.total_units || 1;
+        if (!st.loadingChunk) {
+          if (stream.scrollTop < 110 && st.loadedStartPage > 1) {
+            loadContextDirection("up").catch(() => {});
+          } else if (stream.scrollHeight - stream.scrollTop - stream.clientHeight < 180 && st.loadedEndPage < total) {
+            loadContextDirection("down").catch(() => {});
+          }
+        }
+      });
+    });
   }
 
   function renderReaderPage() {
@@ -381,27 +1444,75 @@
     const isScanOnly = page.search_index_status === "scan_browse_only";
     const showText = !isScanOnly && st.viewMode !== "image";
     const showImage = page.has_image_viewer && (isScanOnly || st.viewMode === "image" || st.viewMode === "split");
+    const isContinuous = st.readLayout === "continuous";
 
-    const entityChipsHtml = (page.entity_links || []).length
-      ? `<div class="lib-page-links-bar">
-           <span class="lib-links-label">本页知识联动 · 点击直达对应学习板块：</span>
-           <div class="lib-chip-cloud">
-             ${page.entity_links
-               .map((lk) => {
-                 const mb = MODULE_BADGE[lk.module] || { cls: "badge-formula", text: lk.kind };
-                 return `<button class="entity-jump-chip ${mb.cls}" type="button" data-jump-module="${esc(lk.module)}" data-jump-id="${esc(lk.entity_id)}">${esc(mb.text)} · ${esc(lk.label)}</button>`;
-               })
-               .join("")}
-           </div>
+    const pagesToShow = isContinuous && st.loadedPages.length ? st.loadedPages : [page];
+    const rangeNote =
+      isContinuous && pagesToShow.length > 1
+        ? `（已载入第 ${st.loadedStartPage}–${st.loadedEndPage} 页上下文）`
+        : "";
+
+    const backSearchBtn = st.lastSearchQuery
+      ? `<button class="ghost-btn small-btn" type="button" id="lib-back-to-search-btn" title="返回刚才的全库检索结果列表">← 返回检索「${esc(st.lastSearchQuery.slice(0, 12))}」</button>`
+      : "";
+
+    const bodyHtml = !isContinuous
+      ? `<div class="lib-content-grid ${showText && showImage ? "two-col" : "one-col"}">
+           ${showText ? renderBookTextPane(page.body_text, st.highlightQuery, true) : ""}
+           ${
+             showImage
+               ? `<div class="lib-image-pane">
+                    <div class="lib-image-caption">原书影印图 · 第 ${page.page_no} 页</div>
+                    <img class="lib-scan-img" ${window.tcmImgAttrs ? window.tcmImgAttrs(page.image_url) : `src="${esc(page.image_url)}"`} alt="${esc(page.book_title)} 第${page.page_no}页原图" loading="lazy" />
+                  </div>`
+               : ""
+           }
          </div>`
-      : `<div class="lib-page-links-bar muted-line">本页暂未检测到明确跨模块条目名称</div>`;
+      : showText && showImage
+        ? `<div class="lib-content-grid two-col">
+             <div id="lib-continuous-stream" class="lib-continuous-stream">
+               <div id="lib-top-sentinel" class="lib-chunk-sentinel">
+                 <button id="lib-load-prev-chunk" class="ghost-btn small-btn" type="button"></button>
+               </div>
+               ${pagesToShow.map((p, i) => renderContinuousPageBlock(p, i > 0 ? pagesToShow[i - 1] : null, st.highlightQuery)).join("")}
+               <div id="lib-bottom-sentinel" class="lib-chunk-sentinel">
+                 <button id="lib-load-next-chunk" class="ghost-btn small-btn" type="button"></button>
+               </div>
+             </div>
+             <div id="lib-synced-scan-pane" class="lib-image-pane lib-synced-scan-pane">
+               <div class="lib-synced-scan-head">
+                 <span id="lib-synced-scan-cap" class="lib-image-caption">原书影印图 · 第 ${page.page_no} / ${page.total_units} 页</span>
+                 <div class="lib-pager-controls">
+                   <button class="ghost-btn tiny-btn" type="button" id="lib-scan-prev" ${page.page_no <= 1 ? "disabled" : ""}>‹ 上页图</button>
+                   <button class="ghost-btn tiny-btn" type="button" id="lib-scan-next" ${page.page_no >= page.total_units ? "disabled" : ""}>下页图 ›</button>
+                 </div>
+               </div>
+               <div id="lib-synced-scan-img-wrap">
+                 <img id="lib-synced-scan-img" class="lib-scan-img" ${window.tcmImgAttrs ? window.tcmImgAttrs(page.image_url) : `src="${esc(page.image_url)}"`} alt="${esc(page.book_title)} 第${page.page_no}页原图" loading="lazy" />
+               </div>
+             </div>
+           </div>`
+        : `<div class="lib-content-grid one-col">
+             <div id="lib-continuous-stream" class="lib-continuous-stream ${!showText ? "is-scan-stream" : ""}">
+               <div id="lib-top-sentinel" class="lib-chunk-sentinel">
+                 <button id="lib-load-prev-chunk" class="ghost-btn small-btn" type="button"></button>
+               </div>
+               ${pagesToShow.map((p, i) => renderContinuousPageBlock(p, i > 0 ? pagesToShow[i - 1] : null, st.highlightQuery)).join("")}
+               <div id="lib-bottom-sentinel" class="lib-chunk-sentinel">
+                 <button id="lib-load-next-chunk" class="ghost-btn small-btn" type="button"></button>
+               </div>
+             </div>
+           </div>`;
 
     panel.innerHTML = `
       <div class="lib-reader-head">
         <div>
-          <span class="lib-shelf-pill">${esc(page.shelf_label)}</span>
+          <div class="lib-head-badges">
+            <span class="lib-shelf-pill">${esc(page.shelf_label)}</span>
+            ${backSearchBtn}
+          </div>
           <h2>${esc(page.book_full_title)}</h2>
-          <p class="lib-reader-sub">${esc(page.unit_label)} ${page.section_title ? `· ${esc(page.section_title)}` : ""}</p>
+          <p id="lib-reader-sub" class="lib-reader-sub">${esc(page.unit_label)} ${page.section_title ? `· ${esc(page.section_title)}` : ""} ${esc(rangeNote)}</p>
         </div>
         <div class="lib-pager-controls">
           <button class="ghost-btn" type="button" id="lib-prev-btn" ${page.prev_page ? "" : "disabled"}>上一页</button>
@@ -415,9 +1526,12 @@
 
       <div class="lib-mode-strip">
         <div class="lib-mode-btns">
+          <button class="mode-pill ${isContinuous ? "active" : ""}" type="button" data-lib-layout="continuous" title="上下滚动连续翻阅全书，消除断页割裂感">连续上下翻</button>
+          <button class="mode-pill ${!isContinuous ? "active" : ""}" type="button" data-lib-layout="single" title="一次专注查看单页">单页精看</button>
+          <span class="lib-mode-sep" aria-hidden="true"></span>
           ${
             isScanOnly
-              ? `<span class="lib-scan-notice">影印原件模式：本书暂无可检文字层，严禁伪造OCR，以下直接呈递高清 PDF 原书页面图像</span>`
+              ? `<span class="lib-scan-notice">影印原件模式：本书暂无可检文字层，严禁伪造OCR，支持上下连续滑览高清原书页面</span>`
               : `
                 <button class="mode-pill ${st.viewMode === "text" ? "active" : ""}" type="button" data-lib-vmode="text">纯读原文</button>
                 ${
@@ -427,32 +1541,29 @@
                     : `<span class="muted-line">本书为纯文本/文档结构化全本</span>`
                 }
                 <span class="lib-mode-sep" aria-hidden="true"></span>
-                <button class="mode-pill ${st.reflowText ? "active" : ""}" type="button" data-lib-reflow="true" title="自动重排PDF硬断行，段落对齐阅读">智能排版精读</button>
+                <button class="mode-pill ${st.reflowText ? "active" : ""}" type="button" data-lib-reflow="true" title="自动重排PDF硬断行并跨页平滑接续">智能连续精读</button>
                 <button class="mode-pill ${!st.reflowText ? "active" : ""}" type="button" data-lib-reflow="false" title="保留原始PDF提取断行">原页断行照录</button>
               `
           }
         </div>
-        <span class="sha-pill" title="页面文本校验码">SHA: ${esc((page.text_sha256 || "").slice(0, 12))}</span>
+        <span id="lib-active-sha" class="sha-pill" title="页面文本校验码">SHA: ${esc((page.text_sha256 || "").slice(0, 12))}</span>
       </div>
 
-      ${entityChipsHtml}
-
-      <div class="lib-content-grid ${showText && showImage ? "two-col" : "one-col"}">
-        ${showText ? renderBookTextPane(page.body_text, st.highlightQuery) : ""}
-        ${
-          showImage
-            ? `<div class="lib-image-pane">
-                 <div class="lib-image-caption">原书影印图 · 第 ${page.page_no} 页</div>
-                 <img class="lib-scan-img" ${window.tcmImgAttrs ? window.tcmImgAttrs(page.image_url) : `src="${esc(page.image_url)}"`} alt="${esc(page.book_title)} 第${page.page_no}页原图" loading="lazy" />
-               </div>`
-            : ""
-        }
+      <div id="lib-active-links-bar" class="${(page.entity_links || []).length ? "lib-page-links-bar" : "lib-page-links-bar muted-line"}">
+        ${buildEntityLinksBarHtml(page)}
       </div>
+
+      ${bodyHtml}
       ${book?.description ? `<div class="lib-book-foot-note"><strong>藏书简介：</strong>${esc(book.description)}</div>` : ""}
     `;
-    const firstMark = panel.querySelector(".lib-hl");
-    if (firstMark) {
-      firstMark.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    if (isContinuous) {
+      refreshSentinelControls();
+      attachContinuousStreamScrollHandler();
+      installContinuousScanLazyObserver();
+    } else {
+      const firstMark = panel.querySelector(".lib-hl");
+      if (firstMark) firstMark.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }
 
@@ -460,6 +1571,8 @@
     const query = (q || "").trim();
     if (!query) {
       st.searchActive = false;
+      st.searchQuery = "";
+      st.lastSearchQuery = "";
       st.highlightQuery = "";
       $("#lib-search-results-panel")?.classList.add("hidden");
       $("#lib-reader-workspace")?.classList.remove("hidden");
@@ -467,6 +1580,7 @@
     }
     st.searchActive = true;
     st.searchQuery = query;
+    st.lastSearchQuery = query;
     st.highlightQuery = query;
     const onlyCurr = $("#lib-scope-current")?.checked;
     const params = new URLSearchParams({ q: query, limit: "60" });
@@ -491,10 +1605,15 @@
       partial_fallback: "拆词参考",
     };
 
+    const scanNoticeList = data.scan_only_notice || [];
+    const searchableBooks = Math.max(1, 17 - scanNoticeList.length);
+    const scanNoticeHtml = scanNoticeList.length
+      ? ` <span class="muted-line">影印保留卷（${esc(scanNoticeList.join("、"))}）不含伪造OCR。</span>`
+      : ` <span class="muted-line">含 OCR 古籍同步附原页扫描图像对照。</span>`;
+
     host.innerHTML = `
       <div class="lib-search-summary">
-        <strong>全书库检索「${esc(query)}」</strong>：在已数字化的 15 册典籍中共命中 <b>${data.total}</b> 页/节 ${exactNote}（展示前 ${items.length} 条）。
-        <span class="muted-line">影印保留卷（${esc((data.scan_only_notice || []).join("、"))}）不含伪造OCR。</span>
+        <strong>全书库检索「${esc(query)}」</strong>：在已数字化的 ${searchableBooks} 册典籍中共命中 <b>${data.total}</b> 页/节 ${exactNote}（展示前 ${items.length} 条）。${scanNoticeHtml}
       </div>
       <div class="lib-hit-grid">
         ${
@@ -609,6 +1728,13 @@
       } else {
         renderGroundEmpty();
       }
+    } else if (mode === "hantang") {
+      renderS5Chips(HANTANG_CHIPS);
+      const inp = $("#s5-query-input");
+      if (inp && document.activeElement !== inp && inp.value !== st.s5Query) {
+        inp.value = st.s5Query;
+      }
+      await renderHantangStudio(st.s5Query);
     }
   }
 
@@ -616,11 +1742,46 @@
     const isEmpty = Boolean(opts.isEmpty);
     const recognizedSyms = new Set(d.recognized_symptoms || []);
     const recognizedPulses = new Set(d.recognized_pulses || st.s5Pulses || []);
+    const recognizedTongues = new Set(d.recognized_tongues || []);
     const curTxt = st.s5Query || "";
+    const tongueText = (d.recognized_tongues || []).join("、") || "未指定";
     const statusHtml = isEmpty
-      ? `<span>已辨识规范症状：<strong>暂未选择</strong>（点选下方症状按钮即自动填入）</span><span>已选脉象权重：<strong>暂未选择</strong></span>`
+      ? `<span>已辨识规范症状：<strong>暂未选择</strong>（点选下方症状/舌象/十问即自动填入）</span><span>已选脉象权重：<strong>暂未选择</strong></span>`
       : `<span>已辨识症状轴：<b>${esc((d.recognized_symptoms || []).join("、") || "暂未提取")}</b></span>
-         <span>当前脉象：<b>${esc((d.recognized_pulses || []).map((x) => "脉" + x).join(" ") || "未指定（纯依症状）")}</b></span>`;
+         <span>当前脉象：<b>${esc((d.recognized_pulses || []).map((x) => "脉" + x).join(" ") || "未指定（纯依症状）")}</b></span>
+         <span>当前舌象：<b>${esc(tongueText)}</b></span>`;
+
+    // Group inquiry pills by clinical axis (寒热手足 / 二便口渴 / 眠胃时辰 / 腹诊压痛)
+    const inquiryGroups = new Map();
+    (d.inquiry_pills || []).forEach((iq) => {
+      const grp = iq.group || "临床十问";
+      if (!inquiryGroups.has(grp)) inquiryGroups.set(grp, []);
+      inquiryGroups.get(grp).push(iq);
+    });
+    const inquiryHtml = inquiryGroups.size
+      ? `<details class="s5-inquiry-details" ${!isEmpty || recognizedTongues.size ? "open" : ""}>
+           <summary>人纪十问 · 时辰睡眠 · 腹诊压痛快捷增删（点击即同步收敛辨证）</summary>
+           <div class="s5-inquiry-groups">
+             ${Array.from(inquiryGroups.entries())
+               .map(
+                 ([grpName, items]) => `<div class="s5-inquiry-group-row">
+                   <span class="s5-inquiry-grp-lbl">${esc(grpName)}</span>
+                   <div class="s5-pill-wrap is-symptoms">
+                     ${items
+                       .map((iq) => {
+                         const tokParts = (iq.token || "").split(/\s+/).filter(Boolean);
+                         const active = tokParts.length > 0 && tokParts.every((tp) => curTxt.includes(tp) || recognizedSyms.has(tp));
+                         return `<button class="s5-toggle-pill ${active ? "is-selected" : ""}" type="button" data-toggle-symptom="${esc(iq.token)}">${active ? "✓ " : "+ "}${esc(iq.label)}</button>`;
+                       })
+                       .join("")}
+                   </div>
+                 </div>`
+               )
+               .join("")}
+           </div>
+         </details>`
+      : "";
+
     return `
       <section class="s5-compose-controls">
         <div class="s5-control-row">
@@ -633,6 +1794,21 @@
               .join("")}
           </div>
         </div>
+        ${
+          (d.tongue_options || []).length
+            ? `<div class="s5-control-row">
+                 <span class="s5-control-label">舌诊辨寒热虚实（人纪胃气与津液分水岭）：</span>
+                 <div class="s5-pill-wrap">
+                   ${(d.tongue_options || [])
+                     .map((t) => {
+                       const active = recognizedTongues.has(t.id) || recognizedSyms.has(t.id) || curTxt.includes(t.id);
+                       return `<button class="s5-toggle-pill ${active ? "is-selected" : ""}" type="button" data-toggle-symptom="${esc(t.id)}" title="${esc(t.note)}">${active ? "✓ " : ""}${esc(t.label)}</button>`;
+                     })
+                     .join("")}
+                 </div>
+               </div>`
+            : ""
+        }
         <div class="s5-control-row">
           <span class="s5-control-label">常用症状点选增删（点击即可加入或移出上方辨证输入框）：</span>
           <div class="s5-pill-wrap is-symptoms">
@@ -648,6 +1824,7 @@
               .join("")}
           </div>
         </div>
+        ${inquiryHtml}
         ${
           !isEmpty && (d.followup_questions || []).length
             ? `<div class="s5-control-row s5-followup-box">
@@ -789,8 +1966,10 @@
     if (!host) return;
 
     const sb = d.safety_boundary || {};
+    const triage = d.triage_summary || {};
     const topCompound = (d.compound_regimens || [])[0];
     const acup = d.acupoint_protocol || { primary: [], adjuncts: [], technique_note: "" };
+    const hasTriage = Boolean(triage.headline || (triage.crossroads || []).length || (triage.tongue_notes || []).length);
 
     host.innerHTML = `
       ${renderComposeControls(d, { isEmpty: false })}
@@ -798,6 +1977,36 @@
       ${
         sb.triggered
           ? `<div class="s5-ground-banner is-danger"><strong>${esc(sb.title)}</strong><p>${esc(sb.message)}</p></div>`
+          : ""
+      }
+
+      ${
+        hasTriage
+          ? `<section class="s5-triage-banner">
+               <div class="s5-triage-head">
+                 <strong>四诊分水岭导读</strong>
+                 <span>${esc(triage.headline || "")}</span>
+               </div>
+               ${
+                 (triage.crossroads || []).length
+                   ? `<div class="s5-crossroad-grid">
+                        ${triage.crossroads
+                          .map(
+                            (cr) => `<div class="s5-crossroad-item">
+                                       <strong>${esc(cr.question)}</strong>
+                                       <p>${esc(cr.why)}</p>
+                                     </div>`
+                          )
+                          .join("")}
+                      </div>`
+                   : ""
+               }
+               ${
+                 (triage.tongue_notes || []).length
+                   ? `<div class="s5-tongue-notes">${triage.tongue_notes.map((tn) => `<span>· ${esc(tn)}</span>`).join("")}</div>`
+                   : ""
+               }
+             </section>`
           : ""
       }
 
@@ -987,18 +2196,48 @@
                        ? `<div class="s5-pitfall-box">
                             <strong>【系统已抑制排除的误治方警告】</strong>
                             <ul>
-                              ${d.excluded_pitfalls
-                                .map((ex) => `<li><strong>忌误用「${esc(ex.name)}」：</strong>${esc(ex.why_excluded)}</li>`)
+                              ${groupExcludedPitfalls(d.excluded_pitfalls)
+                                .map((grp) => `<li><strong>忌误用「${esc(grp.names.join("、"))}」：</strong>${esc(grp.reason)}</li>`)
                                 .join("")}
                             </ul>
                           </div>`
                        : ""
                    }
+                   ${renderStage5HantangSection(d.hantang_context)}
                  </section>`
               : ""
           }
         </div>
       </div>
+
+      ${
+        (d.classical_redlines || []).length
+          ? `<section class="s5-alert-banner s5-redline-section">
+               <strong>多学派互参临床红线与禁汗/禁下/禁温拦截（仅供学术辨证研习）：</strong>
+               <div class="s5-diff-list">
+                 ${d.classical_redlines
+                   .map(
+                     (rl) => `
+                   <article class="layer-card">
+                     <h4 class="s5-danger-note">${esc(rl.title)}</h4>
+                     ${rl.classic_basis ? `<p><strong>【经典依据】</strong>${esc(rl.classic_basis)}</p>` : ""}
+                     ${rl.ni_and_hantang_note ? `<p><strong>【人纪 · 汉唐】</strong>${esc(rl.ni_and_hantang_note)}</p>` : ""}
+                     ${rl.schools_crossref ? `<p><strong>【诸家互参】</strong>${esc(rl.schools_crossref)}</p>` : ""}
+                     ${rl.action_rule ? `<p><strong>【辨证拦截】</strong>${esc(rl.action_rule)}</p>` : ""}
+                     ${
+                       (rl.source_anchors || []).length
+                         ? `<div class="s5-redline-anchors"><span class="s5-redline-anchors-label">原文参照：</span>${rl.source_anchors
+                             .map((a) => renderAnchorBtn(a, a.label || a.book_title || "原文参照"))
+                             .join("")}</div>`
+                         : ""
+                     }
+                   </article>`
+                   )
+                   .join("")}
+               </div>
+             </section>`
+          : ""
+      }
 
       ${
         (d.differential_notes || []).length
@@ -1008,10 +2247,28 @@
           : ""
       }
 
+      ${
+        (d.decoction_and_safety || []).length
+          ? `<section class="layer-card s5-decoction-card">
+               <h4>煎服炮制 · 针刺禁忌 · 人纪停药与向愈六大金标准</h4>
+               <ul>
+                 ${d.decoction_and_safety.map((line) => `<li>${esc(line)}</li>`).join("")}
+               </ul>
+             </section>`
+          : ""
+      }
+
       <section class="s5-lib-evidence-box">
-        <h3>关联书库原文佐证 · 点击直达原书页</h3>
+        <h3>关联书库原文佐证 · 点击滑动对照上下页或进藏书阁精读</h3>
         <div class="s5-lib-hit-list">
-          ${(d.library_evidence || []).map((h) => `<button class="s5-book-ref-btn" type="button" data-lib-open="${esc(h.book_id)}:${h.page_no}"><strong>《${esc(h.book_title)}》${esc(h.unit_label)}</strong> — ${esc(h.snippet)}</button>`).join("") || `<div class="empty-mini">暂无书库命中</div>`}
+          ${(d.library_evidence || [])
+            .map((h) =>
+              renderLibRefRow(h, {
+                bodyHtml: `<strong>《${esc(h.book_title)}》${esc(h.unit_label)}</strong> — ${esc(h.snippet)}`,
+                probe: st.s5Query || h.snippet,
+              })
+            )
+            .join("") || `<div class="empty-mini">暂无书库命中</div>`}
         </div>
       </section>
 
@@ -1070,10 +2327,11 @@
                      ? `<div class="s5-cluster-refs">
                           <strong>书库古籍与医案实证：</strong>
                           ${sc.library_refs
-                            .map(
-                              (r) => `<button class="s5-book-ref-btn" type="button" data-lib-open="${esc(r.book_id)}:${r.page_no}">
-                                        《${esc(r.book_title)}》${esc(r.unit_label)} · “${esc((r.quote || "").slice(0, 48))}…”
-                                      </button>`
+                            .map((r) =>
+                              renderLibRefRow(r, {
+                                bodyHtml: `《${esc(r.book_title)}》${esc(r.unit_label)} · “${esc((r.quote || "").slice(0, 48))}…”`,
+                                probe: r.quote || sc.title,
+                              })
                             )
                             .join("")}
                         </div>`
@@ -1110,9 +2368,16 @@
         </section>
       </div>
       <section class="s5-lib-evidence-box">
-        <h3>⑤ 全书库（含汉唐医案与古籍注疏）实时原文命中 · 点击直达原书页</h3>
+        <h3>⑤ 全书库（含汉唐医案与古籍注疏）实时原文命中 · 点击滑动对照上下页或进藏书阁</h3>
         <div class="s5-lib-hit-list">
-          ${(d.library_hits || []).map((h) => `<button class="s5-book-ref-btn" type="button" data-lib-open="${esc(h.book_id)}:${h.page_no}"><strong>《${esc(h.book_title)}》${esc(h.unit_label)}</strong> — ${esc(h.snippet)}</button>`).join("") || `<div class="empty-mini">暂无直接命中</div>`}
+          ${(d.library_hits || [])
+            .map((h) =>
+              renderLibRefRow(h, {
+                bodyHtml: `<strong>《${esc(h.book_title)}》${esc(h.unit_label)}</strong> — ${esc(h.snippet)}`,
+                probe: st.s5Query || h.snippet,
+              })
+            )
+            .join("") || `<div class="empty-mini">暂无直接命中</div>`}
         </div>
       </section>
     `;
@@ -1157,9 +2422,9 @@
           : ""
       }
       <section class="s5-ground-section">
-        <h3>已核验原书逐页引用（SHA-256 真伪校验 · 点击直达书库原页）</h3>
+        <h3>已核验原书逐页引用（SHA-256 真伪校验 · 点击即滑出上下文）</h3>
         <div class="s5-lib-hit-list">
-          ${(g.verified_citations || []).map((c) => `<button class="s5-book-ref-btn" type="button" data-lib-open="${esc(c.book_id)}:${c.page_no}"><strong>[${esc(c.shelf_label)}] 《${esc(c.book_title)}》${esc(c.unit_label)}</strong> · ${esc(c.snippet)} <span class="sha-pill">SHA ${esc((c.text_sha256 || "").slice(0, 10))}</span></button>`).join("") || `<div class="empty-mini">本次问题暂未直接检得可核验正文段落。</div>`}
+          ${(g.verified_citations || []).map((c) => renderLibRefRow(c, { bodyHtml: `<strong>[${esc(c.shelf_label)}] 《${esc(c.book_title)}》${esc(c.unit_label)}</strong> · ${esc(c.snippet)} <span class="sha-pill">SHA ${esc((c.text_sha256 || "").slice(0, 10))}</span>`, probe: c.snippet || q })).join("") || `<div class="empty-mini">本次问题暂未直接检得可核验正文段落。</div>`}
         </div>
       </section>
       <div class="s5-conflict-gap-row">
@@ -1168,15 +2433,37 @@
           <ul>${(g.version_conflicts || ["暂无显式跨书冲突记录"]).map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
         </div>
         <div class="layer-card">
-          <h4>【覆盖不足与影印未OCR边界】</h4>
+          <h4>【覆盖不足与文献缺口边界】</h4>
           <ul>${(g.insufficiencies_and_gaps || []).map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
         </div>
       </div>
     `;
   }
 
+  function updateSyndromeTabCount(total) {
+    const count = Number(total);
+    const tab = $("#s5-tab-syndromes");
+    if (tab && Number.isFinite(count) && count > 0) {
+      tab.textContent = `${count} 大跨书证候群图谱`;
+    }
+  }
+
+  async function syncSyndromeTabCount() {
+    try {
+      const res = await api("/api/stage5/syndromes");
+      if (res && typeof res.total === "number") {
+        updateSyndromeTabCount(res.total);
+      }
+    } catch {
+      // keep HTML fallback text if API unavailable during early boot
+    }
+  }
+
   async function renderSyndromesAtlas(q = "") {
     const res = await api(`/api/stage5/syndromes?q=${encodeURIComponent(q)}`);
+    if (!String(q || "").trim() && typeof res?.total === "number") {
+      updateSyndromeTabCount(res.total);
+    }
     const host = $("#s5-workspace-body");
     if (!host) return;
     host.innerHTML = `
@@ -1215,7 +2502,7 @@
       targetEl = formulaPanel;
     } else if (h.startsWith("#/herbs/") && !/^#\/herbs\/(compare|chapters|page)\//.test(h) && h !== "#/herbs") {
       eid = decodeURIComponent(h.replace(/^#\/herbs\/(?:entry\/)?/, ""));
-      targetEl = $("#bencao-detail");
+      targetEl = $("#bc-detail");
     } else if (/^#\/acupuncture\/(?:points|conditions|meridians|techniques)\//.test(h)) {
       const m = h.match(/^#\/acupuncture\/[^/]+\/(.+)$/);
       eid = m ? decodeURIComponent(m[1]) : "";
@@ -1223,7 +2510,11 @@
     } else if (/^#\/neijing\/(?:chapters?|concepts?)\//.test(h)) {
       const m = h.match(/^#\/neijing\/[^/]+\/(.+)$/);
       eid = m ? decodeURIComponent(m[1]) : "";
-      targetEl = $("#neijing-detail");
+      targetEl = $("#nj-detail");
+    } else if (/^#\/six\/([^/]+)/.test(h)) {
+      const m = h.match(/^#\/six\/([^/]+?)(?:\/dossier)?$/);
+      eid = m ? decodeURIComponent(m[1]) : "";
+      targetEl = $("#six-detail");
     }
     return { targetEl, eid };
   }
@@ -1247,16 +2538,19 @@
       box.dataset.xrefKey = key;
       box.innerHTML = `
         <div class="lib-xref-head">
-          <strong>书库原文与医案跨书互参（${refs.length} 处原文 · 点击直达藏书阁页码）</strong>
+          <strong>书库原文与医案跨书互参（${refs.length} 处原文 · 点击滑开前后文对照）</strong>
           ${syns.map((s) => `<button class="entity-jump-chip badge-neijing" type="button" data-s5-jump-syndrome="${esc(s.title)}">综合辨证 · ${esc(s.title)}</button>`).join("")}
         </div>
         <div class="lib-xref-list">
           ${refs
-            .slice(0, 6)
-            .map(
-              (r) => `<button class="s5-book-ref-btn" type="button" data-lib-open="${esc(r.book_id)}:${r.page_no}">
-                        <strong>《${esc(r.book_title)}》${esc(r.unit_label)}</strong> — ${esc(r.snippet)}
-                      </button>`
+            .slice(0, 10)
+            .map((r) =>
+              renderLibRefRow(r, {
+                bodyHtml: `${renderShelfBadge(r.shelf)}<strong>《${esc(r.book_title)}》${esc(r.unit_label)}</strong>${
+                  r.section_title ? ` <span class="lib-xref-sec">(${esc(String(r.section_title).slice(0, 26))})</span>` : ""
+                } — ${esc(r.snippet)}`,
+                probe: r.snippet,
+              })
             )
             .join("")}
         </div>
@@ -1270,6 +2564,384 @@
   async function hydrateCurrentDetailLibraryLinks(force = false) {
     const { targetEl, eid } = resolveActiveDetailFromHash();
     await hydrateEntityInto(targetEl, eid, force);
+  }
+
+  const HANTANG_CHIPS = [
+    { label: "HT-40 心脏术后", q: "HT-40" },
+    { label: "胆切除 HT-84", q: "胆切除" },
+    { label: "第5椎 · 红斑狼疮", q: "红斑" },
+    { label: "热药冷服 · 格阳", q: "热药冷服" },
+    { label: "白带 · 妇科带下", q: "白带" },
+    { label: "痛风 HT-27", q: "痛风" },
+  ];
+
+  const HT_SAFETY_META = {
+    standard: { cls: "safety-standard", text: "常规经方化裁" },
+    high_risk: { cls: "safety-high_risk", text: "峻药高危 · 须严辨" },
+    practitioner_only: { cls: "safety-practitioner_only", text: "重证剧毒 · 仅限一线执业" },
+  };
+
+  function groupExcludedPitfalls(pitfalls = []) {
+    const groups = [];
+    const byReason = new Map();
+    for (const ex of pitfalls || []) {
+      const reason = String(ex.why_excluded || "").trim();
+      const name = String(ex.name || "").trim();
+      if (!name) continue;
+      if (!byReason.has(reason)) {
+        const entry = { reason, names: [name] };
+        byReason.set(reason, entry);
+        groups.push(entry);
+      } else {
+        const entry = byReason.get(reason);
+        if (!entry.names.includes(name)) entry.names.push(name);
+      }
+    }
+    return groups;
+  }
+
+  function renderAnchorBtn(anchor, label = "原文参照") {
+    if (!anchor || !anchor.book_id) return "";
+    const pno = Number(anchor.page_no || anchor.page_hint || 0);
+    const pTxt = pno > 0 ? ` · p.${pno}` : "";
+    return `<button type="button" class="ghost-btn tiny-btn ctx-ref-btn" data-ctx-loc="1" data-ctx-book="${esc(anchor.book_id)}" data-ctx-page="${pno > 0 ? pno : ""}" data-ctx-q="${esc(anchor.q || "")}">${esc(label)}${pTxt}</button>`;
+  }
+
+  function renderHtEntityChips(classics = [], points = []) {
+    const fHtml = (classics || [])
+      .map((c) => `<button type="button" class="entity-jump-chip badge-formula" data-jump-module="formulas" data-jump-id="${esc(c.id)}">经方 · ${esc(c.name)}</button>`)
+      .join("");
+    const pHtml = (points || [])
+      .map((p) => `<button type="button" class="entity-jump-chip badge-acup" data-jump-module="acupuncture" data-jump-id="${esc(p.id)}">穴 · ${esc(p.name)}</button>`)
+      .join("");
+    return fHtml || pHtml ? `<div class="entity-jump-strip">${fHtml}${pHtml}</div>` : "";
+  }
+
+  function renderStage5HantangSection(htCtx) {
+    if (!htCtx) return "";
+    const formulas = htCtx.hantang_formulas || [];
+    const western = htCtx.western_history_guidance || [];
+    const du = htCtx.du_spine_guides || [];
+    const palp = htCtx.special_palpations || [];
+    const redlines = htCtx.ht_redlines || [];
+    if (!formulas.length && !western.length && !du.length && !palp.length && !redlines.length) return "";
+    const prog = htCtx.prognosis_summary || {};
+    return `
+      <div class="s5-hantang-section">
+        <div class="s5-ht-header">
+          <strong>【汉唐百方 &amp; 倪氏人纪临床互参】</strong>
+          <span class="s5-ht-badge partial-warn">仅作病机与取象立法示范 · 严禁直接抄方套用</span>
+        </div>
+        ${western
+          .map(
+            (w) => `<div class="s5-ht-alert-box">
+              <strong>⚠️ 西医介入修正 · ${esc(w.title)}</strong>（触发：${esc((w.matched_triggers || []).join(" / "))}）<br/>
+              <span><b>病机转归：</b>${esc(w.pathogenesis_shift)}</span><br/>
+              <span><b>禁忌红线：</b>${esc(w.forbidden)}</span><br/>
+              <span><b>替代方策：</b>${esc(w.guidance)}</span>
+              <div class="s5-ht-ops">
+                <div>${(w.linked_ht || []).map((ht) => `<button type="button" class="s5-ht-pill" data-hantang-focus="${esc(ht)}">${esc(ht)} 详参</button>`).join("")}</div>
+                ${renderAnchorBtn(w.anchor, "《医案/百方》原文")}
+              </div>
+            </div>`
+          )
+          .join("")}
+        ${
+          du.length || palp.length || redlines.length
+            ? `<div class="s5-ht-alert-box">
+                ${du
+                  .map(
+                    (d) => `<div><strong>【督脉触诊】${esc(d.location)}：</strong>${esc(d.warning_target)} — ${esc(d.companion_cue)} ${
+                      d.acupoint_id
+                        ? `<button type="button" class="entity-jump-chip badge-acup" data-jump-module="acupuncture" data-jump-id="${esc(d.acupoint_id)}">穴 · ${esc(d.acupoint)}</button>`
+                        : ""
+                    } ${renderAnchorBtn(d.anchor, "原书定位")}</div>`
+                  )
+                  .join("")}
+                ${palp
+                  .map(
+                    (p) => `<div><strong>【特异压痛点】${esc(p.name)}：</strong>${esc(p.differential)} ${renderAnchorBtn(p.anchor, "原文")}</div>`
+                  )
+                  .join("")}
+                ${redlines
+                  .map(
+                    (r) => `<div><strong>【汉唐临床红线】${esc(r.title)}：</strong>${esc(r.rule)} ${renderAnchorBtn(r.anchor, r.ref || "出处")}</div>`
+                  )
+                  .join("")}
+              </div>`
+            : ""
+        }
+        ${
+          formulas.length
+            ? `<div class="s5-ht-grid">
+                ${formulas
+                  .map((h) => {
+                    const sm = HT_SAFETY_META[h.safety_level] || HT_SAFETY_META.standard;
+                    return `<article class="s5-ht-card">
+                      <div class="s5-ht-card-head">
+                        <span class="s5-ht-card-title">${esc(h.full_title)}</span>
+                        <div class="s5-ht-badges">
+                          <span class="s5-ht-badge ${sm.cls}">${esc(sm.text)}</span>
+                          ${h.is_partial_disclosure ? `<span class="s5-ht-badge partial-warn">公开部分药味</span>` : ""}
+                        </div>
+                      </div>
+                      <div class="s5-ht-layer s5-ht-layer-ni">
+                        <span class="s5-ht-layer-label">【倪氏原论 · 主治与示例药味】</span>
+                        <div>${esc(h.indications)}</div>
+                        <div><b>示方药物：</b>${esc(h.partial_herbs)}</div>
+                        <div><b>禁忌：</b>${esc(h.contraindications)}</div>
+                      </div>
+                      <div class="s5-ht-layer s5-ht-layer-ziji">
+                        <span class="s5-ht-layer-label">【紫极讲者按语 &amp; 经方关联】</span>
+                        <div>${esc(h.ziji_commentary)}</div>
+                        ${renderHtEntityChips(h.linked_classical_formulas, h.linked_acupoints)}
+                      </div>
+                      <div class="s5-ht-ops">
+                        <button type="button" class="s5-ht-pill" data-hantang-focus="${esc(h.ht_number)}">汉唐全库详览 ↗</button>
+                        ${renderAnchorBtn(h.source_anchor, "《汉唐百方》原文")}
+                      </div>
+                    </article>`;
+                  })
+                  .join("")}
+              </div>`
+            : ""
+        }
+        ${
+          (prog.seven_recovery_signs || []).length
+            ? `<details class="s5-ht-prog-details">
+                <summary>【倪氏疗效向愈判标速查（六准则 / 七大好转指针 / 逆证警讯）】</summary>
+                <div style="margin-top:6px;">
+                  <div><b>六大总则：</b>${esc((prog.ni_six_criteria || []).join(" ｜ "))}</div>
+                  <div><b>七大向愈指征：</b>${esc((prog.seven_recovery_signs || []).join(" ｜ "))}</div>
+                  <div><b>凶险逆证警讯：</b>${esc((prog.danger_reversal_signs || []).join(" ｜ "))}</div>
+                  <div style="margin-top:6px;">${renderAnchorBtn(prog.anchor, "《汉唐医案集》倪氏六准则原文")}</div>
+                </div>
+              </details>`
+            : ""
+        }
+      </div>
+    `;
+  }
+
+  function renderHtFormulaCard(f) {
+    const sm = HT_SAFETY_META[f.safety_level] || HT_SAFETY_META.standard;
+    const ni = f.ni_original || {};
+    const zj = f.ziji_note || {};
+    return `
+      <article class="s5-ht-card">
+        <div class="s5-ht-card-head">
+          <span class="s5-ht-card-title">${esc(f.full_title)}</span>
+          <div class="s5-ht-badges">
+            <span class="s5-ht-badge ${sm.cls}">${esc(sm.text)}</span>
+            ${ni.is_partial_disclosure ? `<span class="s5-ht-badge partial-warn">……等 部分示药</span>` : ""}
+          </div>
+        </div>
+        <div class="muted-line">${esc(f.category)}</div>
+        <div class="s5-ht-layer s5-ht-layer-ni">
+          <span class="s5-ht-layer-label">【倪氏原论 · 汉唐百方】</span>
+          <div><b>主治适应证：</b>${esc(ni.indications)}</div>
+          <div><b>核心病机：</b>${esc(ni.pathogenesis)}</div>
+          <div><b>部分公开药味：</b>${esc(ni.partial_herbs)}</div>
+          <div><b>服法/量度：</b>${esc(ni.dosage_method)}</div>
+          <div><b>原书禁忌：</b>${esc(ni.contraindications)}</div>
+        </div>
+        <div class="s5-ht-layer s5-ht-layer-ziji">
+          <span class="s5-ht-layer-label">【紫极讲者按语 · 孤立标示】</span>
+          <div>${esc(zj.commentary)}</div>
+          ${renderHtEntityChips(zj.linked_classical_formulas, zj.linked_acupoints)}
+        </div>
+        <div class="s5-ht-ops">
+          <div class="muted-line">${esc((f.clinical_tags || []).slice(0, 4).join(" · "))}</div>
+          ${renderAnchorBtn(f.source_anchor, "原文对照")}
+        </div>
+      </article>
+    `;
+  }
+
+  function renderHtSubContent(ov, formulaRes) {
+    const sub = st.htSubTab || "formulas";
+    if (sub === "formulas") {
+      const cats = ov.categories || [];
+      const items = formulaRes?.items || [];
+      return `
+        <div class="s5-ht-filter-row">
+          <button type="button" class="s5-ht-pill ${st.htCategory === "all" ? "active" : ""}" data-ht-cat="all">全部 (${ov.formula_count}方)</button>
+          ${cats
+            .map(
+              (c) => `<button type="button" class="s5-ht-pill ${st.htCategory === c.id ? "active" : ""}" data-ht-cat="${esc(c.id)}">${esc(c.short)} (${c.count})</button>`
+            )
+            .join("")}
+        </div>
+        <div class="s5-ht-filter-row">
+          <span class="muted-line">风险分级：</span>
+          ${[
+            ["all", "全部级别"],
+            ["standard", "常规"],
+            ["high_risk", "峻药高危"],
+            ["practitioner_only", "重证仅限执业"],
+          ]
+            .map(
+              ([k, lbl]) => `<button type="button" class="s5-ht-pill ${st.htSafety === k ? "active" : ""}" data-ht-safety="${k}">${lbl}</button>`
+            )
+            .join("")}
+          <span class="muted-line">原书未公开缺号：HT-${esc((ov.missing_numbers || []).join(", "))}</span>
+        </div>
+        <div class="muted-line">当前显示 <strong>${items.length}</strong> 方${st.s5Query ? `（检索：${esc(st.s5Query)}）` : ""}</div>
+        <div class="s5-ht-grid">
+          ${items.length ? items.map(renderHtFormulaCard).join("") : `<div class="s5-empty-guide"><p>未找到匹配的汉唐方剂，请换关键词（如 HT-40、胆切除、白带、疼痛）或切换分类。</p></div>`}
+        </div>
+      `;
+    }
+    if (sub === "spine_palp") {
+      return `
+        <h4>一、督脉第 3 / 5 / 6 / 9 / 13 椎压痛早期预警系统</h4>
+        <div class="s5-ht-grid">
+          ${(ov.du_spine_diagnostics || [])
+            .map(
+              (d) => `<article class="s5-ht-card">
+                <div class="s5-ht-card-head">
+                  <span class="s5-ht-card-title">${esc(d.location)}</span>
+                  <span class="s5-ht-badge safety-high_risk">${esc(d.organ)}</span>
+                </div>
+                <div><b>预警目标：</b>${esc(d.warning_target)}</div>
+                <div><b>伴随印证：</b>${esc(d.companion_cue)}</div>
+                <div class="s5-ht-ops">
+                  ${d.acupoint_id ? `<button type="button" class="entity-jump-chip badge-acup" data-jump-module="acupuncture" data-jump-id="${esc(d.acupoint_id)}">督脉定位穴 · ${esc(d.acupoint)}</button>` : `<span>穴：${esc(d.acupoint)}</span>`}
+                  ${renderAnchorBtn(d.anchor, "《汉唐医案集》原文")}
+                </div>
+              </article>`
+            )
+            .join("")}
+        </div>
+        <h4 style="margin-top:16px;">二、临床特异压痛点与头足冷热鉴诊指标</h4>
+        <div class="s5-ht-grid">
+          ${(ov.special_palpation_points || [])
+            .map(
+              (p) => `<article class="s5-ht-card">
+                <div class="s5-ht-card-title">${esc(p.name)}</div>
+                <div class="s5-ht-layer s5-ht-layer-ni">${esc(p.differential)}</div>
+                <div class="s5-ht-ops"><span></span>${renderAnchorBtn(p.anchor, "原书对照")}</div>
+              </article>`
+            )
+            .join("")}
+        </div>
+      `;
+    }
+    if (sub === "western") {
+      return `
+        <div class="s5-ht-grid">
+          ${(ov.western_history_rules || [])
+            .map(
+              (w) => `<article class="s5-ht-card">
+                <div class="s5-ht-card-title">${esc(w.title)}</div>
+                <div class="muted-line">触发史关键词：${esc((w.triggers || []).join(" / "))}</div>
+                <div class="s5-ht-layer s5-ht-layer-ni">
+                  <div><b>经方病机演变：</b>${esc(w.pathogenesis_shift)}</div>
+                  <div><b>禁用警戒：</b>${esc(w.forbidden)}</div>
+                  <div><b>善后替代思路：</b>${esc(w.guidance)}</div>
+                </div>
+                <div>
+                  ${(w.linked_ht || []).map((ht) => `<button type="button" class="s5-ht-pill" data-hantang-focus="${esc(ht)}">${esc(ht)}</button>`).join(" ")}
+                </div>
+                ${renderHtEntityChips(w.linked_classical_items, [])}
+                <div class="s5-ht-ops"><span></span>${renderAnchorBtn(w.anchor, "原书详述")}</div>
+              </article>`
+            )
+            .join("")}
+        </div>
+      `;
+    }
+    if (sub === "redlines") {
+      const prog = ov.prognosis_and_recovery_criteria || {};
+      return `
+        <h4>一、汉唐百方十大高频高危禁忌红线</h4>
+        <div class="s5-ht-grid">
+          ${(ov.clinical_redlines || [])
+            .map(
+              (r) => `<article class="s5-ht-card">
+                <div class="s5-ht-card-head">
+                  <span class="s5-ht-card-title">${esc(r.title)}</span>
+                  <span class="s5-ht-badge safety-practitioner_only">${esc(r.ref)}</span>
+                </div>
+                <div class="s5-ht-layer s5-ht-layer-ni">${esc(r.rule)}</div>
+                <div class="s5-ht-ops">
+                  ${r.anchor?.q ? `<button type="button" class="s5-ht-pill" data-hantang-focus="${esc(r.anchor.q.split(" ")[0])}">查看对应方卡</button>` : "<span></span>"}
+                  ${renderAnchorBtn(r.anchor, "《汉唐百方》原文")}
+                </div>
+              </article>`
+            )
+            .join("")}
+        </div>
+        <h4 style="margin-top:16px;">二、倪氏治病六准则 &amp; 七大好转指针 &amp; 凶险逆证警讯</h4>
+        <article class="s5-ht-card">
+          <div><b>倪氏治病六准则（正常人金标）：</b></div>
+          <ul>${(prog.ni_six_criteria || []).map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
+          <div><b>七大攻邪向愈体征：</b></div>
+          <ul>${(prog.seven_recovery_signs || []).map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
+          <div style="color:#8f1d14;"><b>⚠️ 凶险逆证将脱警讯：</b></div>
+          <ul style="color:#8f1d14;">${(prog.danger_reversal_signs || []).map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
+          <div class="s5-ht-layer s5-ht-layer-ziji"><span class="s5-ht-layer-label">【紫极五通总纲 · 讲者整理】</span>${esc(prog.five_passages_ziji)}</div>
+          <div class="s5-ht-ops"><span></span>${renderAnchorBtn(prog.anchor, "《汉唐医案集》原文")}</div>
+        </article>
+      `;
+    }
+    return `
+      <div class="s5-ht-grid">
+        ${(ov.cases_index || [])
+          .map(
+            (cs) => `<article class="s5-ht-card">
+              <div class="s5-ht-card-head">
+                <span class="s5-ht-card-title">${esc(cs.title)}</span>
+                <span class="s5-ht-badge safety-standard">${esc(cs.date)}</span>
+              </div>
+              <div class="s5-ht-layer s5-ht-layer-ni">${esc(cs.summary)}</div>
+              <div>
+                ${(cs.formulas || [])
+                  .filter((fn) => fn.startsWith("HT-"))
+                  .map((ht) => `<button type="button" class="s5-ht-pill" data-hantang-focus="${esc(ht)}">${esc(ht)}</button>`)
+                  .join(" ")}
+              </div>
+              ${renderHtEntityChips(cs.linked_formula_items, cs.linked_acupoint_items)}
+              <div class="s5-ht-ops"><span></span>${renderAnchorBtn(cs.anchor, "原书医案参照")}</div>
+            </article>`
+          )
+          .join("")}
+      </div>
+    `;
+  }
+
+  async function renderHantangStudio(q = "") {
+    const host = $("#s5-workspace-body");
+    if (!host) return;
+    host.innerHTML = `<div class="muted-line">正在加载汉唐 91 方、督脉触诊、西医介入禁忌与医案索引...</div>`;
+    if (!st.htOverview) {
+      st.htOverview = await api("/api/hantang/overview");
+    }
+    const ov = st.htOverview;
+    let formulaRes = null;
+    if (st.htSubTab === "formulas") {
+      formulaRes = await api(
+        `/api/hantang/formulas?category=${encodeURIComponent(st.htCategory)}&safety=${encodeURIComponent(st.htSafety)}&q=${encodeURIComponent(q)}`
+      );
+    }
+    const subTabs = [
+      ["formulas", `汉唐百方 (${ov.formula_count}方)`],
+      ["spine_palp", `督脉5椎 & 特异触诊 (${(ov.du_spine_diagnostics || []).length + (ov.special_palpation_points || []).length})`],
+      ["western", `七大西医介入善后 (${(ov.western_history_rules || []).length})`],
+      ["redlines", `十大红线 & 向愈判标 (${(ov.clinical_redlines || []).length})`],
+      ["cases", `重点临床医案 (${(ov.cases_index || []).length}案)`],
+    ];
+    host.innerHTML = `
+      <div class="s5-ht-epistemic">${esc(ov.epistemic_notice)}</div>
+      <div class="s5-ht-subtabs">
+        ${subTabs
+          .map(
+            ([k, lbl]) => `<button type="button" class="s5-ht-pill ${st.htSubTab === k ? "active" : ""}" data-ht-subtab="${k}">${esc(lbl)}</button>`
+          )
+          .join("")}
+      </div>
+      ${renderHtSubContent(ov, formulaRes)}
+    `;
   }
 
   function installBacklinkObservers() {
@@ -1293,7 +2965,7 @@
       if (st.activeView) clearExtraViews();
       setTimeout(() => hydrateCurrentDetailLibraryLinks(false), 260);
     });
-    ["#formula-detail", "#bencao-detail", "#acup-detail", "#neijing-detail"].forEach((sel) => {
+    ["#formula-detail", "#bc-detail", "#acup-detail", "#nj-detail", "#six-detail"].forEach((sel) => {
       const el = $(sel);
       if (!el) return;
       const obs = new MutationObserver((muts) => {
@@ -1347,8 +3019,110 @@
       });
     });
 
-    // Global delegated clicks across Stage 5, Library & Backlink panels
+    // Global delegated clicks across Stage 5, Library, Context Drawer & Backlink panels
     document.addEventListener("click", async (e) => {
+      const ctxLocBtn = e.target.closest("[data-ctx-loc]");
+      if (ctxLocBtn) {
+        e.preventDefault();
+        await openContextDrawer({
+          bookId: ctxLocBtn.dataset.ctxBook || "",
+          pageNo: Number(ctxLocBtn.dataset.ctxPage || 0),
+          line: Number(ctxLocBtn.dataset.ctxLine || 0),
+          bookHint: ctxLocBtn.dataset.ctxHint || "",
+          q: ctxLocBtn.dataset.ctxQ || "",
+        });
+        return;
+      }
+      if (e.target.closest("#ctx-close-btn") || e.target === $("#ctx-drawer-backdrop")) {
+        closeContextDrawer();
+        return;
+      }
+      if (e.target.closest("#ctx-open-lib-btn")) {
+        const bid = ctxSt.bookId;
+        const pno = ctxSt.activePageNo;
+        const hl = ctxSt.highlightQuery;
+        closeContextDrawer();
+        if (bid) await openBookPageFromAnywhere(bid, pno || 1, hl);
+        return;
+      }
+      if (e.target.closest("#ctx-toggle-index")) {
+        const keepPage = ctxSt.activePageNo;
+        ctxSt.showIndex = !ctxSt.showIndex;
+        renderContextDrawer();
+        scrollCtxToTarget(keepPage, false);
+        return;
+      }
+      const ctxJump = e.target.closest("[data-ctx-jump-page]");
+      if (ctxJump) {
+        await jumpCtxToPage(Number(ctxJump.dataset.ctxJumpPage), ctxJump.dataset.ctxJumpHl || "");
+        return;
+      }
+      if (e.target.closest("#ctx-index-search-btn")) {
+        await searchInsideCtxBook($("#ctx-index-search")?.value || "");
+        return;
+      }
+      if (e.target.closest("#ctx-index-reset-btn")) {
+        ctxSt.indexSearchQuery = "";
+        ctxSt.indexSearchHits = null;
+        ctxSt.indexFilter = "";
+        const inp = $("#ctx-index-search");
+        if (inp) inp.value = "";
+        updateCtxIndexDomOnly();
+        return;
+      }
+      if (e.target.id === "ctx-jump-go") {
+        await jumpCtxToPage(Number($("#ctx-jump-inp")?.value || 1));
+        return;
+      }
+      const ctxVmode = e.target.closest("[data-ctx-vmode]");
+      if (ctxVmode) {
+        const keepPage = ctxSt.activePageNo;
+        ctxSt.viewMode = ctxVmode.dataset.ctxVmode;
+        renderContextDrawer();
+        scrollCtxToTarget(keepPage, false);
+        return;
+      }
+      const ctxReflow = e.target.closest("[data-ctx-reflow]");
+      if (ctxReflow) {
+        const keepPage = ctxSt.activePageNo;
+        ctxSt.reflowText = ctxReflow.dataset.ctxReflow === "true";
+        renderContextDrawer();
+        scrollCtxToTarget(keepPage, false);
+        return;
+      }
+      if (e.target.closest("#ctx-load-prev")) {
+        await loadCtxDirection("up");
+        return;
+      }
+      if (e.target.closest("#ctx-load-next")) {
+        await loadCtxDirection("down");
+        return;
+      }
+      const ctxSync = e.target.closest("[data-ctx-sync-scan]");
+      if (ctxSync) {
+        const pno = Number(ctxSync.dataset.ctxSyncScan) || ctxSt.activePageNo;
+        const pg = ctxSt.pages.find((p) => p.page_no === pno);
+        if (pg) {
+          updateCtxSyncedScan(pg);
+          syncCtxActivePage(pno, { updateScan: false });
+        }
+        return;
+      }
+      if (e.target.id === "ctx-scan-prev" || e.target.id === "ctx-scan-next") {
+        const isPrev = e.target.id === "ctx-scan-prev";
+        const targetP = Math.max(1, Math.min(ctxSt.totalUnits, ctxSt.activePageNo + (isPrev ? -1 : 1)));
+        if (targetP !== ctxSt.activePageNo) {
+          if (targetP < ctxSt.startPage) await loadCtxDirection("up");
+          else if (targetP > ctxSt.endPage) await loadCtxDirection("down");
+          const pg = ctxSt.pages.find((p) => p.page_no === targetP);
+          if (pg) {
+            updateCtxSyncedScan(pg);
+            syncCtxActivePage(targetP, { updateScan: false });
+            scrollCtxToTarget(targetP, false);
+          }
+        }
+        return;
+      }
       const shelfBtn = e.target.closest("#lib-shelf-tabs [data-lib-shelf]");
       if (shelfBtn) {
         await loadLibraryBooks(shelfBtn.dataset.libShelf || "");
@@ -1367,20 +3141,64 @@
       const libOpenBtn = e.target.closest("[data-lib-open]");
       if (libOpenBtn) {
         const [bid, pstr] = libOpenBtn.dataset.libOpen.split(":");
-        await openBookPageFromAnywhere(bid, Number(pstr) || 1);
+        await openBookPageFromAnywhere(bid, Number(pstr) || 1, libOpenBtn.dataset.libHl || "");
         return;
       }
       const jumpBtn = e.target.closest("[data-jump-module][data-jump-id]");
       if (jumpBtn) {
+        if (ctxSt.open) closeContextDrawer();
         await jumpToModuleEntity(jumpBtn.dataset.jumpModule, jumpBtn.dataset.jumpId);
         return;
       }
-      if (e.target.id === "lib-prev-btn" && st.pageData?.prev_page) {
-        await loadBookPage(st.selectedBookId, st.pageData.prev_page, false);
+      if (e.target.closest("#lib-back-to-search-btn")) {
+        const panel = $("#lib-search-results-panel");
+        const ws = $("#lib-reader-workspace");
+        if (panel && panel.innerHTML.trim()) {
+          st.searchActive = true;
+          panel.classList.remove("hidden");
+          ws?.classList.add("hidden");
+        } else if (st.lastSearchQuery) {
+          await runLibrarySearch(st.lastSearchQuery);
+        }
         return;
       }
-      if (e.target.id === "lib-next-btn" && st.pageData?.next_page) {
-        await loadBookPage(st.selectedBookId, st.pageData.next_page, false);
+      const layoutBtn = e.target.closest("[data-lib-layout]");
+      if (layoutBtn) {
+        const nextLayout = layoutBtn.dataset.libLayout === "single" ? "single" : "continuous";
+        if (nextLayout !== st.readLayout) {
+          st.readLayout = nextLayout;
+          st.loadedPages = [];
+          await loadBookPage(st.selectedBookId, st.currentPageNo, true);
+        }
+        return;
+      }
+      if (e.target.closest("#lib-load-prev-chunk")) {
+        await loadContextDirection("up");
+        return;
+      }
+      if (e.target.closest("#lib-load-next-chunk")) {
+        await loadContextDirection("down");
+        return;
+      }
+      const syncBtn = e.target.closest("[data-lib-sync-scan]");
+      if (syncBtn) {
+        const pno = Number(syncBtn.dataset.libSyncScan) || st.currentPageNo;
+        const pg = st.loadedPages.find((p) => p.page_no === pno) || st.pageData;
+        if (pg) {
+          updateSyncedScanImage(pg);
+          syncActivePageIndicators(pno, { updateScan: false });
+        }
+        return;
+      }
+      if (e.target.id === "lib-prev-btn" || e.target.id === "lib-scan-prev") {
+        const cur = st.currentPageNo || st.pageData?.page_no || 1;
+        if (cur > 1) await loadBookPage(st.selectedBookId, cur - 1, false);
+        return;
+      }
+      if (e.target.id === "lib-next-btn" || e.target.id === "lib-scan-next") {
+        const cur = st.currentPageNo || st.pageData?.page_no || 1;
+        const total = st.pageData?.total_units || st.selectedBook?.total_units || cur;
+        if (cur < total) await loadBookPage(st.selectedBookId, cur + 1, false);
         return;
       }
       if (e.target.id === "lib-jump-go") {
@@ -1390,14 +3208,18 @@
       }
       const vmodeBtn = e.target.closest("[data-lib-vmode]");
       if (vmodeBtn) {
+        const keepPage = st.currentPageNo;
         st.viewMode = vmodeBtn.dataset.libVmode;
         renderReaderPage();
+        if (st.readLayout === "continuous") scrollToPageAnchor(keepPage, false);
         return;
       }
       const reflowBtn = e.target.closest("[data-lib-reflow]");
       if (reflowBtn) {
+        const keepPage = st.currentPageNo;
         st.reflowText = reflowBtn.dataset.libReflow === "true";
         renderReaderPage();
+        if (st.readLayout === "continuous") scrollToPageAnchor(keepPage, false);
         return;
       }
       const s5ModeBtn = e.target.closest("[data-s5-mode]");
@@ -1465,9 +3287,45 @@
       const s5Chip = e.target.closest("[data-s5-chip]");
       if (s5Chip) {
         const q = s5Chip.dataset.s5Chip;
+        st.s5Query = q;
+        const inp = $("#s5-query-input");
+        if (inp) inp.value = q;
         if (st.s5Mode === "ground") await runStage5Ground(q);
         else if (st.s5Mode === "compose") await runStage5Compose(q, st.s5Pulses);
-        else await runStage5Diagnose(q);
+        else if (st.s5Mode === "hantang") {
+          st.htSubTab = "formulas";
+          await renderHantangStudio(q);
+        } else await runStage5Diagnose(q);
+        return;
+      }
+      const htSubBtn = e.target.closest("[data-ht-subtab]");
+      if (htSubBtn) {
+        st.htSubTab = htSubBtn.dataset.htSubtab || "formulas";
+        await renderHantangStudio(st.s5Query);
+        return;
+      }
+      const htCatBtn = e.target.closest("[data-ht-cat]");
+      if (htCatBtn) {
+        st.htCategory = htCatBtn.dataset.htCat || "all";
+        await renderHantangStudio(st.s5Query);
+        return;
+      }
+      const htSafeBtn = e.target.closest("[data-ht-safety]");
+      if (htSafeBtn) {
+        st.htSafety = htSafeBtn.dataset.htSafety || "all";
+        await renderHantangStudio(st.s5Query);
+        return;
+      }
+      const htFocusBtn = e.target.closest("[data-hantang-focus]");
+      if (htFocusBtn) {
+        const q = htFocusBtn.dataset.hantangFocus || "";
+        st.s5Query = q;
+        st.htSubTab = "formulas";
+        st.htCategory = "all";
+        st.htSafety = "all";
+        const inp = $("#s5-query-input");
+        if (inp) inp.value = q;
+        await activateStage5("hantang", false);
         return;
       }
       const s5Drill = e.target.closest("[data-s5-drill]");
@@ -1485,6 +3343,35 @@
       }
       if (e.target.closest("#s5-clear-selected-btn")) {
         $("#s5-reset-btn")?.click();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && ctxSt.open) {
+        closeContextDrawer();
+        return;
+      }
+      if (e.key === "Enter" && e.target?.id === "lib-jump-input") {
+        e.preventDefault();
+        $("#lib-jump-go")?.click();
+        return;
+      }
+      if (e.key === "Enter" && e.target?.id === "ctx-jump-inp") {
+        e.preventDefault();
+        $("#ctx-jump-go")?.click();
+        return;
+      }
+      if (e.key === "Enter" && e.target?.id === "ctx-index-search") {
+        e.preventDefault();
+        searchInsideCtxBook(e.target.value);
+      }
+    });
+
+    document.addEventListener("input", (e) => {
+      if (e.target?.id === "ctx-index-search") {
+        ctxSt.indexFilter = e.target.value;
+        ctxSt.indexSearchHits = null;
+        updateCtxIndexDomOnly();
       }
     });
 
@@ -1522,10 +3409,14 @@
     $("#s5-submit-btn")?.addEventListener("click", async () => {
       clearTimeout(composeDebounceTimer);
       const q = $("#s5-query-input")?.value || "";
+      st.s5Query = q;
       if (st.s5Mode === "compose") await runStage5Compose(q, st.s5Pulses);
       else if (st.s5Mode === "ground") await runStage5Ground(q);
       else if (st.s5Mode === "syndromes") await renderSyndromesAtlas(q);
-      else await runStage5Diagnose(q);
+      else if (st.s5Mode === "hantang") {
+        st.htSubTab = "formulas";
+        await renderHantangStudio(q);
+      } else await runStage5Diagnose(q);
     });
     $("#s5-query-input")?.addEventListener("keydown", async (e) => {
       if (e.key === "Enter") {
@@ -1537,6 +3428,8 @@
       clearTimeout(composeDebounceTimer);
       st.s5Query = "";
       st.s5Pulses = [];
+      st.htCategory = "all";
+      st.htSafety = "all";
       const inp = $("#s5-query-input");
       if (inp) inp.value = "";
       await activateStage5(st.s5Mode, false);
@@ -1546,9 +3439,12 @@
   }
 
   bindEvents();
+  syncSyndromeTabCount();
   window.libraryStage5 = {
     handleHash,
     openBookPage: openBookPageFromAnywhere,
+    openContextDrawer,
+    closeContextDrawer,
     jumpToEntity: jumpToModuleEntity,
     hydrateBacklinks: hydrateCurrentDetailLibraryLinks,
   };

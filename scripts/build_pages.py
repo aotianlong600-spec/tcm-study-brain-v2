@@ -247,7 +247,7 @@ def build_dist(*, skip_pdfs: bool = False) -> Path:
         f"style.css?v={bundle_ver}",
         "favicon.svg",
         f"pages_runtime.js?v={bundle_ver}",
-        "pages_worker.js",
+        f"pages_worker.js?v={bundle_ver}",
         f"acupuncture.js?v={bundle_ver}",
         f"bencao.js?v={bundle_ver}",
         f"neijing.js?v={bundle_ver}",

@@ -6,25 +6,35 @@ const BUILD_TAG = "__BUILD_ID__";
 let dispatchJson = null;
 
 async function fetchCachedArrayBuffer(url) {
+  const versionedUrl = `${url}?v=${BUILD_TAG}`;
   if (typeof caches !== "undefined") {
     try {
       const cache = await caches.open(RUNTIME_CACHE);
-      const cacheKey = `${url}?v=${BUILD_TAG}`;
-      const hit = await cache.match(cacheKey);
+      const hit = await cache.match(versionedUrl);
       if (hit) {
         return await hit.arrayBuffer();
       }
-      const resp = await fetch(url);
-      if (!resp.ok) throw new Error(`HTTP ${resp.status} for ${url}`);
+      const resp = await fetch(versionedUrl, { cache: "no-store" });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status} for ${versionedUrl}`);
       const clone = resp.clone();
-      await cache.put(cacheKey, clone).catch(() => {});
+      await cache.put(versionedUrl, clone).catch(() => {});
+      cache
+        .keys()
+        .then((reqs) =>
+          Promise.all(
+            reqs
+              .filter((r) => r.url.includes("bundle.zip") && !r.url.includes(`v=${BUILD_TAG}`))
+              .map((r) => cache.delete(r))
+          )
+        )
+        .catch(() => {});
       return await resp.arrayBuffer();
     } catch (_err) {
       // Fallback straight to direct fetch
     }
   }
-  const resp = await fetch(url);
-  if (!resp.ok) throw new Error(`HTTP ${resp.status} for ${url}`);
+  const resp = await fetch(versionedUrl, { cache: "no-store" });
+  if (!resp.ok) throw new Error(`HTTP ${resp.status} for ${versionedUrl}`);
   return await resp.arrayBuffer();
 }
 

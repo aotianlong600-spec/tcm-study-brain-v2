@@ -14,6 +14,7 @@ from . import (
     catalog,
     formula_diagnose,
     formula_extras,
+    hantang_catalog,
     library_catalog,
     neijing_catalog,
     stage5_service,
@@ -536,6 +537,43 @@ def library_book_pages(
     return item
 
 
+@app.get("/api/library/locate")
+def library_locate_context(
+    book_id: str = Query(default=""),
+    page_no: int = Query(default=0, ge=0),
+    line: int = Query(default=0, ge=0),
+    q: str = Query(default=""),
+    book_hint: str = Query(default=""),
+    before: int = Query(default=2, ge=0, le=6),
+    after: int = Query(default=4, ge=0, le=8),
+):
+    item = library_catalog.locate_book_context(
+        book_id=book_id,
+        page_no=page_no,
+        line=line,
+        q=q,
+        book_hint=book_hint,
+        before=before,
+        after=after,
+    )
+    if not item:
+        raise HTTPException(status_code=404, detail="未能在书库中定位对应原书页码")
+    return item
+
+
+@app.get("/api/library/books/{book_id}/context")
+def library_book_context(
+    book_id: str,
+    page_no: int = Query(default=1, ge=1),
+    before: int = Query(default=2, ge=0, le=6),
+    after: int = Query(default=4, ge=0, le=8),
+):
+    item = library_catalog.get_book_context(book_id, page_no=page_no, before=before, after=after)
+    if not item:
+        raise HTTPException(status_code=404, detail="未找到指定书籍或上下文页面")
+    return item
+
+
 @app.get("/api/library/books/{book_id}")
 def library_book_detail(book_id: str):
     item = library_catalog.get_book(book_id)
@@ -593,6 +631,37 @@ def stage5_ground(
     limit: int = Query(default=12, ge=1, le=24),
 ):
     return grounded_study.ground_study_query(q=q, limit_citations=limit)
+
+
+# --- Hantang Formulas & Ni Haixia Clinical System ---
+@app.get("/api/hantang/overview")
+def hantang_overview():
+    return hantang_catalog.overview()
+
+
+@app.get("/api/hantang/formulas")
+def hantang_formulas(
+    category: str = Query(default=""),
+    safety: str = Query(default=""),
+    q: str = Query(default=""),
+):
+    return hantang_catalog.list_formulas(category=category, safety=safety, q=q)
+
+
+@app.get("/api/hantang/formulas/{formula_id:path}")
+def hantang_formula_detail(formula_id: str):
+    item = hantang_catalog.get_formula(formula_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="未找到汉唐方剂")
+    return item
+
+
+@app.get("/api/hantang/match")
+def hantang_match(
+    q: str = Query(default=""),
+    limit: int = Query(default=4, ge=1, le=8),
+):
+    return hantang_catalog.match_clinical_context(q=q, limit=limit)
 
 
 app.mount("/", StaticFiles(directory=WEB, html=True), name="web")

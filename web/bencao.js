@@ -375,7 +375,7 @@
       ${pointsRows ? `<table class="bc-comp-table"><tbody>${pointsRows}</tbody></table>` : ""}
       ${comp.ni_clinical_key ? `<div class="review-note"><strong>【倪氏临证抉择要点】</strong>${esc(comp.ni_clinical_key)}</div>` : ""}
       ${comp.safety_note ? `<div class="warning-box"><strong>【高危与红线警示】</strong>${esc(comp.safety_note)}</div>` : ""}
-      ${comp.source_ref ? `<div class="source-locator">出处锚点：${esc(comp.source_ref)}</div>` : ""}
+      ${comp.source_ref ? `<div class="source-locator">出处锚点：${esc(comp.source_ref)} <button type="button" class="text-button ctx-ref-btn" data-ctx-loc="1" data-ctx-book="ni-bencao-pdf" data-ctx-page="${esc(comp.source_page || 0)}" data-ctx-q="${esc((comp.herbs || [comp.title || ""])[0])}">滑动对照原书上下文 ↗</button></div>` : ""}
     </div>`;
   }
 
@@ -590,7 +590,10 @@
       ${spans
         .map(
           (sp) => `<div class="source-box">
-            <div class="source-locator">底本溯源：倪注《神农本草经》 · PDF 第 ${sp.pdf_page} 页${sp.printed_page ? `（书页 ${esc(sp.printed_page)}）` : ""} · SHA256:${esc((sp.text_sha256 || "").slice(0, 12))}</div>
+            <div class="source-locator">
+              <span>底本溯源：倪注《神农本草经》 · PDF 第 ${sp.pdf_page} 页${sp.printed_page ? `（书页 ${esc(sp.printed_page)}）` : ""} · SHA256:${esc((sp.text_sha256 || "").slice(0, 12))}</span>
+              <button type="button" class="text-button ctx-ref-btn" data-ctx-loc="1" data-ctx-book="ni-bencao-pdf" data-ctx-page="${sp.pdf_page}" data-ctx-q="${esc((sp.quote || entry.name).slice(0, 20))}">上下文滑动对照（消除跨页截断）↗</button>
+            </div>
             <p>逐字锚定引文：“${esc(sp.quote)}”</p>
           </div>`
         )
@@ -601,6 +604,7 @@
             const open = Boolean(bcState.pagePreviewOpen[pNo]);
             return `<div class="bc-page-toggle-wrap">
               <button type="button" class="text-button" data-bc-toggle-img="${pNo}">${open ? `收起 PDF 第 ${pNo} 页原页图` : `展开查看 PDF 第 ${pNo} 页原书扫描图`}</button>
+              <button type="button" class="text-button ctx-ref-btn" data-ctx-loc="1" data-ctx-book="ni-bencao-pdf" data-ctx-page="${pNo}" data-ctx-q="${esc(entry.name)}">上下文连续滑读（PDF p.${pNo} 起）↗</button>
               <button type="button" class="text-button" data-bc-open-page="${pNo}">转至原页逐字校对视图 ↗</button>
               ${open ? `<div class="bc-page-img-frame"><img ${window.tcmImgAttrs ? window.tcmImgAttrs(`/api/bencao/source-pages/${pNo}/image`) : `src="/api/bencao/source-pages/${pNo}/image"`} alt="《倪注神农本草经》PDF 第 ${pNo} 页" loading="lazy"></div>` : ""}
             </div>`;
@@ -610,7 +614,7 @@
     </div>`;
 
     detailEl.innerHTML = `<div class="detail-inner">
-      <div class="detail-kicker">倪海厦注《神农本草经》 · ${esc(entry.grade)} · 第 ${esc(entry.seq_raw)} 条 · PDF P.${esc(entry.page_start)}${entry.page_end && entry.page_end !== entry.page_start ? `–${esc(entry.page_end)}` : ""}${entry.toc_printed_page ? `（书页 ${esc(entry.toc_printed_page)}）` : ""}</div>
+      <div class="detail-kicker">倪海厦注《神农本草经》 · ${esc(entry.grade)} · 第 ${esc(entry.seq_raw)} 条 · PDF P.${esc(entry.page_start)}${entry.page_end && entry.page_end !== entry.page_start ? `–${esc(entry.page_end)}` : ""}${entry.toc_printed_page ? `（书页 ${esc(entry.toc_printed_page)}）` : ""} <button type="button" class="text-button ctx-ref-btn" data-ctx-loc="1" data-ctx-book="ni-bencao-pdf" data-ctx-page="${esc(entry.page_start || 1)}" data-ctx-q="${esc(entry.name)}">滑动对照本经上下页 ↗</button></div>
       <div class="dossier-title-row">
         <div>
           <h2 class="detail-title">${esc(entry.name)}</h2>

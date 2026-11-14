@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>中医学习大脑 · 针灸 / 神农本草 / 黄帝内经 / 经方</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/style.css?v=stage2-2">
+    <link rel="stylesheet" href="/style.css?v=hantang-m1">
   </head>
   <body>
     <header class="app-header">
@@ -442,7 +442,8 @@
             <button id="s5-tab-compose" class="acup-dim-tab active" data-s5-mode="compose" role="tab" aria-selected="true">辨证论治 · 症状脉象合方取穴</button>
             <button id="s5-tab-diagnose" class="acup-dim-tab" data-s5-mode="diagnose" role="tab" aria-selected="false">四经一体总览 (5A)</button>
             <button id="s5-tab-ground" class="acup-dim-tab" data-s5-mode="ground" role="tab" aria-selected="false">循证 AI 研习问答 (5B)</button>
-            <button id="s5-tab-syndromes" class="acup-dim-tab" data-s5-mode="syndromes" role="tab" aria-selected="false">20 大跨书证候群图谱</button>
+            <button id="s5-tab-syndromes" class="acup-dim-tab" data-s5-mode="syndromes" role="tab" aria-selected="false">31 大跨书证候群图谱</button>
+            <button id="s5-tab-hantang" class="acup-dim-tab" data-s5-mode="hantang" role="tab" aria-selected="false">汉唐百方 · 91方与医案</button>
           </div>
           <span class="muted-line">症状拆解 · 脉象权重 · 动态合方 · 经络取穴 · 预留AI循证包</span>
         </div>
@@ -463,9 +464,9 @@
             <button class="acup-dim-tab active" data-lib-shelf="" role="tab" aria-selected="true">全部藏书 (17册)</button>
             <button class="acup-dim-tab" data-lib-shelf="renji_core" role="tab" aria-selected="false">人纪四大经典 (7册)</button>
             <button class="acup-dim-tab" data-lib-shelf="hantang_clinical" role="tab" aria-selected="false">汉唐方剂与医案 (3册 · 新增)</button>
-            <button class="acup-dim-tab" data-lib-shelf="classical_companions" role="tab" aria-selected="false">古籍辅注与影印 (7册 · 新增)</button>
+            <button class="acup-dim-tab" data-lib-shelf="classical_companions" role="tab" aria-selected="false">古籍辅注与各家全书 (7册)</button>
           </div>
-          <span id="lib-overview-stats" class="muted-line">共 17 册 · 15 册全文检索 + 2 册高清影印原件 · 双向联动四大模块</span>
+          <span id="lib-overview-stats" class="muted-line">共 17 册 · 全库 17 册可全文检索 · 双向联动四大模块</span>
         </div>
 
         <div class="lib-search-strip">
@@ -510,6 +511,9 @@
       </section>
     </main>
 
+    <div id="ctx-drawer-backdrop" class="ctx-drawer-backdrop hidden" aria-hidden="true">
+      <aside id="ctx-reader-drawer" class="ctx-reader-drawer" role="dialog" aria-modal="true" aria-label="原书上下文连续对照阅读"></aside>
+    </div>
     <div id="notice" class="notice hidden" role="status"></div>
     <script src="/acupuncture.js"></script>
     <script src="/bencao.js"></script>

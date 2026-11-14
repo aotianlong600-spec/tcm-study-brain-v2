@@ -121,6 +121,9 @@
           <button class="text-button" type="button" data-acup-page="${sp.pdf_page}">
             查看第 ${esc(sp.printed_page || sp.pdf_page)} 页原文
           </button>
+          <button class="text-button ctx-ref-btn" type="button" data-ctx-loc="1" data-ctx-book="ni-acupuncture-v2-20100703" data-ctx-page="${sp.pdf_page}" data-ctx-q="${esc((sp.quote || "").slice(0, 22))}">
+            上下文滑动对照 ↗
+          </button>
           <span>${esc(sp.chapter_path || sp.page_id)}</span>
           <code>${esc((sp.quote_sha256 || "").slice(0, 10))}</code>
         </div>
@@ -696,7 +699,10 @@
           <h2 class="detail-title">${esc(m.canonical_name)}</h2>
           <p class="detail-sub">${esc((m.aliases || []).join(" · "))} · 原书第 ${(m.page_range || [])[0] || "?"}–${(m.page_range || [])[1] || "?"} 页</p>
         </div>
-        ${m.page_range?.[0] ? `<button class="dossier-button" type="button" data-acup-page="${m.page_range[0]}">阅读原书第 ${m.page_range[0]} 页</button>` : ""}
+        <div class="inline-actions">
+          ${m.page_range?.[0] ? `<button class="dossier-button" type="button" data-acup-page="${m.page_range[0]}">阅读原书第 ${m.page_range[0]} 页</button>` : ""}
+          ${m.page_range?.[0] ? `<button class="dossier-button ctx-ref-btn" type="button" data-ctx-loc="1" data-ctx-book="ni-acupuncture-v2-20100703" data-ctx-page="${m.page_range[0]}" data-ctx-q="${esc(m.canonical_name)}">上下文滑读 ↗</button>` : ""}
+        </div>
       </div>
       ${statusPills(m)}
       ${riskBanner(m)}
@@ -781,7 +787,10 @@
           <h2 class="detail-title">${esc(pt.canonical_name)}</h2>
           <p class="detail-sub">${pt.meridian ? `<button class="text-button" type="button" data-acup-open="meridian" data-acup-id="${encodeURIComponent(pt.meridian.id)}">${esc(pt.meridian.canonical_name)}</button>` : ""}${pt.sequence ? ` · 第 ${pt.sequence} 穴` : ""}${pt.pinyin ? ` · ${esc(pt.pinyin)}` : ""}${(pt.aliases || []).length ? ` · 别名：${esc(pt.aliases.join("、"))}` : ""}</p>
         </div>
-        ${pt.source_spans?.[0] ? `<button class="dossier-button" type="button" data-acup-page="${pt.source_spans[0].pdf_page}">原书第 ${pt.source_spans[0].pdf_page} 页</button>` : ""}
+        <div class="inline-actions">
+          ${pt.source_spans?.[0] ? `<button class="dossier-button" type="button" data-acup-page="${pt.source_spans[0].pdf_page}">原书第 ${pt.source_spans[0].pdf_page} 页</button>` : ""}
+          ${pt.source_spans?.[0] ? `<button class="dossier-button ctx-ref-btn" type="button" data-ctx-loc="1" data-ctx-book="ni-acupuncture-v2-20100703" data-ctx-page="${pt.source_spans[0].pdf_page}" data-ctx-q="${esc(pt.canonical_name)}">上下文滑读 ↗</button>` : ""}
+        </div>
       </div>
       ${statusPills(pt)}
       ${riskBanner(pt)}
@@ -916,7 +925,10 @@
           <h2 class="detail-title">${esc(cond.canonical_name)}</h2>
           <p class="detail-sub">第六章 针灸治症系列 · 原书第 ${(cond.page_range || [])[0] || "?"}–${(cond.page_range || [])[1] || "?"} 页${(cond.aliases || []).length ? ` · 含：${esc(cond.aliases.slice(0, 5).join("、"))}` : ""}</p>
         </div>
-        ${cond.page_range?.[0] ? `<button class="dossier-button" type="button" data-acup-page="${cond.page_range[0]}">阅读原书第 ${cond.page_range[0]} 页</button>` : ""}
+        <div class="inline-actions">
+          ${cond.page_range?.[0] ? `<button class="dossier-button" type="button" data-acup-page="${cond.page_range[0]}">阅读原书第 ${cond.page_range[0]} 页</button>` : ""}
+          ${cond.page_range?.[0] ? `<button class="dossier-button ctx-ref-btn" type="button" data-ctx-loc="1" data-ctx-book="ni-acupuncture-v2-20100703" data-ctx-page="${cond.page_range[0]}" data-ctx-q="${esc(cond.canonical_name)}">上下文滑读 ↗</button>` : ""}
+        </div>
       </div>
       ${statusPills(cond)}
       ${riskBanner(cond)}

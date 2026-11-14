@@ -14,6 +14,7 @@ from app import (
     catalog,
     formula_diagnose,
     formula_extras,
+    hantang_catalog,
     library_catalog,
     neijing_catalog,
     stage5_service,
@@ -362,6 +363,26 @@ def dispatch_api(url: str) -> tuple[int, Any]:
     if m_lp:
         item = library_catalog.get_book_page(unquote(m_lp.group(1)), int(m_lp.group(2)))
         return (200, item) if item else _not_found("未找到指定书页或章节")
+    if path == "/api/library/locate":
+        item = library_catalog.locate_book_context(
+            book_id=_qs_str(qs, "book_id"),
+            page_no=_qs_int(qs, "page_no", 0, 0, 999999),
+            line=_qs_int(qs, "line", 0, 0, 999999),
+            q=_qs_str(qs, "q"),
+            book_hint=_qs_str(qs, "book_hint"),
+            before=_qs_int(qs, "before", 2, 0, 6),
+            after=_qs_int(qs, "after", 4, 0, 8),
+        )
+        return (200, item) if item else _not_found("未能在书库中定位对应原书页码")
+    m_lctx = re.match(r"^/api/library/books/([^/]+)/context$", path)
+    if m_lctx:
+        item = library_catalog.get_book_context(
+            unquote(m_lctx.group(1)),
+            page_no=_qs_int(qs, "page_no", 1, 1, 999999),
+            before=_qs_int(qs, "before", 2, 0, 6),
+            after=_qs_int(qs, "after", 4, 0, 8),
+        )
+        return (200, item) if item else _not_found("未找到指定书籍或上下文页面")
     m_lps = re.match(r"^/api/library/books/([^/]+)/pages$", path)
     if m_lps:
         item = library_catalog.list_book_pages(
@@ -403,6 +424,25 @@ def dispatch_api(url: str) -> tuple[int, Any]:
         return 200, grounded_study.ground_study_query(
             q=_qs_str(qs, "q"),
             limit_citations=_qs_int(qs, "limit", 12, 1, 24),
+        )
+
+    # Hantang Formulas & Clinical System
+    if path == "/api/hantang/overview":
+        return 200, hantang_catalog.overview()
+    if path == "/api/hantang/formulas":
+        return 200, hantang_catalog.list_formulas(
+            category=_qs_str(qs, "category"),
+            safety=_qs_str(qs, "safety"),
+            q=_qs_str(qs, "q"),
+        )
+    m = re.match(r"^/api/hantang/formulas/(.+)$", path)
+    if m:
+        item = hantang_catalog.get_formula(unquote(m.group(1)))
+        return (200, item) if item else _not_found("未找到汉唐方剂")
+    if path == "/api/hantang/match":
+        return 200, hantang_catalog.match_clinical_context(
+            q=_qs_str(qs, "q"),
+            limit=_qs_int(qs, "limit", 4, 1, 8),
         )
 
     return _not_found(f"未知接口路径: {path}")

@@ -127,6 +127,7 @@
               <strong>${esc(sp.chapter_path || sp.page_id)}</strong>
               <span>${sp.source_id === "ni-neijing-vol1-pdf" ? "上册" : "下册"} · PDF p.${esc(sp.pdf_page)}${sp.printed_page ? `（印制 p.${esc(sp.printed_page)}）` : ""}</span>
               <button class="acup-span-btn" type="button" data-nj-page="${esc(sp.source_id)}:${esc(sp.pdf_page)}">打开第 ${esc(sp.pdf_page)} 页</button>
+              <button class="acup-span-btn ctx-ref-btn" type="button" data-ctx-loc="1" data-ctx-book="${esc(sp.source_id)}" data-ctx-page="${esc(sp.pdf_page)}" data-ctx-q="${esc((sp.quote || "").slice(0, 22))}">上下文滑动对照 ↗</button>
             </div>
             <blockquote>${esc(sp.quote)}</blockquote>
           </div>`
@@ -398,7 +399,10 @@
           ${d.chapters.map((ch, idx) => `<article id="nj-diag-ch-${idx}" class="acup-pattern-card">
             <div class="acup-pattern-head">
               <h4><span>0${idx + 1}</span> ${esc(ch.title)} <small style="font-weight:400;color:var(--muted);">· ${esc(ch.volume_label)} 印 p.${esc(ch.printed_page_start)}–${esc(ch.printed_page_end)}</small></h4>
-              <button type="button" class="text-button" data-nj-open-chapter="${esc(ch.id)}">按篇精读全篇</button>
+              <div class="inline-actions">
+                <button type="button" class="text-button ctx-ref-btn" data-ctx-loc="1" data-ctx-book="${esc(ch.source_id || "")}" data-ctx-page="${esc(ch.pdf_page_start || 0)}" data-ctx-hint="${esc(ch.volume_label || "黄帝内经")}" data-ctx-q="${esc(ch.title)}">上下文滑读 ↗</button>
+                <button type="button" class="text-button" data-nj-open-chapter="${esc(ch.id)}">按篇精读全篇</button>
+              </div>
             </div>
             <div class="acup-pattern-body">
               <p>${esc(ch.summary)}</p>
@@ -406,6 +410,7 @@
                 <div class="nj-sec-detail-head">
                   <strong>${esc(s.heading)}</strong>
                   ${s.printed_page_range ? `<span>印 p.${esc(s.printed_page_range)}</span>` : ""}
+                  <button type="button" class="acup-span-btn ctx-ref-btn" data-ctx-loc="1" data-ctx-book="${esc(ch.source_id || "")}" data-ctx-page="${esc(s.pdf_page_start || ch.pdf_page_start || 0)}" data-ctx-hint="${esc(ch.volume_label || "黄帝内经")}" data-ctx-q="${esc((s.source_quote || s.heading || "").slice(0, 20))}">对照原文上下文 ↗</button>
                 </div>
                 ${s.source_quote ? `<p><strong>原文：</strong>${esc(s.source_quote)}</p>` : ""}
                 ${s.ni_teaching ? `<p><strong>倪注：</strong>${esc(s.ni_teaching)}</p>` : ""}
@@ -559,8 +564,14 @@
       )
       .join("");
 
+    const firstSpan = item.source_spans?.[0] || item.resolved_chapters?.[0] || {};
+    const firstCtxPage = firstSpan.pdf_page || firstSpan.pdf_page_start || 0;
+    const firstCtxBook = firstSpan.source_id || "";
     detail.innerHTML = `<div class="detail-inner">
-      <div class="detail-kicker">理论专题 · ${esc(item.submodule_label)} · ${esc(item.doctrine_key)}</div>
+      <div class="detail-kicker detail-kicker-row">
+        <span>理论专题 · ${esc(item.submodule_label)} · ${esc(item.doctrine_key)}</span>
+        ${firstCtxPage || item.canonical_name ? `<button type="button" class="text-button ctx-ref-btn" data-ctx-loc="1" data-ctx-book="${esc(firstCtxBook)}" data-ctx-page="${esc(firstCtxPage)}" data-ctx-hint="黄帝内经" data-ctx-q="${esc(item.canonical_name)}">原书上下文滑读 ↗</button>` : ""}
+      </div>
       <h2 class="detail-title">${esc(item.canonical_name)}</h2>
       <p class="detail-subtitle">${esc(item.summary)}</p>
       ${statusBadges(item)}
@@ -626,6 +637,7 @@
                   <strong>${esc(s.heading)}</strong>
                   <span>${s.printed_page_range ? `印 p.${esc(s.printed_page_range)}` : ""}</span>
                   ${s.pdf_page_start ? `<button type="button" class="acup-span-btn" data-nj-page="${esc(ch.source_id)}:${esc(s.pdf_page_start)}">PDF p.${esc(s.pdf_page_start)}</button>` : ""}
+                  <button type="button" class="acup-span-btn ctx-ref-btn" data-ctx-loc="1" data-ctx-book="${esc(ch.source_id)}" data-ctx-page="${esc(s.pdf_page_start || ch.pdf_page_start || 0)}" data-ctx-q="${esc((s.source_quote || s.heading || "").slice(0, 20))}">上下文滑动对照 ↗</button>
                 </div>
                 ${s.source_quote ? `<p><strong>《素问》引文：</strong>${esc(s.source_quote)}</p>` : ""}
                 ${s.ni_teaching ? `<p><strong>倪海厦讲授：</strong>${esc(s.ni_teaching)}</p>` : ""}
@@ -648,10 +660,13 @@
           <div class="section-title">本篇原书子节目录（共 ${ch.sections.length} 节 · 点击查看对应页文本与影印）</div>
           <div class="nj-sections-list">${ch.sections
             .map(
-              (s) => `<button type="button" class="nj-sec-row" data-nj-page="${esc(s.source_id)}:${esc(s.pdf_page_start)}">
-                <strong>${esc(s.title)}</strong>
-                <span>${esc(s.volume_label)} PDF p.${esc(s.pdf_page_start)}–${esc(s.pdf_page_end)}（印制 p.${esc(s.printed_page_start)}–${esc(s.printed_page_end)}）</span>
-              </button>`
+              (s) => `<div class="nj-sec-row-wrap">
+                <button type="button" class="nj-sec-row" data-nj-page="${esc(s.source_id)}:${esc(s.pdf_page_start)}">
+                  <strong>${esc(s.title)}</strong>
+                  <span>${esc(s.volume_label)} PDF p.${esc(s.pdf_page_start)}–${esc(s.pdf_page_end)}（印制 p.${esc(s.printed_page_start)}–${esc(s.printed_page_end)}）</span>
+                </button>
+                <button type="button" class="acup-span-btn ctx-ref-btn" data-ctx-loc="1" data-ctx-book="${esc(s.source_id)}" data-ctx-page="${esc(s.pdf_page_start)}" data-ctx-q="${esc(s.title)}">上下文滑读 ↗</button>
+              </div>`
             )
             .join("")}</div>
         </div>`
@@ -665,7 +680,10 @@
               (p) => `<div class="acup-span-card">
                 <div class="acup-span-head">
                   <strong>${esc(p.page_id)}（PDF p.${esc(p.pdf_page)} / 印p.${esc(p.printed_page)}）</strong>
-                  <button type="button" class="acup-span-btn" data-nj-page="${esc(p.source_id)}:${esc(p.pdf_page)}">查阅全页与扫描图</button>
+                  <div class="inline-actions">
+                    <button type="button" class="acup-span-btn" data-nj-page="${esc(p.source_id)}:${esc(p.pdf_page)}">查阅全页与扫描图</button>
+                    <button type="button" class="acup-span-btn ctx-ref-btn" data-ctx-loc="1" data-ctx-book="${esc(p.source_id)}" data-ctx-page="${esc(p.pdf_page)}" data-ctx-q="${esc((p.excerpt || ch.title || "").slice(0, 18))}">上下文连续滑读 ↗</button>
+                  </div>
                 </div>
                 <blockquote>${esc(p.excerpt)}…</blockquote>
               </div>`
@@ -675,7 +693,7 @@
       : "";
 
     detail.innerHTML = `<div class="detail-inner">
-      <div class="detail-kicker">${esc(ch.volume_label)} · ${esc(ch.classic_standard_title)} · PDF p.${esc(ch.pdf_page_start)}–${esc(ch.pdf_page_end)}（印制 p.${esc(ch.printed_page_start)}–${esc(ch.printed_page_end)}）</div>
+      <div class="detail-kicker">${esc(ch.volume_label)} · ${esc(ch.classic_standard_title)} · PDF p.${esc(ch.pdf_page_start)}–${esc(ch.pdf_page_end)}（印制 p.${esc(ch.printed_page_start)}–${esc(ch.printed_page_end)}） <button type="button" class="text-button ctx-ref-btn" data-ctx-loc="1" data-ctx-book="${esc(ch.source_id)}" data-ctx-page="${esc(ch.pdf_page_start || 1)}" data-ctx-q="${esc(ch.title)}">全篇上下文滑读 ↗</button></div>
       <h2 class="detail-title">${esc(ch.title)}</h2>
       <p class="detail-subtitle">${esc(pass.summary || "")}</p>
       ${statusBadges(pass)}

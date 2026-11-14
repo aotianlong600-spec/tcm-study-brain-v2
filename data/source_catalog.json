@@ -241,18 +241,16 @@
       "authors_and_collators": [
         "（清）徐大椿（灵胎）"
       ],
-      "edition": "扫描影印 PDF",
+      "edition": "WinRT OCR 校理双栏版 + 原版影印 PDF",
       "source_type": "classical_edition",
       "file_format": "pdf",
       "sha256": "031a8d91a0accb66163e23bcd23bfe947369f6a797b21ab8f16e8ac80f22d709",
       "byte_size": 16333494,
       "total_pages": 434,
-      "page_mapping_note": "共 434 页影印扫描 PDF，无文本层",
+      "page_mapping_note": "Extracted 434/434 pages via Windows zh-Hans-CN OCR; 22 verso/blank pages preserved blank.",
       "relative_path": "books/ni-haixia-medicine/明清名医全书大成(徐灵胎医学全书 ).pdf",
-      "text_layer_status": "image_only",
-      "known_issues": [
-        "纯图像 PDF，后续如需引用须走页图 OCR 校字流程。"
-      ]
+      "text_layer_status": "winrt_zh_hans_ocr",
+      "known_issues": []
     },
     {
       "source_id": "chen-shiduo-shishimilu-txt",
@@ -311,18 +309,16 @@
       "authors_and_collators": [
         "托名岐伯/陈士铎传"
       ],
-      "edition": "扫描影印 PDF",
+      "edition": "WinRT OCR 数字化版 + 原版影印 PDF",
       "source_type": "classical_edition",
       "file_format": "pdf",
       "sha256": "b8b6647b0d24e83abdd757c40c6b492b4ecc200fa2a7061a5e7e4552337b5bcb",
       "byte_size": 21140279,
       "total_pages": 85,
-      "page_mapping_note": "共 85 页影印扫描 PDF，无文本层",
+      "page_mapping_note": "Extracted all 85/85 pages (4-page modern overview + 80 extant essays) via Windows zh-Hans-CN OCR.",
       "relative_path": "books/ni-haixia-medicine/黄帝外经.pdf",
-      "text_layer_status": "image_only",
-      "known_issues": [
-        "纯图像 PDF，后续如需引用须走页图 OCR 校字流程。"
-      ]
+      "text_layer_status": "winrt_zh_hans_ocr",
+      "known_issues": []
     },
     {
       "source_id": "jinkui-recipes-snapshot",

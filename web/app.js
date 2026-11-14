@@ -105,6 +105,22 @@ function renderHerbList() {
   $("#herb-more")?.classList.toggle("hidden", state.herbItems.length >= state.herbTotal);
 }
 
+function ctxButtonHtml(label, opts = {}) {
+  const attrs = ['type="button"', 'class="text-button ctx-ref-btn"', 'data-ctx-loc="1"'];
+  if (opts.bookId) attrs.push(`data-ctx-book="${escapeHtml(opts.bookId)}"`);
+  if (opts.pageNo) attrs.push(`data-ctx-page="${escapeHtml(opts.pageNo)}"`);
+  if (opts.line) attrs.push(`data-ctx-line="${escapeHtml(opts.line)}"`);
+  if (opts.bookHint) attrs.push(`data-ctx-hint="${escapeHtml(opts.bookHint)}"`);
+  if (opts.q) attrs.push(`data-ctx-q="${escapeHtml(String(opts.q).slice(0, 24))}"`);
+  return `<button ${attrs.join(" ")}>${escapeHtml(label)}</button>`;
+}
+
+function parseFirstPageNum(val) {
+  const s = String(val || "");
+  if (/行/.test(s) && !/页/.test(s)) return { pageNo: 0, line: Number((s.match(/(\d+)/) || [])[1] || 0) };
+  return { pageNo: Number((s.match(/(\d+)/) || [])[1] || 0), line: 0 };
+}
+
 function renderNeijingRelations(items) {
   if (!items?.length) {
     return `<div class="section-copy">暂无直接对应的《黄帝内经》篇目或专题锚点。</div>`;
@@ -146,6 +162,7 @@ function renderModificationsSection(item) {
       <div class="s4-mod-meta">
         ${row.boundary ? `<span>适用边界：${escapeHtml(row.boundary)}</span>` : ""}
         ${row.source ? `<span>出处：${escapeHtml(typeof row.source === "string" ? row.source : `${row.source.book || ""} ${row.source.ref || ""}`.trim())}</span>` : ""}
+        ${ctxButtonHtml("对照原书上下文 ↗", { bookHint: item.book || "伤寒", q: peerName || row.condition || item.name })}
       </div>
     </div>`;
   }).join("");
@@ -264,10 +281,17 @@ function renderCuratedFormulaDetail(item) {
       ).join("")}</div>`
     : `<div class="section-copy">暂无已建立的本经条目链接。</div>`;
   const proof = evidence.proofreading?.length
-    ? evidence.proofreading.map((row) =>
-        `<span class="proof-chip">${escapeHtml(row.title)} · ${escapeHtml(row.pages || "")}</span>`
-      ).join("")
+    ? evidence.proofreading.map((row) => {
+        const parsed = parseFirstPageNum(row.pages || "");
+        const hasLoc = parsed.pageNo > 0 || parsed.line > 0;
+        const hint = [row.title, row.kind, item.book].filter(Boolean).join(" ");
+        return hasLoc
+          ? `<button type="button" class="proof-chip is-clickable" data-ctx-loc="1" data-ctx-hint="${escapeHtml(hint)}" ${parsed.pageNo ? `data-ctx-page="${parsed.pageNo}"` : ""} ${parsed.line ? `data-ctx-line="${parsed.line}"` : ""} data-ctx-q="${escapeHtml(item.name)}" title="点击滑动对照原文上下页">${escapeHtml(row.title)} · ${escapeHtml(row.pages || "")} ↗</button>`
+          : `<span class="proof-chip">${escapeHtml(row.title)} · ${escapeHtml(row.pages || "")}</span>`;
+      }).join("")
     : `<span class="proof-chip">校对依据待补</span>`;
+  const origPage0 = (evidence.formula_original?.source_pages || [])[0] || 0;
+  const modPage0 = (evidence.usage_modern?.source_pages || [])[0] || origPage0;
   const sixAction = evidence.six_channel?.id
     ? `<button class="text-button" data-open-six-dossier="${encodeURIComponent(evidence.six_channel.id)}">原文与倪注</button>`
     : "";
@@ -277,13 +301,13 @@ function renderCuratedFormulaDetail(item) {
       ).join("")}</div></div></div>`
     : "";
   return `<div class="detail-inner curated-detail">
-    <div class="detail-kicker">${escapeHtml(item.book)} · ${escapeHtml(reviewLevel)}</div>
+    <div class="detail-kicker">${escapeHtml(item.book)} · ${escapeHtml(reviewLevel)} ${ctxButtonHtml("滑动对照原书上下文 ↗", { bookHint: item.book, pageNo: origPage0, q: item.name })}</div>
     <h2 class="detail-title">${escapeHtml(item.name)}</h2>
     <p class="detail-subtitle">${escapeHtml(evidence.rationale.summary)}</p>
     <div class="tag-row"><span class="tag">${escapeHtml(item.book)}</span><span class="status-pill ${reviewed ? "status-reviewed" : "status-pending"}">${reviewed ? "已逐方校" : "原文页索引"}</span><span class="tag">${escapeHtml(item.type)}</span><span class="tag">${escapeHtml(evidence.six_channel.name)}</span><span class="tag">${item.ingredients.length} 味</span></div>
 
     <div class="section-block top-composition">
-      <div class="section-heading-row"><div class="section-title">1. 药物与剂量</div><button class="text-button" data-formula-page="source" data-formula-id="${encodeURIComponent(item.id)}">原方原文</button></div>
+      <div class="section-heading-row"><div class="section-title">1. 药物与剂量</div><div class="inline-actions">${ctxButtonHtml("原书上下页对照 ↗", { bookHint: item.book, pageNo: origPage0, q: item.name })}<button class="text-button" data-formula-page="source" data-formula-id="${encodeURIComponent(item.id)}">原方原文</button></div></div>
       <div class="composition-grid">${item.ingredients.map(ingredientHtml).join("")}</div>
     </div>
 
@@ -296,14 +320,20 @@ function renderCuratedFormulaDetail(item) {
       </div>
       <div class="topic-row">
         <div class="topic-copy"><div class="section-title">现代煎药 · 书内原文</div><div class="curated-quote modern-source-quote">${escapeHtml(evidence.usage_modern.source_text)}</div></div>
-        <button class="text-button topic-action" data-open-decoction="${encodeURIComponent(item.id)}" data-decoction-mode="modern">整理步骤</button>
+        <div class="inline-actions">${ctxButtonHtml("书内原文上下文 ↗", { bookHint: item.book, pageNo: modPage0, q: (evidence.usage_modern.source_text || item.name).slice(0, 18) })}<button class="text-button topic-action" data-open-decoction="${encodeURIComponent(item.id)}" data-decoction-mode="modern">整理步骤</button></div>
       </div>
       <div class="warning-box">古籍剂量和煎服法按原文保留，仅供学习核对；不是个人处方。含附子、乌头、巴豆、半夏、甘遂、大戟等剧毒或峻下药味时，必须严守炮制与煎煮时长要求并由专业医师处理。</div>
     </div>
 
     <div class="section-block">
       <div class="section-title">3. 相关症状与辨证线索</div>
-      <div class="symptom-row">${symptoms.map((row) => `<span class="symptom-chip" title="${escapeHtml(row.source)} · 第 ${escapeHtml(row.page)} 页">${escapeHtml(row.name)}</span>`).join("")}</div>
+      <div class="symptom-row">${symptoms.map((row) => {
+        const sp = parseFirstPageNum(row.page || "");
+        const symHint = [item.book, row.source].filter(Boolean).join(" ");
+        return sp.pageNo || sp.line
+          ? `<button type="button" class="symptom-chip is-clickable" data-ctx-loc="1" data-ctx-hint="${escapeHtml(symHint)}" ${sp.pageNo ? `data-ctx-page="${sp.pageNo}"` : ""} ${sp.line ? `data-ctx-line="${sp.line}"` : ""} data-ctx-q="${escapeHtml(row.name)}" title="点击查看 ${escapeHtml(row.source || item.book)} · 第 ${escapeHtml(row.page)} 页上下文">${escapeHtml(row.name)} <small>p.${escapeHtml(row.page)} ↗</small></button>`
+          : `<span class="symptom-chip" title="${escapeHtml(row.source || item.book)} · 第 ${escapeHtml(row.page)} 页">${escapeHtml(row.name)}</span>`;
+      }).join("")}</div>
     </div>
 
     <div class="section-block overview-block">
@@ -381,7 +411,7 @@ function renderDossier(item) {
       <div class="dossier-quote">${paragraphs(original.original)}</div>
       <h4>原文注解</h4>
       <div class="dossier-notes">${annotations.map((row) =>
-        `<article><div class="source-locator">倪海厦伤寒论 · 第 ${escapeHtml(row.page)} 页</div><p>${escapeHtml(row.text)}</p></article>`
+        `<article><div class="source-locator"><span>倪海厦伤寒论 · 第 ${escapeHtml(row.page)} 页</span> ${ctxButtonHtml("滑动对照上下页 ↗", { bookId: "ni-shanghan-pdf", pageNo: Number(row.page || 0), q: (row.text || "").slice(0, 18) })}</div><p>${escapeHtml(row.text)}</p></article>`
       ).join("")}</div>
       <h4>理解</h4>
       <div class="dossier-notes">${annotationNotes.map((row) =>
@@ -393,13 +423,13 @@ function renderDossier(item) {
       <div class="dossier-section-number">02</div>
       <h3>逐页原文与注解</h3>
       <div class="page-reading-list">${pageReading.map((row) =>
-        `<article class="page-reading"><div class="page-number">第 ${escapeHtml(row.page)} 页</div><div class="page-reading-body"><div class="page-kind">${escapeHtml(row.kind)}</div><h4>${escapeHtml(row.title)}</h4><div class="dossier-quote">${escapeHtml(row.text)}</div><div class="review-note">${escapeHtml(row.annotation)}</div></div></article>`
+        `<article class="page-reading"><div class="page-number"><div>第 ${escapeHtml(row.page)} 页</div>${ctxButtonHtml("上下文滑读 ↗", { bookHint: item.book, pageNo: Number(row.page || 0), q: (row.text || item.name).slice(0, 18) })}</div><div class="page-reading-body"><div class="page-kind">${escapeHtml(row.kind)}</div><h4>${escapeHtml(row.title)}</h4><div class="dossier-quote">${escapeHtml(row.text)}</div><div class="review-note">${escapeHtml(row.annotation)}</div></div></article>`
       ).join("")}</div>
     </section>
 
     <section id="dossier-formula" class="dossier-section">
       <div class="dossier-section-number">03</div>
-      <h3>${escapeHtml(formula.title)} · 古文原方</h3>
+      <div class="section-heading-row"><h3>${escapeHtml(formula.title)} · 古文原方</h3>${ctxButtonHtml("原书上下页对照 ↗", { bookHint: item.book, pageNo: (formula.source_pages || [])[0] || 0, q: item.name })}</div>
       <div class="dossier-quote source-quote">${escapeHtml(formula.text)}</div>
       <div class="source-note">${escapeHtml(formula.note)}</div>
       <h4>古文用法</h4>
@@ -428,9 +458,10 @@ function renderDossier(item) {
     <section id="dossier-proof" class="dossier-section">
       <div class="dossier-section-number">06</div>
       <h3>校对依据</h3>
-      <div class="proof-list">${sources.map((row) =>
-        `<article><strong>${escapeHtml(row.kind)} · ${escapeHtml(row.title)}</strong><span>${escapeHtml(row.pages || "")}</span><p>${escapeHtml(row.note || "")}</p></article>`
-      ).join("")}</div>
+      <div class="proof-list">${sources.map((row) => {
+        const sp = parseFirstPageNum(row.pages || "");
+        return `<article><strong>${escapeHtml(row.kind)} · ${escapeHtml(row.title)}</strong><span>${escapeHtml(row.pages || "")}</span><p>${escapeHtml(row.note || "")}</p>${(sp.pageNo || sp.line) ? ctxButtonHtml("原书上下文 ↗", { bookHint: [row.title, row.kind, item.book].filter(Boolean).join(" "), pageNo: sp.pageNo, line: sp.line, q: item.name }) : ""}</article>`;
+      }).join("")}</div>
     </section>
   </div>`;
   $("#formula-detail").innerHTML = html;
@@ -442,15 +473,16 @@ function renderDecoctionPage(item, mode) {
   const isAncient = mode === "ancient";
   const title = isAncient ? "完整古文煎药法" : "现代煎药整理步骤";
   const summary = isAncient ? evidence.usage_original.summary : "本页先列整理步骤，再附书内现代煎药原文。";
+  const targetPages = isAncient ? evidence.formula_original.source_pages : evidence.usage_modern.source_pages;
   const body = isAncient
     ? `<div class="dossier-quote source-quote">${escapeHtml(evidence.usage_original.text)}</div><div class="source-note">${escapeHtml(evidence.formula_original.note)}</div>`
     : `<h4>整理步骤</h4><ol class="dossier-steps">${evidence.usage_modern.steps.map((row) => `<li>${escapeHtml(row)}</li>`).join("")}</ol><h4>注意</h4><ul class="dossier-warnings">${evidence.usage_modern.cautions.map((row) => `<li>${escapeHtml(row)}</li>`).join("")}</ul><h4>书内现代原文</h4><div class="dossier-quote source-quote">${escapeHtml(evidence.usage_modern.source_text)}</div>`;
   $("#formula-detail").innerHTML = `<div class="detail-inner dossier-page decoction-page">
     <button class="back-to-formula dossier-back" data-close-decoction="${encodeURIComponent(item.id)}">← 返回${escapeHtml(item.name)}</button>
-    <div class="detail-kicker">煎药法 · ${isAncient ? "古文" : "书内现代解释"}</div>
+    <div class="detail-kicker">煎药法 · ${isAncient ? "古文" : "书内现代解释"} ${ctxButtonHtml("滑动对照原书上下页 ↗", { bookHint: item.book, pageNo: (targetPages || [])[0] || 0, q: item.name })}</div>
     <h2 class="detail-title">${escapeHtml(item.name)} · ${title}</h2>
     <p class="detail-subtitle">${escapeHtml(summary)}</p>
-    <div class="tag-row"><span class="tag">${escapeHtml(item.book)}</span><span class="tag">${isAncient ? "古文原文" : "现代解释"}</span><span class="tag">第 ${escapeHtml((isAncient ? evidence.formula_original.source_pages : evidence.usage_modern.source_pages).join("、"))} 页</span></div>
+    <div class="tag-row"><span class="tag">${escapeHtml(item.book)}</span><span class="tag">${isAncient ? "古文原文" : "现代解释"}</span><span class="tag">第 ${escapeHtml(targetPages.join("、"))} 页</span></div>
     <div class="warning-box">古籍原文和现代解释分开陈列，不作为个人处方或自行煎服依据。</div>
     ${body}
     <div class="section-block inline-actions">
@@ -461,9 +493,10 @@ function renderDecoctionPage(item, mode) {
 
 function renderFormulaSourcePage(item) {
   const evidence = item.evidence;
+  const origP = (evidence.formula_original?.source_pages || [])[0] || 0;
   $("#formula-detail").innerHTML = `<div class="detail-inner dossier-page">
     <button class="back-to-formula dossier-back" data-close-formula-page="${encodeURIComponent(item.id)}">← 返回${escapeHtml(item.name)}</button>
-    <div class="detail-kicker">原方 · 古文原文</div>
+    <div class="detail-kicker">原方 · 古文原文 ${ctxButtonHtml("滑动对照原书上下页 ↗", { bookHint: item.book, pageNo: origP, q: item.name })}</div>
     <h2 class="detail-title">${escapeHtml(item.name)} · 原方原文</h2>
     <div class="tag-row"><span class="tag">${escapeHtml(item.book)}</span><span class="tag">${item.ingredients.length} 味</span></div>
     <div class="warning-box">原文剂量仅供学习核对，不是个人处方。</div>
@@ -477,12 +510,12 @@ function renderFormulaRationalePage(item) {
   const annotations = evidence.annotations || [];
   $("#formula-detail").innerHTML = `<div class="detail-inner dossier-page">
     <button class="back-to-formula dossier-back" data-close-formula-page="${encodeURIComponent(item.id)}">← 返回${escapeHtml(item.name)}</button>
-    <div class="detail-kicker">为什么用 · 倪注与方义</div>
+    <div class="detail-kicker">为什么用 · 倪注与方义 ${ctxButtonHtml("滑动对照原书上下页 ↗", { bookHint: item.book, pageNo: annotations[0]?.source_page || 0, q: item.name })}</div>
     <h2 class="detail-title">${escapeHtml(item.name)} · 方义原文</h2>
     <p class="detail-subtitle">${escapeHtml(evidence.rationale.summary)}</p>
     <div class="warning-box">现代整理用于学习，不替代原文和专业辨证。</div>
     <section class="dossier-section"><div class="dossier-section-number">01</div><h3>方义整理</h3><div class="dossier-quote">${escapeHtml(evidence.rationale.full_text)}</div></section>
-    <section class="dossier-section"><div class="dossier-section-number">02</div><h3>分项说明</h3><div class="dossier-notes">${annotations.map((row) => `<article><h5>${escapeHtml(row.heading)}</h5><p>${escapeHtml(row.text)}</p><div class="source-locator">第 ${escapeHtml(row.source_page || "")} 页</div></article>`).join("")}</div></section>
+    <section class="dossier-section"><div class="dossier-section-number">02</div><h3>分项说明</h3><div class="dossier-notes">${annotations.map((row) => `<article><h5>${escapeHtml(row.heading)}</h5><p>${escapeHtml(row.text)}</p><div class="source-locator"><span>第 ${escapeHtml(row.source_page || "")} 页</span> ${row.source_page ? ctxButtonHtml("原书上下文 ↗", { bookHint: item.book, pageNo: Number(row.source_page || 0), q: (row.text || item.name).slice(0, 18) }) : ""}</div></article>`).join("")}</div></section>
   </div>`;
 }
 
@@ -494,7 +527,10 @@ function renderFormulaProofPage(item) {
     <div class="detail-kicker">校对记录</div>
     <h2 class="detail-title">${escapeHtml(item.name)} · 校对依据</h2>
     <p class="detail-subtitle">${escapeHtml(evidence.editorial_note)}</p>
-    <section class="dossier-section"><div class="dossier-section-number">01</div><h3>已核对来源</h3><div class="proof-list">${sources.map((row) => `<article><strong>${escapeHtml(row.kind)} · ${escapeHtml(row.title)}</strong><span>${escapeHtml(row.pages || "")}</span><p>${escapeHtml(row.note || "")}</p></article>`).join("")}</div></section>
+    <section class="dossier-section"><div class="dossier-section-number">01</div><h3>已核对来源</h3><div class="proof-list">${sources.map((row) => {
+      const sp = parseFirstPageNum(row.pages || "");
+      return `<article><strong>${escapeHtml(row.kind)} · ${escapeHtml(row.title)}</strong><span>${escapeHtml(row.pages || "")}</span><p>${escapeHtml(row.note || "")}</p>${(sp.pageNo || sp.line) ? ctxButtonHtml("原书上下文 ↗", { bookHint: [row.title, row.kind, item.book].filter(Boolean).join(" "), pageNo: sp.pageNo, line: sp.line, q: item.name }) : ""}</article>`;
+    }).join("")}</div></section>
   </div>`;
 }
 
@@ -525,14 +561,23 @@ function renderFormulaDetail(item) {
   const why = evidence.why
     ? `<div class="section-copy">${escapeHtml(evidence.why)}</div>`
     : `<div class="missing-composition">待逐方校；候选出处暂列于下方。</div>`;
+  const bookLocArgs = (row) => {
+    const p = parseFirstPageNum(row?.page);
+    return {
+      bookHint: source.title || item.book || "",
+      pageNo: p.pageNo,
+      line: p.line,
+      q: row?.excerpt ? String(row.excerpt).slice(0, 18) : item.name,
+    };
+  };
   const reviewedHtml = reviewedSources.length
     ? `<details open><summary>已采用的校对原文（${reviewedSources.length} 条）</summary><div class="evidence-list">${reviewedSources.map((row) =>
-        `<article><div class="source-locator">${escapeHtml(row.kind)} · ${escapeHtml(row.title)} · 第 ${escapeHtml(row.page)} 页</div><p>${escapeHtml(row.excerpt)}</p></article>`
+        `<article><div class="source-locator"><span>${escapeHtml(row.kind)} · ${escapeHtml(row.title)} · 第 ${escapeHtml(row.page)} 页</span>${ctxButtonHtml("滑动读原文上下文 ↗", bookLocArgs(row))}</div><p>${escapeHtml(row.excerpt)}</p></article>`
       ).join("")}</div></details>`
     : "";
   const candidateHtml = candidateSources.length
     ? `<details><summary>候选原文（未判定，${candidateSources.length} 条）</summary><div class="evidence-list">${candidateSources.map((row) =>
-        `<article><div class="source-locator">${escapeHtml(row.kind)} · 第 ${escapeHtml(row.page)} 页</div><p>${escapeHtml(row.excerpt)}</p></article>`
+        `<article><div class="source-locator"><span>${escapeHtml(row.kind)} · 第 ${escapeHtml(row.page)} 页</span>${ctxButtonHtml("滑动读原文上下文 ↗", bookLocArgs(row))}</div><p>${escapeHtml(row.excerpt)}</p></article>`
       ).join("")}</div></details>`
     : "";
   const derivative = item.derivative
@@ -557,8 +602,14 @@ function renderFormulaDetail(item) {
   const composition = item.ingredients.length
     ? `<div class="composition-grid">${item.ingredients.map(ingredientHtml).join("")}</div>`
     : `<div class="missing-composition">本条目在原始资料中没有可用的组成行。没有用后世人卫资料补写。</div>`;
+  const mainSrcOpts = {
+    bookHint: source.title || item.book || "",
+    pageNo: source.line ? 0 : Number(source.page || 0),
+    line: Number(source.line || 0),
+    q: item.name,
+  };
   $("#formula-detail").innerHTML = `<div class="detail-inner">
-    <div class="detail-kicker">${escapeHtml(source.title)} · ${source.line ? `第 ${escapeHtml(source.line)} 行` : `第 ${escapeHtml(source.page)} 页`}</div>
+    <div class="detail-kicker detail-kicker-row"><span>${escapeHtml(source.title)} · ${source.line ? `第 ${escapeHtml(source.line)} 行` : `第 ${escapeHtml(source.page)} 页`}</span>${ctxButtonHtml("滑动查原书上下文 ↗", mainSrcOpts)}</div>
     <h2 class="detail-title">${escapeHtml(item.name)}</h2>
     <p class="detail-subtitle">${escapeHtml(item.indication || "条目原文见下方")}</p>
     <div class="tag-row"><span class="tag">${escapeHtml(item.book || "方剂")}</span><span class="status-pill status-${escapeHtml(status)}">${escapeHtml(statusLabel)}</span><span class="status-pill ${reviewStatus === "reviewed" ? "status-reviewed" : "status-pending"}">${escapeHtml(reviewLabel)}</span><span class="tag">${escapeHtml(item.type)}</span><span class="tag">${escapeHtml(context)}</span><span class="tag">${item.ingredients.length} 味</span></div>
@@ -597,7 +648,7 @@ function renderFormulaDetail(item) {
     ${notes}
     <div class="section-block">
       <div class="section-title">原文定位</div>
-      <div class="source-box"><div class="source-locator">${escapeHtml(source.title)} · ${escapeHtml(source.path)} · ${source.line ? `第 ${escapeHtml(source.line)} 行` : `第 ${escapeHtml(source.page)} 页`}${source.chapter ? ` · ${escapeHtml(source.chapter)}` : ""}</div><p>${escapeHtml(source.excerpt || source.note || "原文片段未提供")}</p></div>
+      <div class="source-box"><div class="source-locator"><span>${escapeHtml(source.title)} · ${escapeHtml(source.path)} · ${source.line ? `第 ${escapeHtml(source.line)} 行` : `第 ${escapeHtml(source.page)} 页`}${source.chapter ? ` · ${escapeHtml(source.chapter)}` : ""}</span>${ctxButtonHtml("定位原文上下文 ↗", { ...mainSrcOpts, q: (source.excerpt || item.name || "").slice(0, 18) })}</div><p>${escapeHtml(source.excerpt || source.note || "原文片段未提供")}</p></div>
     </div>
   </div>`;
 }
@@ -614,7 +665,7 @@ function renderHerbDetail(item) {
       ).join("")
     : `<span class="section-copy">暂无关联方剂。</span>`;
   detailEl.innerHTML = `<div class="detail-inner">
-    <div class="detail-kicker">倪海厦注神农本草经 · 第 ${escapeHtml(item.page_start)} 页</div>
+    <div class="detail-kicker detail-kicker-row"><span>倪海厦注神农本草经 · 第 ${escapeHtml(item.page_start)} 页</span>${ctxButtonHtml("滑动查原书上下文 ↗", { bookId: "ni-bencao-pdf", pageNo: Number(item.page_start || 1), q: item.name })}</div>
     <h2 class="detail-title">${escapeHtml(item.name)}</h2>
     <p class="detail-subtitle">${escapeHtml(item.names?.filter((name) => name !== item.name).join(" · ") || "本经条目")}</p>
     <div class="tag-row"><span class="tag">${escapeHtml(item.source || "本经")}</span><span class="tag">${formulas ? "有方剂关联" : "暂无方剂关联"}</span></div>
@@ -639,8 +690,9 @@ function renderSixDetail(item) {
   const symptoms = item.symptoms || [];
   const understanding = item.understanding || [];
   const related = item.related_formula_ids || [];
+  const sixPage = Number(item.source_pages?.[0] || 1);
   $("#six-detail").innerHTML = `<div class="detail-inner">
-    <div class="detail-kicker">六经辨证 · ${escapeHtml(item.name)}</div>
+    <div class="detail-kicker detail-kicker-row"><span>六经辨证 · ${escapeHtml(item.name)} · 倪注伤寒第 ${escapeHtml(sixPage)} 页</span>${ctxButtonHtml("滑动读原书上下文 ↗", { bookId: "ni-shanghan-pdf", pageNo: sixPage, q: item.name })}</div>
     <div class="dossier-title-row">
       <div><h2 class="detail-title">${escapeHtml(item.name)}</h2><p class="detail-subtitle">${escapeHtml(item.summary)}</p></div>
       <span class="status-pill ${item.status === "reviewed" ? "status-reviewed" : "status-pending"}">${escapeHtml(item.status_label)}</span>
@@ -648,7 +700,7 @@ function renderSixDetail(item) {
     <div class="warning-box">这是六经辨证学习条目，不替代面诊、脉诊和个体化辨证。</div>
     <div class="section-block">
       <div class="section-heading-row"><div class="section-title">相关症状</div><button class="text-button" data-open-six-dossier="${encodeURIComponent(item.id)}">展开原文与注解</button></div>
-      <div class="symptom-row">${symptoms.length ? symptoms.map((row) => `<span class="symptom-chip">${escapeHtml(row)}</span>`).join("") : `<span class="section-copy">待整理。</span>`}</div>
+      <div class="symptom-row">${symptoms.length ? symptoms.map((row) => `<button type="button" class="symptom-chip is-clickable" data-ctx-loc="1" data-ctx-book="ni-shanghan-pdf" data-ctx-page="${escapeHtml(sixPage)}" data-ctx-q="${escapeHtml(row)}" title="在原书上下文中查找「${escapeHtml(row)}」">${escapeHtml(row)} ↗</button>`).join("") : `<span class="section-copy">待整理。</span>`}</div>
     </div>
     <div class="section-block">
       <div class="section-title">理解总结</div>
@@ -672,9 +724,10 @@ function renderSixDossier(item) {
   const understanding = item.understanding || [];
   const related = item.related_formula_ids || [];
   const source = item.source_pages?.length ? `第 ${item.source_pages.join("、")} 页` : "页码待补";
+  const sixFirstPage = Number(item.source_pages?.[0] || 1);
   $("#six-detail").innerHTML = `<div class="detail-inner dossier-page">
     <button class="back-to-formula dossier-back" data-close-six-dossier="${encodeURIComponent(item.id)}">← 返回${escapeHtml(item.name)}</button>
-    <div class="detail-kicker">六经辨证 · 完整原文卡</div>
+    <div class="detail-kicker detail-kicker-row"><span>六经辨证 · 完整原文卡 · 倪注伤寒第 ${escapeHtml(sixFirstPage)} 页</span>${ctxButtonHtml("打开可滑动原书上下文 ↗", { bookId: "ni-shanghan-pdf", pageNo: sixFirstPage, q: item.name })}</div>
     <h2 class="detail-title">${escapeHtml(item.name)} · 原文与注解</h2>
     <p class="detail-subtitle">${escapeHtml(item.summary)}</p>
     <div class="tag-row"><span class="tag">${escapeHtml(item.name)}</span><span class="status-pill ${item.status === "reviewed" ? "status-reviewed" : "status-pending"}">${escapeHtml(item.status_label)}</span></div>
@@ -683,12 +736,12 @@ function renderSixDossier(item) {
       <div class="dossier-section-number">01</div>
       <h3>原文</h3>
       <div class="dossier-quote">${original.map((row) => `<p>${escapeHtml(row)}</p>`).join("")}</div>
-      <div class="source-note">${escapeHtml(source)} · ${escapeHtml(item.proof_note || "")}</div>
+      <div class="source-note source-locator"><span>${escapeHtml(source)} · ${escapeHtml(item.proof_note || "")}</span>${ctxButtonHtml("滑动对照原书全文 ↗", { bookId: "ni-shanghan-pdf", pageNo: sixFirstPage, q: (original[0] || item.name || "").slice(0, 18) })}</div>
     </section>
     <section class="dossier-section">
       <div class="dossier-section-number">02</div>
       <h3>原文注解</h3>
-      ${annotations.length ? `<div class="dossier-notes">${annotations.map((row) => `<article><div class="source-locator">倪海厦伤寒论 · 第 ${escapeHtml(row.page)} 页</div><p>${escapeHtml(row.text)}</p></article>`).join("")}</div>` : `<div class="missing-composition">原文已列；注解待补。</div>`}
+      ${annotations.length ? `<div class="dossier-notes">${annotations.map((row) => `<article><div class="source-locator"><span>倪海厦伤寒论 · 第 ${escapeHtml(row.page)} 页</span>${ctxButtonHtml("滑动看前后文 ↗", { bookId: "ni-shanghan-pdf", pageNo: Number(row.page || sixFirstPage), q: (row.text || "").slice(0, 18) })}</div><p>${escapeHtml(row.text)}</p></article>`).join("")}</div>` : `<div class="missing-composition">原文已列；注解待补。</div>`}
     </section>
     <section class="dossier-section">
       <div class="dossier-section-number">03</div>

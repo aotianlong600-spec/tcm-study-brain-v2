@@ -194,10 +194,10 @@ KNOWN_SOURCES = {
         "source_id": "xu-lingtai-collection-pdf",
         "title": "明清名医全书大成·徐灵胎医学全书",
         "authors_and_collators": ["（清）徐大椿（灵胎）"],
-        "edition": "扫描影印 PDF",
+        "edition": "WinRT OCR 校理双栏版 + 原版影印 PDF",
         "source_type": "classical_edition",
-        "page_mapping_note": "共 434 页影印扫描 PDF，无文本层",
-        "known_issues": ["纯图像 PDF，后续如需引用须走页图 OCR 校字流程。"],
+        "page_mapping_note": "共 434 页（412 页本地 Windows zh-Hans-CN OCR 全文 + 22 页空白背面如实留空），原书 p.1–420 对照（含1999现代导言/学术研究边界标注与王孟英「雄按」）",
+        "known_issues": ["偶见繁简/异体及古籍版面识别差异，阅读器同步附原页扫描图像供核对。"],
     },
     "books/ni-haixia-medicine/石室秘录-清-陈士铎.txt": {
         "source_id": "chen-shiduo-shishimilu-txt",
@@ -229,11 +229,11 @@ KNOWN_SOURCES = {
     "books/ni-haixia-medicine/黄帝外经.pdf": {
         "source_id": "huangdi-waijing-pdf",
         "title": "黄帝外经",
-        "authors_and_collators": ["托名岐伯/陈士铎传"],
-        "edition": "扫描影印 PDF",
+        "authors_and_collators": ["托名岐伯/陈士铎述"],
+        "edition": "WinRT OCR 数字化版 + 原版影印 PDF",
         "source_type": "classical_edition",
-        "page_mapping_note": "共 85 页影印扫描 PDF，无文本层",
-        "known_issues": ["纯图像 PDF，后续如需引用须走页图 OCR 校字流程。"],
+        "page_mapping_note": "共 85 页本地 Windows zh-Hans-CN OCR 全文（p.1–4 卷首概述 + 现存《外经微言》80 篇，含「凌波按」）",
+        "known_issues": ["底本楷体偶见「耒/汨/順/炅」等异形识别字，检索已兼顾归一化，阅读器并附原页图像核对。"],
     },
 }
 

@@ -1,6 +1,6 @@
 {
   "schema_version": "5.0",
-  "edge_count": 346,
+  "edge_count": 553,
   "edges": [
     {
       "syndrome_id": "syndrome:taiyang-zhongfeng",
@@ -1731,6 +1731,1041 @@
       "syndrome_id": "syndrome:fengshi-lijie",
       "target_module": "acupuncture_point",
       "target_id": "acupoint:bl40:委中"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:yin-yang-biao-li-han-re"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:xushi-hanyin-yu-liujingjue"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:05"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:31"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "formula",
+      "target_id": "shanghan:通脉四逆汤"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "formula",
+      "target_id": "shanghan:白通汤"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "formula",
+      "target_id": "shanghan:白虎汤"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "formula",
+      "target_id": "shanghan:大承气汤"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "bencao",
+      "target_id": "bencao:附子"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "bencao",
+      "target_id": "bencao:干姜"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "bencao",
+      "target_id": "bencao:石膏"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "bencao",
+      "target_id": "bencao:大黄"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s295"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ren04:关元"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ki01:涌泉"
+    },
+    {
+      "syndrome_id": "syndrome:zhenhan-jiare",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:li11:曲池"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:wu-xing-sheng-ke"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:yinyang-shengjiang-jieli"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:yin-yang-biao-li-han-re"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:31"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:65"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "formula",
+      "target_id": "shanghan:四逆汤"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "formula",
+      "target_id": "shanghan:通脉四逆汤"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "formula",
+      "target_id": "shanghan:小柴胡汤"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "formula",
+      "target_id": "shanghan:麻黄汤"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "bencao",
+      "target_id": "bencao:附子"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "bencao",
+      "target_id": "bencao:干姜"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "bencao",
+      "target_id": "bencao:茈胡"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "bencao",
+      "target_id": "bencao:干地黄"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s295"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s282"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:du04:命门"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ren04:关元"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:lv03:太冲"
+    },
+    {
+      "syndrome_id": "syndrome:waijing-mingmen-wuyu",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ki03:太溪"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:biaoben-huanji-zhize"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:yin-yang-biao-li-han-re"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:28"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:38"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "formula",
+      "target_id": "shanghan:小青龙汤"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "formula",
+      "target_id": "shanghan:桂枝汤"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "formula",
+      "target_id": "shanghan:麻黄汤"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "formula",
+      "target_id": "jinkui:小建中汤"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "bencao",
+      "target_id": "bencao:五味子"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "bencao",
+      "target_id": "bencao:人参"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "bencao",
+      "target_id": "bencao:石膏"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "bencao",
+      "target_id": "bencao:麻黄"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s264"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s282"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:bl13:肺俞"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:st36:足三里"
+    },
+    {
+      "syndrome_id": "syndrome:xulingtai-bingshi-xie-liu",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ki03:太溪"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:yin-yang-biao-li-han-re"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:biaoben-huanji-zhize"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:28"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:65"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "formula",
+      "target_id": "shanghan:大黄黄连泻心汤"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "formula",
+      "target_id": "shanghan:附子泻心汤"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "formula",
+      "target_id": "shanghan:旋覆代赭石汤"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "formula",
+      "target_id": "shanghan:大陷胸汤"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "formula",
+      "target_id": "shanghan:半夏泻心汤"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "bencao",
+      "target_id": "bencao:大黄"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "bencao",
+      "target_id": "bencao:黄连"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "bencao",
+      "target_id": "bencao:半夏"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "bencao",
+      "target_id": "bencao:旋复花"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "bencao",
+      "target_id": "bencao:代赭"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s281"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s283"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ren12:中脘"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:pc06:内关"
+    },
+    {
+      "syndrome_id": "syndrome:jiexiong-pizheng",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:st36:足三里"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:rebing-liujing-chuanbian"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:ke-tong-bi-wei-bingji"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:31"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:32"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "formula",
+      "target_id": "shanghan:猪肤汤"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "formula",
+      "target_id": "shanghan:半夏散及汤"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "formula",
+      "target_id": "shanghan:甘草汤"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "formula",
+      "target_id": "shanghan:桔梗汤"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "formula",
+      "target_id": "shanghan:苦酒汤"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "bencao",
+      "target_id": "bencao:甘草"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "bencao",
+      "target_id": "bencao:桔梗"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "bencao",
+      "target_id": "bencao:半夏"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "bencao",
+      "target_id": "bencao:牡桂"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s270"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ki06:照海"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:lu11:少商"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ren23:廉泉"
+    },
+    {
+      "syndrome_id": "syndrome:shaoyin-yantong",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:lu07:列缺"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:rebing-liujing-chuanbian"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:jing-qi-shen-xue"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:33"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:31"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "formula",
+      "target_id": "shanghan:小柴胡汤"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "formula",
+      "target_id": "jinkui:甘麦大枣汤"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "formula",
+      "target_id": "jinkui:温经汤"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "formula",
+      "target_id": "shanghan:桃核承气汤"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "bencao",
+      "target_id": "bencao:茈胡"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "bencao",
+      "target_id": "bencao:当归"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "bencao",
+      "target_id": "bencao:甘草"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "bencao",
+      "target_id": "bencao:芍药"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s288"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s289"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s290"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:lv14:期门"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:sp06:三阴交"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ht07:神门"
+    },
+    {
+      "syndrome_id": "syndrome:chanhou-baozhen-fuke",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:sp10:血海"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:qibing-xueku-xiaoke"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:pibu-luose-wuzangfengzhen"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:28"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:38"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "formula",
+      "target_id": "jinkui:泻心汤"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "formula",
+      "target_id": "jinkui:百合地黄汤"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "formula",
+      "target_id": "shanghan:黄连阿胶汤"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "formula",
+      "target_id": "shanghan:炙甘草汤"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "bencao",
+      "target_id": "bencao:干地黄"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "bencao",
+      "target_id": "bencao:百合"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "bencao",
+      "target_id": "bencao:黄连"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "bencao",
+      "target_id": "bencao:阿胶"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "bencao",
+      "target_id": "bencao:大黄"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s264"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s282"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:lu06:孔最"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:bl17:膈俞"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ki03:太溪"
+    },
+    {
+      "syndrome_id": "syndrome:pizhi-ganzao-fanzhi",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:li11:曲池"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:taiyin-yangming-biaoli"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:biaoben-huanji-zhize"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:28"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:61"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "formula",
+      "target_id": "jinkui:大黄附子汤"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "formula",
+      "target_id": "jinkui:赤豆当归散"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "formula",
+      "target_id": "jinkui:大建中汤"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "formula",
+      "target_id": "shanghan:猪苓汤"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "bencao",
+      "target_id": "bencao:附子"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "bencao",
+      "target_id": "bencao:大黄"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "bencao",
+      "target_id": "bencao:细辛"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "bencao",
+      "target_id": "bencao:滑石"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "bencao",
+      "target_id": "bencao:当归"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s285"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s286"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ren03:中极"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:st25:天枢"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:sj06:支沟"
+    },
+    {
+      "syndrome_id": "syndrome:changyong-fushigongxia",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ren12:中脘"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:ke-tong-bi-wei-bingji"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:biaoben-huanji-zhize"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:38"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:28"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "formula",
+      "target_id": "shanghan:小青龙汤"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "formula",
+      "target_id": "jinkui:射干麻黄汤"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "formula",
+      "target_id": "shanghan:桂枝加厚朴杏仁汤"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "formula",
+      "target_id": "jinkui:苓甘五味姜辛汤"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "bencao",
+      "target_id": "bencao:麻黄"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "bencao",
+      "target_id": "bencao:细辛"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "bencao",
+      "target_id": "bencao:五味子"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "bencao",
+      "target_id": "bencao:干姜"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "bencao",
+      "target_id": "bencao:厚朴"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s272"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s282"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:lu01:中府"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ren22:天突"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:bl13:肺俞"
+    },
+    {
+      "syndrome_id": "syndrome:waihan-neihan-chuanzheng",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ki03:太溪"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:rebing-liujing-chuanbian"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:yin-yang-biao-li-han-re"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:31"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:28"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "formula",
+      "target_id": "jinkui:百合地黄汤"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "formula",
+      "target_id": "jinkui:百合知母汤"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "formula",
+      "target_id": "jinkui:麦门冬汤"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "formula",
+      "target_id": "shanghan:竹叶石膏汤"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "bencao",
+      "target_id": "bencao:百合"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "bencao",
+      "target_id": "bencao:知母"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "bencao",
+      "target_id": "bencao:干地黄"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "bencao",
+      "target_id": "bencao:麦门冬"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "bencao",
+      "target_id": "bencao:石膏"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s275"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s282"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:ki03:太溪"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:pc06:内关"
+    },
+    {
+      "syndrome_id": "syndrome:baihe-yuhuo-xiehe",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:lu01:中府"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:yin-yang-biao-li-han-re"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:qibing-xueku-xiaoke"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "neijing_concept",
+      "target_id": "concept:nj:xushi-hanyin-yu-liujingjue"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:31"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "neijing_chapter",
+      "target_id": "nj:suwen:28"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "formula",
+      "target_id": "shanghan:白虎加人参汤"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "formula",
+      "target_id": "shanghan:附子汤"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "formula",
+      "target_id": "shanghan:真武汤"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "formula",
+      "target_id": "jinkui:黄土汤"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "formula",
+      "target_id": "jinkui:赤豆当归散"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "formula",
+      "target_id": "jinkui:硝石矾石散"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "formula",
+      "target_id": "shanghan:茵陈蒿汤"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "bencao",
+      "target_id": "bencao:石膏"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "bencao",
+      "target_id": "bencao:附子"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "bencao",
+      "target_id": "bencao:知母"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "bencao",
+      "target_id": "bencao:茵陈"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "bencao",
+      "target_id": "bencao:干地黄"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s264"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s285"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "acupuncture_condition",
+      "target_id": "cond:ch6:s293"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:st36:足三里"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:sp06:三阴交"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:du20:百会"
+    },
+    {
+      "syndrome_id": "syndrome:wuhan-shigao-jixu",
+      "target_module": "acupuncture_point",
+      "target_id": "acupoint:du14:大椎"
     }
   ]
 }

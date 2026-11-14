@@ -43,7 +43,7 @@
     readyResolve = r;
   });
 
-  const worker = new Worker("./pages_worker.js", { type: "module" });
+  const worker = new Worker("./pages_worker.js?v=__BUILD_ID__", { type: "module" });
   worker.addEventListener("message", (event) => {
     const msg = event.data || {};
     if (msg.type === "status") {
@@ -202,7 +202,7 @@
     }
 
     if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "127.0.0.1" || location.hostname === "localhost")) {
-      navigator.serviceWorker.register("./sw.js").catch(() => {});
+      navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" }).catch(() => {});
     }
   });
 })();

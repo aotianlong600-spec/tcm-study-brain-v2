@@ -7,44 +7,13 @@ from pathlib import Path
 import re
 from typing import Any
 
+from retrieval.tcm_synonyms import FORMULA_SYNONYM_GROUPS
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 
-SYNONYM_GROUPS: tuple[tuple[str, ...], ...] = (
-    ("项背强", "项强", "项背强几几", "颈项强", "脖子僵", "身体强几几然", "刚痉", "柔痉"),
-    ("往来寒热", "寒热往来", "忽冷忽热", "时冷时热", "发寒发热"),
-    ("心烦喜呕", "心烦", "喜呕", "呕吐", "干呕", "恶心", "反胃"),
-    ("胸胁苦满", "胸胁满", "胁下痞硬", "胁痛", "两胁胀痛", "往来寒热"),
-    ("恶寒", "怕冷", "畏寒", "背恶寒", "恶风", "怕风"),
-    ("发热", "发烧", "身热", "壮热", "骨蒸", "潮热", "日晡所发潮热", "日晡所剧"),
-    ("无汗", "不出汗", "汗闭", "表实"),
-    ("有汗", "汗出", "自汗", "汗出恶风", "盗汗", "微汗", "大汗", "汗多"),
-    ("口渴", "大渴", "烦渴", "欲饮水", "渴欲饮水", "引饮", "消渴", "糖尿病"),
-    ("不渴", "不欲饮", "不用水", "寒多不用水", "口不渴"),
-    ("小便不利", "小便少", "小便反少", "尿少", "癃闭", "水肿", "浮肿", "水气", "蓄水"),
-    ("小便自利", "小便利", "小便清长", "小便数", "尿频"),
-    ("大便硬", "大便干", "大便难", "不大便", "便秘", "燥屎", "宿食", "不转矢气"),
-    ("下利", "泄泻", "腹泻", "拉肚子", "下利清谷", "热利", "痢疾", "脓血便"),
-    ("远血", "先便后血", "黑便", "胃出血", "柏油便"),
-    ("近血", "先血后便", "便血", "痔疮出血", "肠风下血"),
-    ("心下痞", "胃痞", "心下闷", "胃胀", "心下满", "痞满", "心中痞气"),
-    ("胸痹", "胸痛", "心痛彻背", "背痛彻心", "心痛", "心绞痛", "短气", "喘息"),
-    ("少腹肿痞", "少腹肿", "按之即痛如淋", "大黄牡丹汤", "肠痈", "右下腹痛", "盲肠炎"),
-    ("肌肤甲错", "皮肤甲错", "两目黯黑", "干血", "癥瘕", "血痹", "麻木不仁"),
-    ("热入血室", "经水适断", "经水适来", "寒热如疟", "如疟状", "期门"),
-    ("喘", "咳逆", "上气", "哮喘", "咳嗽", "水鸡声", "但坐不得眠", "肺胀", "肺痈", "肺痿"),
-    ("咽痛", "喉咙痛", "咽中伤", "失音", "梅核气", "咽中如有炙脔"),
-    ("黄疸", "发黄", "谷疸", "酒疸", "女劳疸", "身目黄"),
-    ("奔豚", "气上冲胸", "脐下悸"),
-    ("虚劳", "悸", "心悸", "心动悸", "失眠", "虚烦不得眠", "梦遗", "酸枣仁"),
-    ("风湿", "历节", "关节痛", "身烦疼", "身重", "不能自转侧", "骨节疼痛"),
-    ("厥逆", "四肢厥冷", "手脚冰冷", "手足寒", "脉微欲绝", "亡阳", "附子"),
-    ("吐蛔", "蚘虫", "蛔虫", "蚘厥", "脏寒"),
-    ("转筋", "脚挛急", "拘急"),
-    ("郁冒", "眩晕", "头晕", "冒家", "水饮眩悸"),
-    ("妊娠", "怀孕", "胎动", "漏下", "产后", "恶露"),
-)
+SYNONYM_GROUPS: tuple[tuple[str, ...], ...] = FORMULA_SYNONYM_GROUPS
 
 DIFFERENTIAL_GUIDES = [
     {
@@ -223,6 +192,14 @@ def _safety_alerts(q: str, top_formulas: list[dict]) -> list[str]:
         alerts.append("所询症状可能涉及急腹症（肠痈/穿孔）、急性心胸痛、消化道大出血、中枢痉厥或重度呼吸/循环衰竭等临床危急征象，古籍方证仅供文献研习，须优先现代急诊医疗处置。")
     if any(k in q_clean for k in ["孕", "产后", "妊娠", "胎"]):
         alerts.append("妊娠及产后生理属高危辨证边界，破血、峻下、大热有毒及滑利药均严禁自行照古方服用。")
+    if any(k in q_clean for k in ["吐血", "咳血", "咯血", "鼻衄", "亡血", "骨蒸", "盗汗"]):
+        alerts.append("《伤寒》明训「衄家、亡血家不可发汗」，《慎疾刍言》与《血证论》亦重申阴虚吐血骨蒸脉数严禁麻黄发汗及建中参附温补。")
+    if ("心下" in q_clean or "结胸" in q_clean) and any(k in q_clean for k in ["白厚", "胎滑", "饮食如故", "能食", "不渴"]):
+        alerts.append("《伤寒》警示：心下硬痛而反见饮食如故、不渴、苔白滑润或下利者，须严别「脏结」死候，绝禁妄下大陷胸/承气。")
+    if ("无汗" in q_clean or "不出汗" in q_clean) and ("大渴" in q_clean or "烦渴" in q_clean or "石膏" in q_clean):
+        alerts.append("《石室秘录》《伤寒》警示：白虎石膏必见阳明大汗如雨始可清解，若无汗表闭大渴而早用石膏必遏抑伏邪内陷（当辨大青龙散寒清里或先透表）。")
+    if ("短气" in q_clean or "虚喘" in q_clean or "不抬肩" in q_clean) and "抬肩" not in q_clean.replace("不抬肩", " ") and "痰鸣" not in q_clean:
+        alerts.append("《石室秘录》《外经》喘证辨疑：实喘必抬肩痰鸣，虚喘唯见张口短气而不抬肩；虚喘忌妄投麻桂强发散耗伤肺肾元气。")
     risky_names = []
     for f in top_formulas[:5]:
         h_names = [i.get("name", "") for i in f.get("ingredients", [])]
@@ -261,9 +238,17 @@ def diagnose_formulas(
                 break
     target_meridian_label = meridian_alias.get(six_meridian, six_meridian)
 
-    # Polarity signals in query
+    # Polarity signals in query (exclude head-only sweating and nocturnal night sweats from systemic exterior sweating)
+    sweat_scoped = (
+        cleaned.replace("但头汗出", " ")
+        .replace("头汗出", " ")
+        .replace("头汗", " ")
+        .replace("骨蒸盗汗", " ")
+        .replace("盗汗", " ")
+        .replace("手足心汗", " ")
+    )
     wants_anhidrosis = "无汗" in cleaned
-    wants_sweating = any(k in cleaned for k in ["有汗", "汗出", "自汗", "汗多"]) and not wants_anhidrosis
+    wants_sweating = any(k in sweat_scoped for k in ["有汗", "汗出", "自汗", "汗多"]) and not wants_anhidrosis
     wants_no_thirst = any(k in cleaned for k in ["不渴", "不用水", "不饮水"])
     wants_thirst = any(k in cleaned for k in ["口渴", "大渴", "烦渴", "欲饮水"]) and not wants_no_thirst
 

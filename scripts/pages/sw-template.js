@@ -30,12 +30,28 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
   if (url.pathname.includes("/api/")) return;
 
+  // Network-first for HTML navigations so new builds take effect cleanly on reload
+  if (req.mode === "navigate" || url.pathname.endsWith("/") || url.pathname.endsWith("/index.html")) {
+    event.respondWith(
+      fetch(req)
+        .then((resp) => {
+          if (resp && resp.ok) {
+            const clone = resp.clone();
+            caches.open(SHELL_CACHE).then((c) => c.put(req, clone)).catch(() => {});
+          }
+          return resp;
+        })
+        .catch(() => caches.match(req).then((cached) => cached || caches.match("index.html")))
+    );
+    return;
+  }
+
   // Cache-first for immutable versioned runtime / pre-cached static shell files
   event.respondWith(
     caches.match(req).then((cached) => {
       if (cached) return cached;
       return fetch(req).then((resp) => {
-        if (resp && resp.ok && !url.pathname.endsWith(".pdf")) {
+        if (resp && resp.ok && !url.pathname.endsWith(".pdf") && !url.pathname.endsWith("bundle.zip")) {
           const clone = resp.clone();
           caches.open(SHELL_CACHE).then((c) => c.put(req, clone)).catch(() => {});
         }
