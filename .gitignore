@@ -5,3 +5,7 @@ __pycache__/
 node_modules/
 *.log
 .tmp/
+dist/
+.pages-cache/
+data/library/page_images/
+sources/bencao/rendered_pages/

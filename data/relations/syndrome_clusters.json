@@ -1,0 +1,2191 @@
+{
+  "schema_version": "5.0",
+  "count": 20,
+  "items": [
+    {
+      "id": "syndrome:taiyang-zhongfeng",
+      "title": "太阳表虚中风证（营卫不和·桂枝汤群）",
+      "keywords": [
+        "太阳",
+        "中风",
+        "恶风",
+        "发热",
+        "汗出",
+        "脉浮缓",
+        "项强",
+        "自汗"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:yin-yang-biao-li-han-re",
+        "concept:nj:rebing-liujing-chuanbian"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:31",
+        "nj:suwen:05"
+      ],
+      "formula_ids": [
+        "shanghan:桂枝汤",
+        "shanghan:桂枝加葛根汤",
+        "shanghan:桂枝加厚朴杏仁汤"
+      ],
+      "bencao_ids": [
+        "bencao:牡桂",
+        "bencao:芍药",
+        "bencao:甘草",
+        "bencao:大枣"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s272"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:gb20:风池",
+        "acupoint:lu07:列缺",
+        "acupoint:li04:合谷"
+      ],
+      "clinical_reasoning": "表气受风邪疏泄而营弱卫强，当调和营卫、解肌发汗，服粥温覆以助胃气蒸腾津液，忌峻发大汗。",
+      "differentials": "有汗脉缓用桂枝汤；有汗项背强加葛根；兼微喘加厚朴杏仁；若无汗脉浮紧则转属麻黄汤表实证。",
+      "version_conflicts": "历代对《本经》“牡桂/菌桂”对应现代桂枝与肉桂有文字变迁考证，人纪临证强调发散风寒解肌用桂枝、温肾阳下焦用肉桂。",
+      "safety_note": "酒客忌甘味（桂枝汤禁酒客）；表热里实、脉数烦渴者禁用温辛解表剂。",
+      "library_refs": [
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 7,
+          "unit_label": "第 7 节（L324-L381）",
+          "section_title": "辨太阳病脉证并治上",
+          "quote": "同。本方重在汗出。汗不出者。便非桂枝证。 案金鉴。以此条为重出衍文。误。 太阳病。项背强KT KT 。反汗出恶风者。桂枝加葛根汤主之。（KT KT 。程本。作兀兀。非也。玉函云。桂枝汤主之。论云。桂枝加葛根汤主之。千金翼同。论云。作本论云。） 〔成〕KT KT 者。伸颈之貌也。动则伸颈。摇身而行。项背强者。动则如之。〔程",
+          "text_sha256": "7a2d7f81437896ea88b4b426e2be90a44a8ac52ab9a37d6d9f31f219b60d73ee",
+          "score": 24
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 2,
+          "unit_label": "第 2 节（L6-L23）",
+          "section_title": "太陽病，下之後，其氣上衝者，可與桂枝湯。",
+          "quote": "太陽病，頭痛發熱，汗出惡風者，桂枝湯主之。 太陽病，項背強几几者，反汗出惡風者，桂枝加葛根湯主之。 太陽病，下之後，其氣上衝者，可與桂枝湯。 太陽病之壞病:太陽病三日，已發汗，若吐，若下，若溫針，仍不解者，此為壞病， 太陽病汗漏不止者桂枝加附子湯主之：太陽病，發汗，遂漏不止，其人惡風，小便難，四肢微 急，難以屈伸者，桂枝加附子湯主之。 1",
+          "text_sha256": "10c77388b5e788edf1c3745c10da9d5336bfdd5a1e332f28075bfd9da12d66af",
+          "score": 24
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 19,
+          "unit_label": "PDF 第 19 页",
+          "section_title": "汉唐中医医桉学习――太阳伤寒与太阳中风",
+          "quote": "经方实验录》无疑 是学习经方极佳的书籍，于医理论述颇详。今日读了《经方实验录》中桂枝汤证和麻黄汤证 的医桉，有一些想法，即时写下来，以求教于方家。 汉唐中医倪海厦论太阳伤寒兼太阳中风 汉唐中医倪海厦医师行文随感而发，有时会夹带少量医桉，可供学习。 关于麻黄汤与桂枝汤的思考 关于麻黄汤与桂枝汤的医理，《经方实验录?第一一桉?麻黄汤证其五》“",
+          "text_sha256": "27c45ca7537a2ad5a9bd7c3d29e2d9dca85a7745209c0c0ddd1a028e8e098301",
+          "score": 11
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 107,
+          "unit_label": "PDF 第 107 页",
+          "section_title": "卷六",
+          "quote": "面施治,而用药略有不同,眉列如左。 角弓反张者,太阳经病也,无汗用葛根汤,有汗用桂枝加葛根汤,血家病此, 多是血燥生风,筋灼而挛,麻桂皆其所忌,前方不中与也,宜四物汤,加葛根防风 荆芥独活羚羊角桑寄生续继杏仁治之。 手足抽掣,口目斜引者,少阳经病也,伤寒中风,用大秦艽汤,此方风药虽多, 尚兼滋补,血家病此,亦可借用,再加阿胶羚羊角人参天花",
+          "text_sha256": "8e3155e29b2733166978ece543be98dd52adbb7ce77be034ffaf225b80d5c9a5",
+          "score": 9
+        },
+        {
+          "book_id": "chen-shiduo-shishimilu-txt",
+          "book_title": "陈士铎·石室秘录",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 117,
+          "unit_label": "第 117 节（L2690-L2711）",
+          "section_title": "伤寒门",
+          "quote": "三钱，胡桃仁一个，干姜五分，水煎服。此方大补关元气海，复引火之下行，绝不去祛寒逐邪，庶几气可回，而息高者可平也。倘疑是太阳喘症，而妄用桂枝汤，杀人于顷刻矣。故必用止息汤救之，十人中亦可望生五六人。然必须多服久服始得，苟或服一剂而辄止，亦未能收功者，又不可不知。 伤寒少阴病，脉微沉细，但欲卧，汗出，不烦，自欲呕吐，至五六日自利，复烦躁",
+          "text_sha256": "27b985d5490f3caee7674df105ac1074689c089295857a6b1f9c38cc577b2df3",
+          "score": 9
+        }
+      ]
+    },
+    {
+      "id": "syndrome:taiyang-shanghan-jing",
+      "title": "太阳表实伤寒与项背强痉（麻黄/葛根汤群）",
+      "keywords": [
+        "伤寒",
+        "无汗",
+        "恶寒",
+        "脉浮紧",
+        "身疼",
+        "腰痛",
+        "骨节疼痛",
+        "项背强",
+        "麻黄"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:rebing-liujing-chuanbian",
+        "concept:nj:ke-tong-bi-wei-bingji"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:31",
+        "nj:suwen:35"
+      ],
+      "formula_ids": [
+        "shanghan:麻黄汤",
+        "shanghan:葛根汤",
+        "shanghan:大青龙汤"
+      ],
+      "bencao_ids": [
+        "bencao:麻黄",
+        "bencao:牡桂",
+        "bencao:杏核仁",
+        "bencao:葛根"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:头部与脑瘤治症"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:du14:大椎",
+        "acupoint:gb20:风池",
+        "acupoint:lu07:列缺",
+        "acupoint:li04:合谷"
+      ],
+      "clinical_reasoning": "寒邪束表、卫闭营郁，毛窍闭塞则无汗喘满；开肺腠以散外寒（麻黄），津不上输项背强则助阳明津液升达（葛根）。",
+      "differentials": "纯粹恶寒无汗体痛用麻黄汤；兼项背强几几或下利用葛根汤；外寒无汗兼烦躁口渴用大青龙汤；咽喉干燥、淋家、疮家、衄家、亡血家皆禁麻黄发汗。",
+      "version_conflicts": "《伤寒》表证严守“先去麻黄之煎沫”及中病即止；各家对麻黄生用/炙用及杏仁用量略异，按原书各立。",
+      "safety_note": "亡血、阴虚、尺中脉微、心脏重度衰竭者严禁峻发汗，恐生亡阳戴阳变证。",
+      "library_refs": [
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 3,
+          "unit_label": "第 3 节（L24-L52）",
+          "section_title": "太陽病中篇",
+          "quote": "，頭痛、發熱、身疼腰痛、骨節疼痛、惡風、無汗而喘者，麻黃湯主之。 23.太陽中風大青龍湯證：太陽中風，脈浮緊、發熱惡寒、身疼痛、不汗出而煩躁者，大青龍湯主之； 若脈微弱，汗出惡風者，不可服之。服之則厥逆、筋惕肉瞤。 24傷寒，脈浮緩，身不疼，但重，乍有輕時，大青龍湯主之。 25.傷寒表不解心下有水氣小青龍湯主之：傷寒，表不解，心下有水氣，",
+          "text_sha256": "1b4307978842ad214208b21bbf3db64d1caa4c51e6c8a086ea4d0a536e89ba47",
+          "score": 33
+        },
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 16,
+          "unit_label": "第 16 节（L912-L973）",
+          "section_title": "辨太阳病脉证并治中",
+          "quote": "麻黄八证。头痛发热恶风。同桂枝症。无汗身疼。 同大青龙症。本症。重在发热身疼。无汗而喘。本条不冠伤寒。又不言恶寒。而言恶风。先辈言麻黄汤主治伤寒。不治中风。似非确论。盖麻黄汤。大青龙汤。治中风之重剂。桂枝汤。葛根汤。治中风之轻剂。伤寒可通用之。非主治伤寒之剂也。〔钱〕恶风。虽或可与恶寒互言。然终是营伤卫亦伤也。何则。卫病则恶风。营居",
+          "text_sha256": "82d0dac96800cb7b13f01ced186bfc94fffbebd6ec304d0f48b22ee19b536352",
+          "score": 31
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 220,
+          "unit_label": "PDF 第 220 页",
+          "section_title": "汉唐中医 倪海厦敬上 11/13/2007于佛州自家书房",
+          "quote": ": 麻杏甘石汤症---病人咳嗽不止,痰出黄粘,胃口尚好时,可以吃此方. 第五: 大青龙汤症---病人出现怕冷,无汗,发烧,咳嗽重,咳出黄痰,身体痛,口渴重,喜喝冷水,没 有胃口时,就吃大青龙汤,这就是 SARS与禽流感的主要症状. 第六: 小青龙汤症---病人有怕冷,无汗,发烧,咳嗽重,出白痰,无渴,身体痛,没有胃口时,就可以 用它了.",
+          "text_sha256": "52d3a19a8b67ae68ad3c1c44722bb8a240e26c6fe175c5e37fc0dd5e11e520fa",
+          "score": 21
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 31,
+          "unit_label": "PDF 第 31 页",
+          "section_title": "本书救论",
+          "quote": "一实欬,外感风寒,先见头痛,恶寒发热等证,仲景云,欬而喘息有音,甚则吐 血者,用麻黄汤,李东垣师其意,用麻黄人参芍药汤,可见欬嗽吐红之证,多有因 外感者,古法用麻黄,乃劫病之剂,且是气分之药,于血分尚少调治,须知欬固气 病,然使不犯血分,又何缘而失血也哉,故必以兼顾血分为宜,医宗金鉴用苏子降 气汤,予则用小柴胡汤,加紫苏荆芥当归白芍丹皮杏",
+          "text_sha256": "26abcbf569c33ece049d1b040ba8fd55cf3e1918d386bb846020f7225d529769",
+          "score": 11
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 19,
+          "unit_label": "PDF 第 19 页",
+          "section_title": "HT-4 皮肤过敏",
+          "quote": "疫等同，是一个伤于寒一个伤于温， 37 持续的中型高烧，此际最好的方法是用中医的葛根汤， 葛根4两麻黄3两桂枝炙甘草皆2两加生姜大枣成葛根汤 小孩子发水痘身体出小豆粒，里面有浆状物，会出现持续低烧， 一般来说都是在 38℃左右。为什幺烧？烧就是阳化气，就是向外驱 毒，把毒气外发出来。这时候就要助其外发之力，把毒气外发，葛 根汤葛根在里面起",
+          "text_sha256": "f32a49b9757c0b33a7a90829b01523f8f911243d27d4cc4afe85ddf672dac7de",
+          "score": 9
+        }
+      ]
+    },
+    {
+      "id": "syndrome:taiyang-xushui-wuling",
+      "title": "太阳蓄水证与膀胱气化不利（五苓散群）",
+      "keywords": [
+        "蓄水",
+        "小便不利",
+        "渴欲饮水",
+        "水逆",
+        "水入即吐",
+        "消渴",
+        "浮肿",
+        "五苓散"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:fengshui-shuinie-ni",
+        "concept:nj:kaiguimen-shuiyurexue-cire"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:08",
+        "nj:suwen:61"
+      ],
+      "formula_ids": [
+        "shanghan:五苓散",
+        "jinkui:猪苓散",
+        "shanghan:猪苓汤"
+      ],
+      "bencao_ids": [
+        "bencao:茯苓",
+        "bencao:猪苓",
+        "bencao:泽泻",
+        "bencao:白术",
+        "bencao:牡桂"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s284"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:ren04:关元",
+        "acupoint:sp09:阴陵泉",
+        "acupoint:st36:足三里"
+      ],
+      "clinical_reasoning": "外邪循经入膀胱之腑致气化不行，水道壅滞则小便不利而上不承津故渴欲饮水，水停胃下则水入即吐（水逆）。",
+      "differentials": "五苓散属太阳蓄水兼表（桂枝助阳化气、多饮暖水汗出愈）；猪苓汤属阴虚有热兼水停（配阿胶滑石育阴利水）；真武汤属少阴肾阳衰微水泛。",
+      "version_conflicts": "《本经》原称“术”，后世分化白术、苍术；古方“五苓散”皆以方寸匕散服并多饮暖水，切不可改作水煎失其药势。",
+      "safety_note": "若少腹急结如狂而小便自利者，属蓄血证（桃核承气/抵当汤），非本证。",
+      "library_refs": [
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 27,
+          "unit_label": "第 27 节（L1606-L1665）",
+          "section_title": "辨太阳病脉证并治中",
+          "quote": "而小便又不利。则其水有似乎内自消也。渴。言能饮且能多也〔锡〕案大汗出。胃中干者。乃胃无津液而烦躁。故与水以润之。小便不利消渴者。乃脾不转输。水津不布而消渴。故用五苓以散之。若胃中干者。复与五苓散。利其小便。则愈干矣。故阳明篇云。汗出多而渴者。不可与猪苓汤。以汗多胃中燥。猪苓汤复利其小便故也。 伤寒准绳。张兼善曰。烦渴用白虎汤。宜也。",
+          "text_sha256": "63b3be7a2eafdd46cbee725692529e274287119693461d37bddc1288eaa45961",
+          "score": 19
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 56,
+          "unit_label": "PDF 第 56 页",
+          "section_title": "HT-14 胆石症",
+          "quote": "小便，在时方里面，膏淋散，八正散等等，这些都可治疗热淋，在 伤寒论里面有五苓散，猪苓汤。猪苓汤是治阴虚的淋证，小便不通 利。五苓散治疗气水证，这是经方里面的，都可治疗。 小便发黄尿中有痛尿后仍有尿意，直接用八正散可治。 有石淋的要注意化石，把石头化开。治疗淋症，有个简单的办 法判断人是不是淋症，就是看人的鼻子，鼻头这个部位，是不是色 黄，",
+          "text_sha256": "349bd503a62420230b26d29c699851444d33ffb76cfbc98e33cc76e269a353aa",
+          "score": 12
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 3,
+          "unit_label": "PDF 第 3 页",
+          "section_title": "血证论",
+          "quote": "热,水阴不能濡于肌肤也,凡此之证,皆以生水为治 法,故清燥救肺汤,生津以补肺气,猪苓汤,润利以除痰气,都气丸,补水以益肾气, 即如发汗,所以调卫气也,而亦戒火攻以伤水阴,故用白芍之滋阴,以启汗原,用 花粉之生津,以救汗液,即此观之,可知滋水即是补气,然补中益气汤,六君子,肾 气丸,是皆补气之方也,何以绝不滋水哉,盖无形之水阴,生于下而济于",
+          "text_sha256": "d9349e33ed40777a257e94d612cac5d93f86d34db31d7adda33d13ea047f07a9",
+          "score": 10
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 3,
+          "unit_label": "第 3 节（L24-L52）",
+          "section_title": "太陽病中篇",
+          "quote": "得眠，欲得飲水者，少少與飲之，令胃氣和則愈；若脈 浮、 小便不利、微熱、消渴者，五苓散主之。 43發汗已，脈浮數、煩渴者，五苓散主之。 44傷寒，汗出而渴者，五苓散主之；不渴者，茯苓甘草湯主之。",
+          "text_sha256": "1b4307978842ad214208b21bbf3db64d1caa4c51e6c8a086ea4d0a536e89ba47",
+          "score": 9
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 76,
+          "unit_label": "PDF 第 76 页",
+          "section_title": "倪海厦医师 11/19/2003 洛杉矶演讲内容",
+          "quote": ", 而且药又贵 , 我们北派经方家治疗霍乱 , 先在委中穴点刺放 血 , 再给于五苓散让病毒自小便排出 , 治疗疟疾时我们使用小柴胡汤来治忽冷忽热之症 , 使用葛芩连汤来治热利 , 如果下利带血时 , 就用白头翁汤来做加减 , 都是一剂知二剂已 , 速度之快 , 几乎隔夜就恢复过来 . 如果台湾政府不要爲了打肿脸充胖子 , 去捐五千万美元",
+          "text_sha256": "c0c879cd185f08aea9621907a51594079dea14f0b78680506a3105d61ba52311",
+          "score": 5
+        }
+      ]
+    },
+    {
+      "id": "syndrome:taiyang-xuxue-yuxue",
+      "title": "太阳蓄血证与下焦瘀血血证（桃核承气/抵当/血证论互参）",
+      "keywords": [
+        "蓄血",
+        "少腹急结",
+        "少腹硬满",
+        "小便自利",
+        "发狂",
+        "喜忘",
+        "如狂",
+        "瘀血",
+        "便黑"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:jing-qi-shen-xue",
+        "concept:nj:xushi-hanyin-yu-liujingjue"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:39",
+        "nj:suwen:62"
+      ],
+      "formula_ids": [
+        "shanghan:桃核承气汤",
+        "shanghan:抵当汤",
+        "jinkui:下瘀血汤"
+      ],
+      "bencao_ids": [
+        "bencao:桃核仁",
+        "bencao:大黄",
+        "bencao:水蛭",
+        "bencao:蜚虻"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s285",
+        "cond:ch6:s282"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:sp10:血海",
+        "acupoint:sp06:三阴交",
+        "acupoint:bl40:委中"
+      ],
+      "clinical_reasoning": "表邪化热与瘀血互结下焦胞宫/大肠之间，必验“小便自利”以别蓄水，佐“如狂、喜忘、屎黑”及少腹按之急结硬满；合参唐容川《血证论》消瘀为治血第一要法。",
+      "differentials": "初结少腹急结、其人如狂（热多瘀微）用桃核承气；久结少腹硬满、发狂喜忘、脉沉结（瘀重热结）用抵当汤；妇人产后少腹刺痛用下瘀血汤。",
+      "version_conflicts": "虫类破血药（水蛭、虻虫、蟅虫）生用与炒炙及现代药典替代标准历代争议较大，务必严核来源与炮制。",
+      "safety_note": "高危警示：峻下逐瘀方严禁用于孕妇、经期误诊及内出血未止之休克急症！",
+      "library_refs": [
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 40,
+          "unit_label": "第 40 节（L2462-L2531）",
+          "section_title": "辨太阳病脉证并治中",
+          "quote": "。下者愈。其外不解者。尚未可攻。当先解其外。外解已。 但少腹急结者。乃可攻之。宜桃核承气汤。（【原注】后云解外。宜桂枝汤。○玉函。自上。有必字。愈上。 有即字。成本。解下。无其字。脉经。其外下。有属桂枝汤证五字。千金翼同。） 〔成〕太阳。膀胱经也。太阳经邪热不解。随经入腑。为热结膀胱。其人如狂者。为未至于狂。但不宁尔。",
+          "text_sha256": "c2ac45e72e5b44cae297b686438ce0da34b5e95327451b54fa67b014410c4899",
+          "score": 19
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 4,
+          "unit_label": "第 4 节（L53-L77）",
+          "section_title": "45.中風，發熱六七日，不解而煩，渴欲飲水，水入口吐者，五苓散主之。",
+          "quote": "脈微而沉，反不結胸；其人發狂者，以熱在下焦，少腹當硬滿，小便自 利者，下血乃愈，抵當湯主之。 68太陽病，身黃、脈沉結、小腹硬、小便自利，其人如狂者，抵當湯主之。 69傷寒有熱，小腹滿，應小便不利，今反利者，當下之，宜抵當丸，",
+          "text_sha256": "2b0b4d184a4a30364dc931073cc028a58347dfbfa5ccb6604af34c11f16180a9",
+          "score": 16
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 72,
+          "unit_label": "PDF 第 72 页",
+          "section_title": "卷五",
+          "quote": "谓血在上喜忘,血在下如狂是也,癫犬咬伤,毒聚胞中,故令发 狂,皆属蓄血之证,仲景抵当汤治之,桃仁承气汤亦治之,若胆识不及,可用膈下 逐瘀汤,加大黄,若血犹未结,但是热入血室,夜则谵语,用小柴胡汤,加桃仁丹皮 治之。 血臌(血肿) 血臌之证,满小腹胀,满身上看血丝缕,烦燥漱水,小便赤,大便黑,腹上青筋 是也,医书俱云,是妇人之病,唯喻嘉言谓",
+          "text_sha256": "19ed35ea345650f982675ae0a25b8af20a9b29193a54cd85edb3d973ca93c2be",
+          "score": 15
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 51,
+          "unit_label": "PDF 第 51 页",
+          "section_title": "HT-11 抵挡丸",
+          "quote": "在下焦，少腹当硬满，小便自利者，下血乃 愈，所以然者，以太阳随经，瘀热在里故也。抵当汤主之。 抵当汤方 水蛭三十个（熬，味咸，苦寒） 虻虫三十个（熬，去 翅足，味苦，微寒） 桃仁二十个（去皮尖，味苦甘，平） 大黄三两（酒浸，味苦寒） 右四味为末，以水五升，煮取三升，去滓，温服一升， 不下再服。 太阳病，身黄脉沉结，少腹硬，小便不利者，为无",
+          "text_sha256": "2b7423fd9b80c19260334396d5e0d6565f5bbcde923856405b33418e42fa02d5",
+          "score": 13
+        }
+      ]
+    },
+    {
+      "id": "syndrome:shaoyang-shuji",
+      "title": "少阳枢机不利与热入血室（小柴胡/大柴胡群）",
+      "keywords": [
+        "少阳",
+        "往来寒热",
+        "胸胁苦满",
+        "口苦",
+        "咽干",
+        "目眩",
+        "心烦喜呕",
+        "热入血室",
+        "期门"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:san-yin-san-yang-kaihe",
+        "concept:nj:hanre-nveji-wanglai"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:06",
+        "nj:suwen:35"
+      ],
+      "formula_ids": [
+        "shanghan:小柴胡汤",
+        "shanghan:大柴胡汤",
+        "shanghan:柴胡桂枝汤",
+        "shanghan:柴胡加龙骨牡蛎汤"
+      ],
+      "bencao_ids": [
+        "bencao:茈胡",
+        "bencao:黄芩",
+        "bencao:半夏",
+        "bencao:人参",
+        "bencao:大黄"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s279"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:lv14:期门",
+        "acupoint:gb34:阳陵泉",
+        "acupoint:sj05:外关",
+        "acupoint:sj06:支沟"
+      ],
+      "clinical_reasoning": "少阳主半表半里三焦胆腑枢机，正邪分争则往来寒热、胸胁苦满、默默不欲饮食、心烦喜呕；《伤寒》特明“但见一证便是，不必悉具”，经水适断之热入血室常配刺期门与小柴胡。",
+      "differentials": "纯少阳枢机用小柴胡；兼表发热支节烦疼用柴胡桂枝汤；兼阳明腑实呕不止心下急用大柴胡汤；误下烦惊谵语用柴胡加龙骨牡蛎汤。",
+      "version_conflicts": "柴胡用量（原方半斤约八两与现代临床剂量比例）及小柴胡加减七法去滓再煎规制极关药力。",
+      "safety_note": "少阳禁汗、禁吐、禁纯下；切忌仅凭往来寒热误当作纯表寒滥用发汗。",
+      "library_refs": [
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 84,
+          "unit_label": "第 84 节（L5181-L5247）",
+          "section_title": "辨少阳病脉证并治",
+          "quote": "陷。胸满而烦者比。故不可吐下。若吐下。则虚其中。神志虚怯。则悸而惊也。〔汪〕补亡论。庞安时云。可小柴胡汤。吐下悸而惊者。郭白云云。当服柴胡加龙骨牡蛎汤。 伤寒脉弦细。头痛发热者。属少阳。少阳不可发汗。发汗则谵语。此属胃。胃和则愈。胃不和。烦而悸。（【原注】一云躁○烦上。成本。玉函。有则字。） 〔鉴〕脉弦细。少阳之脉也。上条不言",
+          "text_sha256": "18074373e8f4fc32ad49febc01201377538a053ca5c784a7c02958cf97491b93",
+          "score": 32
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 4,
+          "unit_label": "第 4 节（L53-L77）",
+          "section_title": "45.中風，發熱六七日，不解而煩，渴欲飲水，水入口吐者，五苓散主之。",
+          "quote": "未可攻，當先解其外；外解已，但少 腹急結者，乃可攻之，宜桃核承氣湯。 61. |柴胡加龍骨牡蠣湯跖:傷寒八九日，下之，胸滿、煩驚、小便不利、譫語、一身盡重，不可轉側者, 柴胡加龍骨牡蠣湯主之。 62傷寒脈浮，醫以火迫劫之，必驚狂、臥起不安者，桂枝去芍藥加蜀漆牡蠣龍骨救逆湯主之。 63太陽病，以火熏之，不得汗，其人必躁，必清血，名為火邪。",
+          "text_sha256": "2b0b4d184a4a30364dc931073cc028a58347dfbfa5ccb6604af34c11f16180a9",
+          "score": 21
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 43,
+          "unit_label": "PDF 第 43 页",
+          "section_title": "倪海厦医师 11/19/2003 洛杉矶演讲内容",
+          "quote": "噁心呕吐, 有这些症状我们就知道病人得了少阳症. 此时有两种汤剂, 小柴胡汤及大柴胡汤. 如果是往来寒热, 头痛, 噁心呕吐, 但是大便很好很正常, 则服用小柴胡汤; 如果便祕, 则服 用大柴胡汤. 少阳症再往裡走, 就走到阴症了. 再来有可能不是进入少阳, 而是进入阳明. 阳明症就是进入你的胃及大肠系统, 病人会 产生燥热, 所谓阳明",
+          "text_sha256": "5a324021d204d054e7605703c82be3ce9218a6973092f4b01ba9877a5bfaacf2",
+          "score": 14
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 27,
+          "unit_label": "PDF 第 27 页",
+          "section_title": "本书救论",
+          "quote": "先干呕,然后呕血,呕血后仍发干呕者,皆少阳之逆气也,用大柴胡汤,加蒲 黄丹皮桃仁当归治之,呕血既止,再服小柴胡汤,以调和荣卫,转枢表里,上焦得 通,津液得下,胃气因和,呕哕自止,血自安静,而不上潮矣,然肝胆相连,胆病未 有不及肝者,丹栀逍遥散,可并治之。但呕不吐,属少阳,呕吐兼有,属肝经,肝气 善怒,其火最横,观",
+          "text_sha256": "088aa8145f80246392edcfd9c239286af7685e60d18e338381073864496b4831",
+          "score": 14
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 182,
+          "unit_label": "PDF 第 182 页",
+          "section_title": "HT-64 妇女经停后身热盗汗、易生气、情绪不稳定",
+          "quote": "还有一些小柴胡汤症的，口干,目眩,头眩,耳鸣,便秘,寒热往来, 欲吐等等，包括大柴胡汤的症状. 在不同的人身上显示的就不同 西方医学认为是女性荷尔蒙失调导致,女性到了一定的年龄,绝 经了,体内雌性激素分泌不足了,于是便出现了这样的症状.西医治 疗的办法就是补充相应的雌激素 生长化收藏,生长壮老已,这是自然的规律，七七四十九女性绝 经之后",
+          "text_sha256": "ddf4440756ca4f6da3f5960ea7bc619eb3e579f31241fc923c01f2e92401c8b7",
+          "score": 12
+        }
+      ]
+    },
+    {
+      "id": "syndrome:yangming-qire-baihu",
+      "title": "阳明经分大热大渴（白虎/竹叶石膏群）",
+      "keywords": [
+        "阳明",
+        "大热",
+        "大汗",
+        "大渴",
+        "脉洪大",
+        "白虎",
+        "石膏",
+        "烦渴",
+        "燥热"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:taiyin-yangming-biaoli",
+        "concept:nj:rebing-liujing-chuanbian"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:31",
+        "nj:suwen:32"
+      ],
+      "formula_ids": [
+        "shanghan:白虎汤",
+        "shanghan:白虎加人参汤",
+        "shanghan:竹叶石膏汤"
+      ],
+      "bencao_ids": [
+        "bencao:石膏",
+        "bencao:知母",
+        "bencao:甘草"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s284"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:li11:曲池",
+        "acupoint:li04:合谷",
+        "acupoint:du14:大椎"
+      ],
+      "clinical_reasoning": "邪传阳明气分，胃经实热充斥内外而无燥屎阻结，故大汗、大烦渴、脉洪大或滑而厥（热深厥深），取辛寒重剂石膏配知母直清阳明胃热。",
+      "differentials": "大热脉洪无汗虚用白虎汤；大汗后大渴舌上干燥烦渴欲饮水数升用白虎加人参汤；病愈后余热未清气津两伤欲吐用竹叶石膏汤。",
+      "version_conflicts": "仲景石膏以“鸡子大”碎绵裹煮，后世常误小用不敢过一两或误与阳明腑实混同。",
+      "safety_note": "严防真寒假热（脉浮紧无汗、下利清谷）误投白虎汤致胃阳骤熄！须确认无表寒实证。",
+      "library_refs": [
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 11,
+          "unit_label": "第 11 节（L582-L659）",
+          "section_title": "辨太阳病脉证并治上",
+          "quote": "略同。但此因大汗出之后。故桂枝略重。而麻黄略轻。 服桂枝汤。大汗出后。大烦渴不解。脉洪大者。白虎加人参汤主之。（脉上。玉函。脉经。有若字。脉经。 千金方。作白虎汤。） 〔成〕大汗出。脉洪大而不渴。邪气犹在表也。可更与桂枝汤。若大汗出。脉洪大。而烦渴不解者。表里有热。不可更与桂枝汤。可与白虎加人参汤。生津止渴。和表散热。〔",
+          "text_sha256": "72630f6a597e6978f451985ace19a2718861cec44f1a5d0316438c6744c873fb",
+          "score": 22
+        },
+        {
+          "book_id": "chen-shiduo-shishimilu-txt",
+          "book_title": "陈士铎·石室秘录",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 10,
+          "unit_label": "第 10 节（L273-L292）",
+          "section_title": "大治法",
+          "quote": "分，白芥子三钱，白芍三钱，熟地一两，水三大碗，煎一碗服之。（〔批〕双补至神丹。）盖阳明火盛，理宜用竹叶石膏汤矣，而此偏不用，反用参、苓、 、熟为君，补其气血者，何也？胃火过盛，已铄气血，再用白虎汤，虽一时解其火势之燎原，然而焦头烂额，必致重亡其津液。不若用补气血之药，大剂煎饮，使水足而火自息。方中宜用元参、麦冬、甘菊之品，纯是退阳明之味；",
+          "text_sha256": "12e5776abaec85464070118c5d2cc62e6426ccafe114c60aa8cdaa834223ca9f",
+          "score": 18
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 5,
+          "unit_label": "第 5 节（L78-L108）",
+          "section_title": "太陽病下篇",
+          "quote": "、寸脈微浮、胸中痞硬、氣上沖喉咽不得息者，此為胸有 寒也。當吐之，宜瓜蒂散。 |白虎加人參湯證：傷寒若吐若下後，七八日不解，表裡俱熱，時時惡風、大渴、舌上乾燥而煩、欲 飲水數升者，白虎加人參湯主之。 91傷寒無大熱、口燥渴、心煩、背微惡寒者，白虎加人參湯主之。 92傷寒脈浮、發熱、無汗，渴欲飲水，無表證者，白虎加人參湯主之。 93太陽與少",
+          "text_sha256": "d574b3fa4a0f7e63e3c69733beede7dec7e7063b26e8dc8669f032b50e75d6c2",
+          "score": 18
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 117,
+          "unit_label": "PDF 第 117 页",
+          "section_title": "卷七",
+          "quote": "白虎汤 石膏(一两)、知母(五钱)、甘草(二钱)、粳米(一撮) 四药甘寒,生胃阴,清胃火,阳明燥热得此,如金?夕起,暑酷全消,故以秋金 白虎名汤,乃仲景伤寒阳明之正方,借治血症,脉洪大发热口渴者,尤有捷效。 佛手散(即归芎汤) 当归(五钱)、川芎(三钱) 酒水",
+          "text_sha256": "5ca8f8a704a497ae8c04ed4e53e25bbe34071dda3c2d594f22e3b71ec2c7678c",
+          "score": 15
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 114,
+          "unit_label": "PDF 第 114 页",
+          "section_title": "倪海厦医师 11/19/2003 洛杉矶演讲内容",
+          "quote": "要症在阳明就不会再传经了,所以此人虽然病了七年,却还是停留在阳明经,我开大 剂白虎汤给他,石膏用到一付药是六两,约155公克,加入牡蛎一两,泽泻六 钱给他,读者要了解 一件事,大陆来美国教中医的中医师们,他们一再的告诫美国学生使用石膏不要超过一两,我 不知道他们是依据什麽标准如此教学生的,我使用 石膏最少计量是一付药八钱,但是这只是 用",
+          "text_sha256": "0dc1861bd44af0be298c2d4d88af1844ab891be3cf7ce306a6319b6133eb4a82",
+          "score": 13
+        }
+      ]
+    },
+    {
+      "id": "syndrome:yangming-fushi-chengqi",
+      "title": "阳明腑实燥屎痞满（三承气/麻子仁丸群）",
+      "keywords": [
+        "阳明",
+        "腑实",
+        "潮热",
+        "日晡",
+        "谵语",
+        "不大便",
+        "燥屎",
+        "痞满",
+        "大便硬",
+        "承气"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:taiyin-yangming-biaoli",
+        "concept:nj:xushi-hanyin-yu-liujingjue"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:29",
+        "nj:suwen:11"
+      ],
+      "formula_ids": [
+        "shanghan:大承气汤",
+        "shanghan:小承气汤",
+        "shanghan:调胃承气汤",
+        "shanghan:麻子仁丸"
+      ],
+      "bencao_ids": [
+        "bencao:大黄",
+        "bencao:朴消",
+        "bencao:厚朴",
+        "bencao:枳实",
+        "bencao:甘草"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s285"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:st25:天枢",
+        "acupoint:sj06:支沟",
+        "acupoint:st36:足三里",
+        "acupoint:li04:合谷"
+      ],
+      "clinical_reasoning": "胃家实热与宿食津枯相搏成燥屎，治法首辨“痞、满、燥、实”四字轻重及煎煮先后（先煮枳朴还是大黄、芒硝溶服），急下存阴以保肾津胃液。",
+      "differentials": "痞满燥实俱重（日晡潮热、谵语、转矢气、手足濈然汗出）用大承气；微烦满而未全燥用小承气（试与微和之）；燥实不痞满而胃热心烦用调胃承气；脾约大便坚小便数用麻子仁丸润下。",
+      "version_conflicts": "“先煮厚朴枳实，后纳大黄，临服纳芒硝”煎法决定攻下部位之峻缓，不可一锅乱煮。",
+      "safety_note": "高危警示：剧烈腹痛需先排外急腹症穿孔/肠梗阻绞窄！老弱虚秘及无燥屎者误攻大承气恐致脱阳下利不止。",
+      "library_refs": [
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 81,
+          "unit_label": "第 81 节（L5002-L5065）",
+          "section_title": "辨阳明病脉证并治",
+          "quote": "趺阳脉浮而涩。浮则胃气强。涩则小便数。浮涩相搏。大便则硬。其脾为约。麻子仁丸主之。（成本。无子字。仁。作人。柯本。无此条。及麻仁丸方。） 〔成〕趺阳者。脾胃之脉。诊浮为阳。知胃气强。涩为阴。知脾为约。约者。俭约之约。又约束之约。 内经曰。饮入于胃。游溢精气。上输于脾。脾气散精。上归于肺。通调水道。下输于膀胱。水精四",
+          "text_sha256": "7af35ebfa3ee2da8d6015bc077445b6b658d288dd4e68d3a230d896bde136420",
+          "score": 32
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 6,
+          "unit_label": "第 6 节（L109-L136）",
+          "section_title": "99.提綱｝陽明之為病，胃家實是也。",
+          "quote": "欲嘔，屬陽明也，吳茱萸湯主之。 121太陽病三日，發汗不解，蒸蒸發熱者，屬胃也，調胃承氣湯主之。 122傷寒六七日，目中不了了，睛不和，無表裡證，大便難，身微熱者，急下之，宜大承氣湯。 123陽明少陽合病，必下利，脈滑而數者，有宿食也，當下之，宜大承氣湯。 124傷寒七八日，身黃如橘子色，小便不利，腹微滿者，茵陳蒿湯主之。 125傷寒身黃",
+          "text_sha256": "579c5d7f85f235cb7da3dd108637ac358e7024d1e49b811f074b2a6a8a245780",
+          "score": 29
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 345,
+          "unit_label": "PDF 第 345 页",
+          "section_title": "汉唐中医 倪海厦 敬上08/30/2007于佛州",
+          "quote": "再去睡 , 如此一来失眠就慢慢的会恢复了 . 经方中有许多处方如大黄甘草汤 , 调胃承气汤 , 小承气汤 , 大承气汤 , 大柴胡汤 , 麻 子仁丸等等诸多处方 , 都可以因人而异的来做加减方 , 便秘是很好治的 , 尤其是更年期 后的妇女们, 一定要有每天正常的大便 , 一天两三次都没关係 , 便秘是很不好的习惯 , 一 定要治好它 ,",
+          "text_sha256": "355c78d96f87aa697d6b7248d5521c6dbfe5ecd9d747eb43c7e2632ba47855fe",
+          "score": 21
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 156,
+          "unit_label": "PDF 第 156 页",
+          "section_title": "HT-43 麻子仁丸",
+          "quote": "HT-43 麻子仁丸 (大便如羊屎,小颗粒状) （2006.12.01B 录校：孟磊、徐荣霞） 43号麻子仁丸它的主治是治疗大便干燥的，包括一些老 年性的便秘。大便干燥它干燥成什幺样的程度？大便如同羊屎粒一 样，成瓣状，就是一粒一粒的，称为叫羊 屎蛋，就如同这个小圆蛋 呈",
+          "text_sha256": "b3d8fa48b4f5247461afb9f83da046a7da0ff6204449c952edbb177434a61edf",
+          "score": 14
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 83,
+          "unit_label": "PDF 第 83 页",
+          "section_title": "卷六",
+          "quote": ",瘀血在腑, 则血室主之,证见日晡潮热,昼日明了,暮则谵语,以冲为血海,其脉丽于阳明,故 有阳明燥热之证,桃仁承气汤治之,小柴胡汤,加桃仁丹皮白芍亦治之,瘀血在脏, 则肝主之,以肝司血故也,证见骨蒸痨热,手足心烧,眼目青黑,手发摧折,世以为 难治之证,而不知热血在肝脏使然,宜柴胡清骨散,加桃仁琥珀干漆丹皮治之。 以上所论,皆属血家发热之实",
+          "text_sha256": "4e16315f3c4f76046ad12d951d68d424f5362402aa260869e4fbc64d26103498",
+          "score": 10
+        }
+      ]
+    },
+    {
+      "id": "syndrome:taiyin-xuhan-lizhong",
+      "title": "太阴脾胃虚寒与中焦建中（理中/小建中/吴茱萸群）",
+      "keywords": [
+        "太阴",
+        "腹满而吐",
+        "食不下",
+        "自利益甚",
+        "时腹自痛",
+        "理中",
+        "虚寒",
+        "喜温",
+        "中焦"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:taiyin-yangming-biaoli",
+        "concept:nj:wugu-weiyang-yinshi-jiankang"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:29",
+        "nj:suwen:19"
+      ],
+      "formula_ids": [
+        "shanghan:理中丸",
+        "shanghan:小建中汤",
+        "jinkui:大建中汤"
+      ],
+      "bencao_ids": [
+        "bencao:干姜",
+        "bencao:人参",
+        "bencao:白术",
+        "bencao:甘草",
+        "bencao:牡桂"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s281",
+        "cond:ch6:s283"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:ren12:中脘",
+        "acupoint:st36:足三里",
+        "acupoint:sp04:公孙",
+        "acupoint:bl20:脾俞"
+      ],
+      "clinical_reasoning": "脾家虚寒、中阳不运，腹满时痛、自利不渴、食不下、吐利交作；治以温中健脾、甘温建立中气，切忌寒凉苦泄误作胃实下之。",
+      "differentials": "呕吐下利、寒多不用水用理中丸/汤；腹中急痛、喜温喜按、虚劳悸衄用小建中汤（倍芍药加饴糖）；心胸大寒痛呕不能饮食、腹中寒上冲皮起见头足用大建中汤。",
+      "version_conflicts": "《伤寒》理中作丸以蜜和温水研服或作汤；《金匮》人参汤即理中汤而用主胸痹中虚之证，两书保留各自原注。",
+      "safety_note": "若兼下利清谷、四肢厥冷、脉微欲绝者，已属太阴转少阴，单用理中力薄，当急转四逆汤类。",
+      "library_refs": [
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 33,
+          "unit_label": "第 33 节（L2032-L2091）",
+          "section_title": "辨太阳病脉证并治中",
+          "quote": "和故也。汗者。阳气之所酿。汗出。知阳气复于表。故愈。则非用发表之剂。而和表之剂可知。而里未和者。阳气虽返于内。阴气尚未滋而复。得字宜玩。迟久之辞。盖大便由溏而燥。由燥而硬。 至此不得不斟酌下之。以助津液矣。和表药。桂枝加附子汤。或大建中汤类也。〔锡〕然后者。缓词也。如无里证。可不必下也。〔鉴〕下之。宜调胃承气汤和之。〔张〕冒为发汗过",
+          "text_sha256": "efdaa35e79fef3fb4b28c0430dd4296d511153116a863c7ad425f5375916b67c",
+          "score": 17
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 7,
+          "unit_label": "第 7 节（L137-L171）",
+          "section_title": "少陰病篇",
+          "quote": "，脈沉緊者，與小柴胡 湯。若已吐、下、發汗、溫針，譫語，柴胡湯證罷，此為壞病。 太陰病篇 131提綱：太陰之為病，腹滿而吐，食不下，自利益甚，時腹自痛。若下之，必胸下結硬。 132太陰病，脈浮者，可發汗，宜桂枝湯。 133 .自利不渴者，屬太陰，其藏有寒故也，當溫之。 134本太陽病，醫反下之，因爾腹滿時痛者（注:屬太陰也），桂枝加芍藥湯",
+          "text_sha256": "a5eb88def81b566c08bcaea1fd6cd4e507f02bf3f985fcbb6992ac1d53cb14de",
+          "score": 10
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 192,
+          "unit_label": "PDF 第 192 页",
+          "section_title": "HT-70 定心丸中医之心肾不交（主症是有焦虑，忧郁之情志）",
+          "quote": "只有一个暖水的作用,它不能去破其 阴寒之气.而用那个干姜配炮附,它只是如同像附子理中丸里面的干 姜炮附温中焦差不多。真正碰到这个四逆证要是用现在的炮附子， 这一个四逆汤是绝对无效的。四逆汤的组方,它用到炙甘草二两,干 姜要用到一两半,附子它要用生的,一枚.在桂本里面,它要加人参. 宋本的它不加人参.从这里面我们就可以看到,不要以为别人用四",
+          "text_sha256": "2ac1a8d8a1a09867288f345f8eed73819ccbf3bcad2c44cb2c4597d778c8405e",
+          "score": 9
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 55,
+          "unit_label": "PDF 第 55 页",
+          "section_title": "卷四",
+          "quote": "济附子之性,便不燥烈,免伤阴血,普明子谓此症必脉细无力,唇淡口和, 四支清冷,用理中汤,加归芍,或归脾汤,十全大补汤,时医多用补中益气汤,以升 提之,皆黄土汤之意,凡中土不能摄血者,数方可以随用,但仲景用温药,兼用清 药,知血之所以不宁者,多是有火扰之,凡气实者,则上干,气虚者则下陷,今医但 用温补升提之药,虽得治气虚之法,而未得治血扰之",
+          "text_sha256": "161bdfecfd1d6db599c3cabd155ddb94fb9380dd1dad1f1309c9338eb44ea7a1",
+          "score": 6
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 31,
+          "unit_label": "PDF 第 31 页",
+          "section_title": "汉唐中医 倪海厦 谨记11/30/2007",
+          "quote": "治未病了.) 世上的疾病本来都是很简单易治的,像上面这情形,经方中如甘草干姜汤,大建中汤等都是 去肺家寒症的,桔梗甘草汤是排肺家脓疡的药,在此时治好了,将来怎么会有肺癌呢? 同时控 制病人的情志,利用喜能胜忧来把病因去除,得到结果就是只需用些很便宜的两味或是三味至 多不出八味中药的组成,就可以治病于未发之时,原本应该是所有中医都可以做到的",
+          "text_sha256": "e57a55db879f8f2ce1a112e9a2d2565ac90362ffcc8277e77692ce8c0dc00d24",
+          "score": 5
+        }
+      ]
+    },
+    {
+      "id": "syndrome:shaoyin-hanhua-sini",
+      "title": "少阴寒化亡阳四逆（四逆/真武/通脉四逆/附子汤群）",
+      "keywords": [
+        "少阴",
+        "脉微细",
+        "但欲寐",
+        "四肢厥逆",
+        "下利清谷",
+        "恶寒",
+        "亡阳",
+        "附子",
+        "背恶寒"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:yin-yang-gangji",
+        "concept:nj:xushi-hanyin-yu-liujingjue"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:03",
+        "nj:suwen:05"
+      ],
+      "formula_ids": [
+        "shanghan:四逆汤",
+        "shanghan:通脉四逆汤",
+        "shanghan:真武汤",
+        "shanghan:附子汤"
+      ],
+      "bencao_ids": [
+        "bencao:附子",
+        "bencao:干姜",
+        "bencao:茯苓",
+        "bencao:芍药",
+        "bencao:人参"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s295"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:ren04:关元",
+        "acupoint:ren06:气海",
+        "acupoint:du04:命门",
+        "acupoint:ki03:太溪"
+      ],
+      "clinical_reasoning": "肾中真阳衰微、心火不温，见脉微细、但欲寐、背恶寒、下利清谷、手足厥逆；急以生附子温少阴肾阳、干姜温太阴脾阳，配灸关元气海回阳固脱。",
+      "differentials": "回阳救逆第一方用四逆汤（生附子+干姜+炙草）；真阳格拒（身反不恶寒、面赤）用通脉四逆加葱白；少阴水气悸眩小便不利加茯苓芍药白术（真武汤，用炮附子）；骨节痛背恶寒脉沉（附子汤配人参炮附子）。",
+      "version_conflicts": "生附子与炮附子之辨极为严格：《伤寒》《金匮》救逆回阳多用“生附子”，镇痛化水多用“炮附子”，煎煮久煎去毒是生死分界。",
+      "safety_note": "高危警示：乌头/附子属强毒性剧药（含乌头碱），严禁自购生品试服！脉微欲绝属危重急症应立即急诊救治。",
+      "library_refs": [
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 95,
+          "unit_label": "第 95 节（L5936-L6005）",
+          "section_title": "辨少阴病脉证并治",
+          "quote": "数。沉之豁然虚散。曰素问云。脉至而从。按之不鼓。诸阳皆然。此为阴盛隔阳。得之饮食生冷。坐卧风露。煎真武汤冷冻饮料之。一进汗止。再进烦躁去。三进平复如初。余子元病恶寒战栗。持捉不定。两手皆冷汗浸淫。虽浓衣炽火不能解。伯仁即与真武汤。凡用附子六枚。一日病者忽出。人怪之。病者曰。吾不恶寒。即无事矣。或以问伯仁。伯仁曰。其脉两手皆沉微。余无表里证",
+          "text_sha256": "a5e257dfdf908db86395572bb33fc462e8ba07376fea1daf3dbd3faeb1105cf9",
+          "score": 29
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 7,
+          "unit_label": "第 7 节（L137-L171）",
+          "section_title": "少陰病篇",
+          "quote": "利而渴者，虛故引水自救；若小便色白者，少陰病形 悉具。 137 .少陰病麻黃細辛附子湯證：少陰病始得之，反發熱，脈沉者，麻黃細辛附子湯主之。 138|少陰病麻黃附子甘草湯證：|少陰病，得之二三日，麻黃附子甘草湯微發汗。 139 .少陰病黃連阿膠湯證少陰病，得之二三日以上，心中煩、不得臥，黃連阿膠湯主之。 140少陰病，得之一二日，口中和，",
+          "text_sha256": "a5eb88def81b566c08bcaea1fd6cd4e507f02bf3f985fcbb6992ac1d53cb14de",
+          "score": 19
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 232,
+          "unit_label": "PDF 第 232 页",
+          "section_title": "汉唐中医 倪海厦敬上 11/13/2007于佛州自家书房",
+          "quote": "气汤症 旋覆花代赭石汤症 皂荚丸症与三黄泻心汤症 大柴胡汤症 真武汤症 芍药甘草附子汤症 小承气汤症 四逆汤症 麻黄附子细辛汤症 大黄附子细辛汤症 有下利的大承气汤症 乌梅丸症厚朴三物汤症 乌头桂枝汤症射干麻黄汤症 桂枝芍药知母汤症 示范针刺期门章门穴位 当归四逆加吴茱萸乾薑汤 每天每位病人来访，我都是使用经方来治疗，因此时常根本来不及写",
+          "text_sha256": "0060a7119ade2e21ddc1fd05cbc8f1c436c3c9222a901ab462a760b6b8e4f1fe",
+          "score": 17
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 52,
+          "unit_label": "PDF 第 52 页",
+          "section_title": "卷四",
+          "quote": "惯而不相惊,一遇天气节候蒸动,则不能安然内伏,故作痛也,宜小调经汤,小温 经汤,通脉四逆汤,随其上下内外,以分治之。 血证论卷三终 卷四 便血 大肠者,传导之官,化物出焉,谓大肠下脾胃之化物,为中宫作传导之官,故 呼为地道,乃宫中之出路也,其经与肺相表里,肺为清金,大肠即为燥金,在五行 本属一家,故诊脉者,可于肺部诊大肠焉,大肠之所以能传",
+          "text_sha256": "608010ce07339cc705e8ace81a18a8da46300134d8746a88264d1a3e03020807",
+          "score": 10
+        },
+        {
+          "book_id": "chen-shiduo-shishimilu-txt",
+          "book_title": "陈士铎·石室秘录",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 119,
+          "unit_label": "第 119 节（L2736-L2755）",
+          "section_title": "伤寒门",
+          "quote": "祛胃中之火，一时权宜之计。倘多服又恐损产妇气血矣，所以二剂后，必须改用他方。 妊妇临月，忽感少阴经风邪，恶寒蜷卧，手足冷者，不治之症也。少阴，肾经也，无论传经至少阴，与直中入少阴，苟得此症，多不能治。盖少阴肾经，宜温而不宜寒，今风寒入之，则命门之火微，而肾宫无非寒气，势必子宫亦寒。手足冷者，脾胃寒极之非也。脾胃至于寒极，不死何待。而",
+          "text_sha256": "87b2ea8c6431aed2618441ecd6bb3e0a0c4fced27192610441d30306b4137bcc",
+          "score": 8
+        }
+      ]
+    },
+    {
+      "id": "syndrome:shaoyin-rehua-xinfan",
+      "title": "少阴热化心肾不交与懊憹不眠（黄连阿胶/栀子豉群）",
+      "keywords": [
+        "少阴",
+        "心中烦",
+        "不得卧",
+        "心肾不交",
+        "虚烦",
+        "懊憹",
+        "失眠",
+        "黄连阿胶",
+        "舌红"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:shier-guan-shenming",
+        "concept:nj:wuzang-wushen-wuzou"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:08",
+        "nj:suwen:46"
+      ],
+      "formula_ids": [
+        "shanghan:黄连阿胶汤",
+        "shanghan:栀子豉汤",
+        "shanghan:猪苓汤"
+      ],
+      "bencao_ids": [
+        "bencao:黄连",
+        "bencao:黄芩",
+        "bencao:阿胶",
+        "bencao:栀子",
+        "bencao:ch3-鸡子黄"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s273"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:ht07:神门",
+        "acupoint:pc06:内关",
+        "acupoint:ki03:太溪",
+        "acupoint:sp06:三阴交"
+      ],
+      "clinical_reasoning": "少阴肾水亏竭、君火亢炎而心肾不交（鸡子黄以血肉之情降君火、阿胶滋肾水、芩连直折心热），与胸膈郁热之栀子豉汤虚烦懊憹相对。",
+      "differentials": "少阴病二三日以上心中烦不得卧（阴虚火亢、脉细数）用黄连阿胶汤（鸡子黄须待汤温后搅入）；汗吐下后虚烦不得眠、心中懊憹（无形郁热在胸膈）用栀子豉汤；兼小便不利渴欲饮水用猪苓汤。",
+      "version_conflicts": "鸡子黄须待药液去滓微温时再纳搅匀以免煮熟结块失效；淡豆豉用黑豆制或青蒿香豉各家有考。",
+      "safety_note": "少阴热化与寒化同见“但欲寐”或烦躁，若见手足逆冷脉微切不可误作阴虚清热。",
+      "library_refs": [
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 7,
+          "unit_label": "第 7 节（L137-L171）",
+          "section_title": "少陰病篇",
+          "quote": "泄利下重者，回逆散主 之。 154少陰病，下利六七日，咳而嘔、渴，心煩不得眠者，豬苓湯主之。 155少陰病，得之二三日，口燥咽乾者，急下之，宜大承氣湯。 156少陰病，自利清水，色純青，心下必痛，口乾燥者，急下之，宜大承氣湯。 157少陰病，脈沉者，急溫之，宜回逆湯。 158少陰病，飲食入口則吐；心中溫溫欲吐，復不能吐。始得之，手足寒、脈",
+          "text_sha256": "a5eb88def81b566c08bcaea1fd6cd4e507f02bf3f985fcbb6992ac1d53cb14de",
+          "score": 18
+        },
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 90,
+          "unit_label": "第 90 节（L5578-L5645）",
+          "section_title": "辨少阴病脉证并治",
+          "quote": "甘草亦取其缓也。 设兼见呕利一二里证。专主救里。在太阳已然。况少阴乎。 少阴病。得之二三日以上。心中烦不得卧。黄连阿胶汤主之。（千金翼。卧下。有者字。外台同。） 〔成〕脉经曰。风伤阳。寒伤阴。少阴受病。则得之于寒。二三日以上。寒极变热之时。热烦于内。心中烦不得卧也。与黄连阿胶汤。扶阴散热。〔知〕二三日。邪在少阴。四五日。",
+          "text_sha256": "5b7a47cfc8869516b3c3182554010999b6f0a8dfd53a4edfba5ef86e26b2aa85",
+          "score": 15
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 88,
+          "unit_label": "PDF 第 88 页",
+          "section_title": "卷六",
+          "quote": "藏神,血虚火妄动,则神不安,烦而不寐,仲景黄连阿胶汤主 之,阴虚痰扰,神不安者,猪苓汤治之,一清火,一利水,盖以心神不安,非痰即火, 余每用朱砂安神丸,加茯苓琥珀,或用天王补心丹。 肝病不寐者,肝脏魂,人寤则魂游于目,寐则魂返于肝,若阳浮于外,魂不入 肝,则不寐,其证并不烦躁,清睡而不得寐,宜敛其阳魂,使入于肝,二加龙骨汤, 加五味子枣仁",
+          "text_sha256": "a42e6f5ba0accb1ae2a2b91e40321ebce55f4e4e787ad725f139c1a07341af8a",
+          "score": 14
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 233,
+          "unit_label": "PDF 第 233 页",
+          "section_title": "汉唐中医 倪海厦敬上 11/13/2007于佛州自家书房",
+          "quote": "黄连各三钱，白芍五钱，阿胶三钱均分三包(烊尽)，(这是治疗心血不足引 起的失眠，黄连阿胶汤症) 石膏三两，知母五钱，生附子三钱(另包)，(这是治其裡寒与阳明经热併结之症) 补骨脂三钱，丹皮三钱，(这是补腰肾，同时活血化瘀，因为久病必有瘀。) 每付药用九碗水煮成三碗，早晚餐前各一碗，服用前趁温加一枚蛋黄冲入汤内再服。因 为其中药物有大寒与大",
+          "text_sha256": "4a2be510d76633308bb9a2c3bb719628964aae4a268d5f1b93f233b2a35ce593",
+          "score": 9
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 220,
+          "unit_label": "PDF 第 220 页",
+          "section_title": "HT-89 健筋骨丸(关节肌肉萎缩)",
+          "quote": "同时可治心肾不交形成的失眠证。在以前的时候讲过栀子豉豆汤， 栀子象心，豉象肾，栀子豉汤它是交通心肾的，还有一个是肉桂黄 莲，安泰丸，黄莲清心火肉桂敛肾气，它是交通心肾的，磁珠丸它 也是交通心肾的，这个方剂它是金石之药，相当于是丹药。 磁珠丸能通关活络 , 顺着肝肾脾的经络直达眼睛使退化的眼 组织回复生机 , 使眼组织得到适量的眼液滋润因",
+          "text_sha256": "f6130bc6be724e3d3ce9d3b8bbdcc6979daf0f9240177d39030aab195ff2fff4",
+          "score": 9
+        }
+      ]
+    },
+    {
+      "id": "syndrome:jueyin-wumei-hanre",
+      "title": "厥阴寒热错杂与上热下寒（乌梅丸/当归四逆群）",
+      "keywords": [
+        "厥阴",
+        "消渴",
+        "气上撞心",
+        "饥而不欲食",
+        "食则吐蛔",
+        "寒热错杂",
+        "乌梅丸",
+        "当归四逆",
+        "血虚寒凝"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:yinyang-shengjiang-jieli",
+        "concept:nj:san-yin-san-yang-kaihe"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:05",
+        "nj:suwen:45"
+      ],
+      "formula_ids": [
+        "shanghan:乌梅丸",
+        "shanghan:当归四逆汤",
+        "shanghan:干姜黄连黄芩人参汤"
+      ],
+      "bencao_ids": [
+        "bencao:梅实",
+        "bencao:细辛",
+        "bencao:黄连",
+        "bencao:蜀椒",
+        "bencao:当归"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s284"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:lv03:太冲",
+        "acupoint:pc06:内关",
+        "acupoint:st36:足三里",
+        "acupoint:ren04:关元"
+      ],
+      "clinical_reasoning": "厥阴居两阴交尽而阳气初萌之位，最易现上热下寒、阴阳胜复、蛔厥或久利；当酸收苦降辛温并用（乌梅丸），若血虚肝寒四肢寒厥脉细则温养血脉（当归四逆）。",
+      "differentials": "上热（烦呕消渴）与下寒（吐蛔久利）同见用乌梅丸；单纯血虚寒凝手足厥寒脉细欲绝用当归四逆汤（重用桂枝细辛通草当归）；寒格食入即吐用干姜黄芩黄连人参汤。",
+      "version_conflicts": "细辛自古“不过钱”之争议与仲景原方大剂（《伤寒》《金匮》细辛入汤药多两计），现代临床需按法定毒理安全剂量严格甄别。",
+      "safety_note": "高危警示：乌梅丸含附子、细辛，严禁自行超量；厥阴阴阳胜复需密切观测热复与厥脱变化。",
+      "library_refs": [
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 97,
+          "unit_label": "第 97 节（L6074-L6133）",
+          "section_title": "辨厥阴病脉证并治",
+          "quote": "则上焦俱扰。是以消渴。而心烦疼。胃虚而不能食也。食则吐蛔。则胃中自冷可知。以此句结前证。见为厥阴自病之寒。非传热也。且以见乌梅丸。为厥阴之主方。不但治蛔宜之。 盖肝脉中行。通心肺。上巅。故无自见之证。见之中上二焦。其厥利发热。则厥阴之本证。胃虚脏寒。下之则上热未除。下寒益甚。故利不止。〔钱〕邪入厥阴。则阴邪自下。迫阳于上。故气上撞心",
+          "text_sha256": "23442cd049530b5a832f543823ef5d5c598a6d4a0d497368873076ec5d155698",
+          "score": 17
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 158,
+          "unit_label": "PDF 第 158 页",
+          "section_title": "卷八",
+          "quote": "象罔乃得元珠哉。 紫参汤 紫参(三钱)、甘草(八钱)先煮紫参,后入甘草,温服。 当归四逆汤 当归(三钱)、白芍(三钱)、桂枝(二钱)、细辛(一钱)、生姜(三钱)、大枣(四 枚)、木通(一钱)治手足痹痛寒冷。",
+          "text_sha256": "03c204ef8bdd7e3ba5865b922aa788382fcfc7d563e1b615930c781a9c063bba",
+          "score": 12
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 181,
+          "unit_label": "PDF 第 181 页",
+          "section_title": "倪海厦医师 11/19/2003 洛杉矶演讲内容",
+          "quote": "胰脏 癌的病人，使用处 方都不尽相同，有用过旋覆花代赭石汤，有用过黄土汤，也用过当归四逆汤加吴茱萸生薑汤， 还有就是现在用的乾薑黄芩黄连人参汤来做加减，也 用过小柴胡汤等，西医是同病同治， 中医是同症同治，就像今天这病人跟我抱怨说有右下腹痛，而且是拒按，也就是实症，但是",
+          "text_sha256": "a33909d7bea482b97569f490ad603e50233826f8668e0debe18fb8eb9005aaae",
+          "score": 9
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 1,
+          "unit_label": "PDF 第 1 页",
+          "section_title": "HT-33 中焦湿热过盛兼便秘(过重兼便秘)阳明胃热",
+          "quote": "............................. 293 HT-40 乌梅丸(各种寄生虫,蛔虫)............................................ 296 HT-41 中安丸(失眠) ......................................................",
+          "text_sha256": "6b31fed2fc68611e01bf2270a44f4f9bc86906f55da00380aa1cd8265c05e53c",
+          "score": 7
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 8,
+          "unit_label": "第 8 节（L172-L192）",
+          "section_title": "辨厥陰病霍亂篇",
+          "quote": "厥陰病篇 159.提綱：厥陰之為病，氣上撞心，心中疼熱，饑而不欲食，食則吐，下之，利不止。 160凡厥者，陰陽氣不相順接，便為厥。（注：厥者，手足逆冷者是也。） 161傷寒，脈微而厥，至七八日膚冷，其人躁，無暫安時者，非為蛔厥也。令病者靜，而復時煩，須臾 復止",
+          "text_sha256": "d44e020cc68efac37e3ff6ef3c941f4f8882ae83cb1d81c90e4438d1d3e47e46",
+          "score": 6
+        }
+      ]
+    },
+    {
+      "id": "syndrome:xiongbi-xintong",
+      "title": "胸痹心痛短气（栝蒌薤白群与膻中巨阙）",
+      "keywords": [
+        "胸痹",
+        "胸痛",
+        "心痛彻背",
+        "背痛彻心",
+        "短气",
+        "喘息",
+        "不得卧",
+        "心脏",
+        "薤白",
+        "栝蒌"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:shier-guan-shenming",
+        "concept:nj:se-mai-he-can-yu-sizhen"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:03",
+        "nj:suwen:22"
+      ],
+      "formula_ids": [
+        "jinkui:栝蒌薤白白酒汤",
+        "jinkui:栝蒌薤白半夏汤",
+        "jinkui:枳实薤白桂枝汤",
+        "jinkui:乌头赤石脂丸"
+      ],
+      "bencao_ids": [
+        "bencao:瓜篓根",
+        "bencao:ch3-薤白",
+        "bencao:半夏",
+        "bencao:牡桂",
+        "bencao:枳实"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s276"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:pc06:内关",
+        "acupoint:ren14:巨阙",
+        "acupoint:ren17:膻中",
+        "acupoint:bl15:心俞"
+      ],
+      "clinical_reasoning": "《金匮》总纲“阳微阴弦”（上焦胸阳不振，下焦阴寒痰饮上逆），先以栝蒌涤痰开胸、薤白滑利通阳，佐酒气走窜（白酒/醪糟酒）；针刺内关、巨阙、膻中以宽胸行气。",
+      "differentials": "喘息咳唾胸背痛短气用栝蒌薤白白酒汤；痰饮甚不得卧心痛彻背加半夏；气结胸胁逆抢心偏实者用枳实薤白桂枝汤、偏虚寒者用人参汤（理中）；背痛彻心手足冷甚者用乌头赤石脂丸。",
+      "version_conflicts": "汉代“白酒”多指米酒/浊醪糟酿，非现代高浓度蒸馏烈酒（现代煎方或用黄酒、甜酒酿），且赤石脂乌头丸极寒阴证方可微丸试探。",
+      "safety_note": "高危紧急警示：急性心痛彻背、压榨痛伴大汗手足厥冷属急性冠脉综合征/心梗极高危急症，必须立即拨打急救，不可延误！",
+      "library_refs": [
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 125,
+          "unit_label": "PDF 第 125 页",
+          "section_title": "HT-32 乌金丸",
+          "quote": "生姜三两 枳实五枚 右三味，以水六升，煮取三升，分温三服。 心痛彻背，背痛彻心，乌头赤石脂丸主之。 *生姜：原缺，据上文补。 250",
+          "text_sha256": "7db88114aad594e7cfa2d46ca631e1b6887b417fbb009a06995cacc6de5024f4",
+          "score": 36
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 116,
+          "unit_label": "PDF 第 116 页",
+          "section_title": "倪海厦医师 11/19/2003 洛杉矶演讲内容",
+          "quote": "后当然是当场就好了,于是我开汉唐 32 号给 她吃,而这 32 号就 是经方中的乌头赤石脂丸,专治此症,是心脏病的一种,可是现存医书中的处方是不正确的,张 仲景医圣是不会用乌头来治疗这种心脏病的,因 为年代过久,汉朝又是用竹简写书,难免脱落",
+          "text_sha256": "e114211d15ce1ffff0ce6ffda85b1e6cdbc9052fccac584aaa72f239153be2eb",
+          "score": 7
+        },
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 38,
+          "unit_label": "第 38 节（L2346-L2403）",
+          "section_title": "辨太阳病脉证并治中",
+          "quote": "。宜下。后服木香黄连苦坚之。 又大柴胡汤。治疟热多寒少。目痛多汗。脉大。以此汤微利为度。 医经会解曰。本大柴胡证当下。医以丸药下之。病不解。胸胁满而呕。日晡潮热微利。仍宜再下。加芒硝。 ○连日不大便。热盛烦躁。舌焦口渴。饮水短气。面赤脉洪实。加芒硝。○心下实满。连于左胁。难以侧卧。 大便闭而痛。加栝蒌青皮。○昏乱谵",
+          "text_sha256": "02c99443eb569d248538d532df3753f9d3e63057c817007d5a8aa65ad3d3c358",
+          "score": 6
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 33,
+          "unit_label": "PDF 第 33 页",
+          "section_title": "本书救论",
+          "quote": "失血之家,所以有痰,皆血分之火,所结而成,然使无 瘀血,则痰气有消容之地,尚不致喘息欬逆,而不得卧也,血家病此,如徒以肺胀 法治之,岂不南辕北辙,丹溪此论,可谓发蒙振聩,第其用四物汤加减,于痰瘀两 字,未尽合宜,予谓可用通窍活血汤,加云苓桔梗杏仁桑皮丹皮尖贝,小柴胡,加 当芍桃仁丹皮云苓,尤妥,此皆血家欬嗽属实证者,再参兼欬嗽条更详。 一",
+          "text_sha256": "d7bfde746cf32fd706b1907cf8ee3e59ff17aad329e65581a8014182f57257ec",
+          "score": 4
+        }
+      ]
+    },
+    {
+      "id": "syndrome:feike-tanyin-chuan",
+      "title": "肺咳喘哮与寒饮射肺（小青龙/麻杏石甘/射干麻黄群）",
+      "keywords": [
+        "咳嗽",
+        "喘",
+        "哮喘",
+        "痰多",
+        "白痰",
+        "黄痰",
+        "喉中水鸡声",
+        "不得卧",
+        "小青龙",
+        "肺胀"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:ke-tong-bi-wei-bingji",
+        "concept:nj:fengshui-shuinie-ni"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:38",
+        "nj:suwen:43"
+      ],
+      "formula_ids": [
+        "shanghan:小青龙汤",
+        "shanghan:麻黄杏仁甘草石膏汤",
+        "jinkui:射干麻黄汤",
+        "jinkui:葶苈大枣泻肺汤"
+      ],
+      "bencao_ids": [
+        "bencao:麻黄",
+        "bencao:半夏",
+        "bencao:干姜",
+        "bencao:细辛",
+        "bencao:石膏"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s272",
+        "cond:ch6:s275",
+        "cond:ch6:s293"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:lu05:尺泽",
+        "acupoint:lu07:列缺",
+        "acupoint:bl13:肺俞",
+        "acupoint:ren17:膻中"
+      ],
+      "clinical_reasoning": "依《内经》“五脏六腑皆令人咳”与《金匮》痰饮咳嗽分寒饮、热郁、肺实壅塞三层：外寒内饮用小青龙（辛散温化加五味酸收防散）；肺热壅喘用麻杏石甘；肺水实喘不得卧用葶苈泻肺。",
+      "differentials": "清稀白沫痰、不渴、脉弦或紧用小青龙汤；无恶寒、汗出、痰粘黄、口渴喘急用麻杏石甘汤；咳而上气喉中水鸡声用射干麻黄汤；胸胁支饮面肿不得平卧用葶苈大枣泻肺汤。",
+      "version_conflicts": "《金匮》麻黄与石膏配比在麻杏石甘汤（1:2）、越婢汤（约1:1.3）、大青龙汤（1:鸡子大）各有微调，不可混为一谈。",
+      "safety_note": "细辛、麻黄对高血压及心动过速患者高风险；急性呼吸困难发绀须立刻送医。",
+      "library_refs": [
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 29,
+          "unit_label": "第 29 节（L1736-L1803）",
+          "section_title": "辨太阳病脉证并治中",
+          "quote": "脉经。有可水篇。其中一条云。寸口脉洪而大。数而滑。云云。针药所不能制。与水灌枯槁。阳气微散。身寒温衣覆汗出。表里通利。其病即除。正其义也。（文蛤散条。反以冷水之。若灌之。） 案此条。喻氏张氏魏氏。并以麻黄杏仁甘草石膏汤为主。盖本于郭雍补亡论。水寒伤肺。恐非所宜也。柯氏主以五苓散。汪氏则用茯苓桂枝生姜甘草汤。加浓朴杏仁。钱氏云。去麻黄",
+          "text_sha256": "77bdc78cac8af86b9a021421289b838ad9dc8c66e76689e12c5edeec8a9d8e35",
+          "score": 14
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 220,
+          "unit_label": "PDF 第 220 页",
+          "section_title": "汉唐中医 倪海厦敬上 11/13/2007于佛州自家书房",
+          "quote": "冷水,没 有胃口时,就吃大青龙汤,这就是 SARS与禽流感的主要症状. 第六: 小青龙汤症---病人有怕冷,无汗,发烧,咳嗽重,出白痰,无渴,身体痛,没有胃口时,就可以 用它了. 第七: 小柴胡汤症---病人忽冷忽热,加上呕心,胸胁苦满时,请服用此方,还有女子月经期来时 正好得到感冒,就喝此药,如有咳嗽气喘时加些厚朴杏仁就可以了. 第八:",
+          "text_sha256": "52d3a19a8b67ae68ad3c1c44722bb8a240e26c6fe175c5e37fc0dd5e11e520fa",
+          "score": 13
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 3,
+          "unit_label": "第 3 节（L24-L52）",
+          "section_title": "太陽病中篇",
+          "quote": "兩人參三兩新加湯主之。 34發汗後，喘家，不可更行桂枝湯。汗出喘，無大熱者，可與麻黃杏仁甘草石膏湯。 35發汗過多，其人叉手自冒心，心下悸，欲得按者，桂枝甘草湯主之。 36發汗後，其人臍下悸者，欲作奔豚，茯苓桂枝甘草大棗湯主之。 37發汗後，腹脹滿者，厚朴生薑半夏甘草人參湯主之。 38傷寒，若吐、若下後，心下逆滿、氣上沖胸、起則頭眩、脈沉",
+          "text_sha256": "1b4307978842ad214208b21bbf3db64d1caa4c51e6c8a086ea4d0a536e89ba47",
+          "score": 12
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 29,
+          "unit_label": "PDF 第 29 页",
+          "section_title": "HT-6 手抖兼心颤憟",
+          "quote": "经走偏了。 曾经看过一个小朋友，十来岁，由西医认为的扁桃体炎等咳嗽 症，大量使用小青龙汤，一看到咳就小青龙汤，麻黄汤，配什幺二 陈汤等等这一些，再加附子干姜，碰到咳就这样用，结果这小孩子 长胖了，特别能吃，胃中客火比较盛，胖是怎幺回事？灼炼成痰了， 年轻小孩子的精液都被烧成痰了。后来没办法了，我接手去看，经 过一次次排痰，很厉害的，前一段",
+          "text_sha256": "37597760779d92ba3fe1ca8b775436c0e38b6417685554fe7043866b761f2ac2",
+          "score": 11
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 80,
+          "unit_label": "PDF 第 80 页",
+          "section_title": "卷六",
+          "quote": "失血之人,肝经风火太盛,激动其水, 上冲肺,卧则肺叶张,水饮愈冲,是以不得卧息,葶苈大枣泻肺汤治之,吾每用二 陈汤治饮,加苏子柴胡白芥子黄芩石膏杏仁荆芥薄荷枇杷叶,风火兼治,尤效,此 与杂病欬嗽,因寒动水者有异,因寒动水,以致水饮冲肺者,宜小青龙,及真武汤, 血证欬嗽,多是内动风火,激水而上,青龙真武等,又其所忌,医者辨之。 夫虚痨欬嗽,",
+          "text_sha256": "cde0a2c9ddfdbceb0aa57bd4bfcece3eaac93c1381caa8f888ec059f3143aca3",
+          "score": 9
+        }
+      ]
+    },
+    {
+      "id": "syndrome:shuizhong-shuiqi",
+      "title": "水肿、水饮与十枣蓄饮（风水/石水/十枣/防己黄耆群）",
+      "keywords": [
+        "水肿",
+        "浮肿",
+        "脚肿",
+        "积水",
+        "悬饮",
+        "支饮",
+        "肺积水",
+        "十枣汤",
+        "风水",
+        "黄耆"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:fengshui-shuinie-ni",
+        "concept:nj:kaiguimen-shuiyurexue-cire"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:61",
+        "nj:suwen:14"
+      ],
+      "formula_ids": [
+        "jinkui:防己黄耆汤",
+        "jinkui:越婢汤",
+        "shanghan:十枣汤",
+        "jinkui:木防己汤"
+      ],
+      "bencao_ids": [
+        "bencao:黄耆",
+        "bencao:防己",
+        "bencao:大戟",
+        "bencao:甘遂",
+        "bencao:芫花"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s275",
+        "cond:ch6:s278"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:sp09:阴陵泉",
+        "acupoint:ren09:水分",
+        "acupoint:st36:足三里",
+        "acupoint:bl23:肾俞"
+      ],
+      "clinical_reasoning": "遵循《内经》“开鬼门、洁净府、去宛陈莝”及《金匮》“腰以上肿当发汗、腰以下肿当利小便”；分别风水表实、表虚、阳虚及胸胁实质悬饮。",
+      "differentials": "脉浮汗出恶风身重（气虚表虚水肿）用防己黄耆汤；恶风一身悉肿脉浮不渴（风水挟热）用越婢加术汤；咳唾引痛心下痞硬脉沉弦（胸肋悬饮实邪）用十枣汤；心下痞坚喘满面黧黑用木防己汤。",
+      "version_conflicts": "十枣汤药材（甘遂、大戟、芫花）为剧毒峻下逐水药，古代且用“十枚肥大枣”护胃调和、平旦一服，现代切忌随意自煎加量；防己需严辨汉防己（粉防己）与木防己/广防己（马兜铃酸肾毒！）。",
+      "safety_note": "极高危警示：广防己含马兜铃酸可致不可逆肾衰！甘遂大戟芫花为烈性毒药且反甘草（十枣无甘草），绝对禁止无监护个人试服！",
+      "library_refs": [
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 55,
+          "unit_label": "第 55 节（L3396-L3457）",
+          "section_title": "辨太阳病脉证并治下",
+          "quote": "可攻之。其人 汗出。发作有时。头痛。心下痞硬满。引胁下痛。干呕短气。汗出不恶寒者。此表解里未和也。十枣汤主之。 （干呕短气。玉函。作呕即短气。玉函。无汗出不恶寒者六字。玉函。脉经。千金翼。此下。有为字。） 〔柯〕中风下利呕逆。本葛根加半夏症。若表既解。而水气淫溢。不用十枣攻之。胃气大虚。后难为力矣。然下利呕逆。固为里症。而本于",
+          "text_sha256": "dc50623e7f91eee60fa10d9c7a000d33948ea3c0136ea13dc74b473e0abdbd9a",
+          "score": 15
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 114,
+          "unit_label": "PDF 第 114 页",
+          "section_title": "倪海厦医师 11/19/2003 洛杉矶演讲内容",
+          "quote": ".] 此人因为肺中积水不去,所以肺就成为病毒的温床, 随时就会被感染成肺炎,我开十枣汤给她, 读者一定会想这是什麽东西? 我告诉读者这就是经方中有名的排除肺积水的唯一的处方,但 是现在大陆上的中医几乎没人在使用,因为担心太强太毒,而且也没有人会教,所以就失传了, 十枣汤 是由甘遂,芫花,大戟三味药所组成,须要配合十枚大枣煮汤来吞服,因为不",
+          "text_sha256": "0dc1861bd44af0be298c2d4d88af1844ab891be3cf7ce306a6319b6133eb4a82",
+          "score": 11
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 49,
+          "unit_label": "PDF 第 49 页",
+          "section_title": "HT-10 大禹丸（腹腔积水专用）",
+          "quote": "这阶段了 , 不如放手一搏 , 此方主之。 这一个方是什幺？比较骏利的药，就是十枣汤，给你们方剂也 无妨，因为毕竟这方不是每个人都敢用的，就是用十枣汤开闸放水。 吾辈之人必须在病人尚 存一丝原气时就立刻下手 , 不可犹 豫 , 徘徊街头 , 如果迟迟不敢下手 , 等到病人已经无体力了 , 原气尽失时 , 就回天无力了 , 良机一失 ,",
+          "text_sha256": "ed9ab9b5813445e3e8066a619960cf322e2db2ab99288c57cb484261a414269a",
+          "score": 7
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 71,
+          "unit_label": "PDF 第 71 页",
+          "section_title": "卷五",
+          "quote": "下瘀血汤,代抵当丸,攻痰水宜十枣汤,若水血兼攻,则宜大黄甘遂汤,或秘方化 气丸,外治法,贴观音救苦膏。 瘀血在经络脏腑之间,与气相战,则郁蒸腐化,而变为脓,另详吐脓便脓疮脓 门,兹不再赘。 瘀血在经络脏腑之间被气火煎熬,则为干血,气者,肾中之阳,阴虚阳亢,则 其气上合心火,是以气盛即是火",
+          "text_sha256": "8f230fece5c60ff957410a2d87ccb20de4bc8e206a45bbe0ce84426b0d60e699",
+          "score": 5
+        },
+        {
+          "book_id": "chen-shiduo-shishimilu-txt",
+          "book_title": "陈士铎·石室秘录",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 99,
+          "unit_label": "第 99 节（L2341-L2368）",
+          "section_title": "伤寒相舌秘法",
+          "quote": "，亦胃热而带湿也，亦须用石膏为君，而少加去水之品，如猪苓、泽泻之味也。见舌黄而隔一瓣一瓣者，乃邪湿已入大肠，急用大黄、茵陈下之，不必用抵当、十枣汤也，若下之迟，则不得不用之。然须辨水与血之分，下水用十枣，下血用抵当也。见舌有红中如虫蚀者，乃水未升而火来乘也，亦须用黄连、柴胡以和解之。见舌红而开裂如人字者，乃邪初入心，宜用石膏、黄连以解之。",
+          "text_sha256": "40112bd2b1f26321263ec74ad355128ab9810ed9f97b56acf5c68906f18574d5",
+          "score": 5
+        }
+      ]
+    },
+    {
+      "id": "syndrome:shixue-xuezheng",
+      "title": "吐血衄血便血（泻心/柏叶/黄土汤 + 《血证论》互参）",
+      "keywords": [
+        "吐血",
+        "鼻衄",
+        "便血",
+        "下血",
+        "远血",
+        "近血",
+        "先便后血",
+        "先血后便",
+        "血证",
+        "泻心汤"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:jing-qi-shen-xue",
+        "concept:nj:pibu-luose-wuzangfengzhen"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:37",
+        "nj:suwen:10"
+      ],
+      "formula_ids": [
+        "jinkui:泻心汤",
+        "jinkui:黄土汤",
+        "jinkui:柏叶汤",
+        "jinkui:赤豆当归散"
+      ],
+      "bencao_ids": [
+        "bencao:大黄",
+        "bencao:黄连",
+        "bencao:干姜",
+        "bencao:ch3-艾叶",
+        "bencao:阿胶"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s282",
+        "cond:ch6:s287"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:sp10:血海",
+        "acupoint:bl17:膈俞",
+        "acupoint:lu06:孔最",
+        "acupoint:du20:百会"
+      ],
+      "clinical_reasoning": "以《金匮·惊悸吐衄下血胸满瘀血病脉证治》辨阳亢迫血与阳虚不摄两途，深合唐容川《血证论》“止血、消瘀、宁血、补虚”四纲与“水火气血升降”。",
+      "differentials": "心气不足吐血衄血（实属心胃伏火迫血妄行）用泻心汤（三黄汤）；吐血不止中寒不能摄血用柏叶汤；下血先便后血（远血、脾阳不统）用黄土汤（灶心黄土+附子白术阿胶黄芩）；先血后便（近血、湿热瘀肛）用赤小豆当归散。",
+      "version_conflicts": "《金匮》“心气不足”各家历来多解为心胃阳热有余而真阴不足或热邪乘心，唐容川《血证论》对此有专篇折衷申明。",
+      "safety_note": "高危警示：大口呕血、黑柏油便大量失血伴头晕休克为致命急症，立即就医止血输血！",
+      "library_refs": [
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 43,
+          "unit_label": "PDF 第 43 页",
+          "section_title": "HT-9 血箭痔丸",
+          "quote": "有“下血，先便而后血者，此远血也， 黄土汤主之。”“下血，先血而便者，此近血也，赤豆当归散主之。” 这是属于两种痔疮，并且在桂本伤寒里面已经给出了方剂：一个是 黄土汤，一个是赤豆当归散。 在黄元御的《四圣心源》里面也有一 个痔疮的根原。我们已经讲过。接着再看： 你可知道，凡有脱肛之人，必有痔疮，而有痔疮之人，却不一 定都脱肛，为什么呢？如",
+          "text_sha256": "0738a93a54b32f5051df5962445b30b4b14777ac232e1ca7f2d11490d85f2361",
+          "score": 16
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 54,
+          "unit_label": "PDF 第 54 页",
+          "section_title": "卷四",
+          "quote": "后血为远血,谓其血在胃中, 去肛门远,故便后始下,因名远血,即古所谓阴结下血也,黄土汤主之,黄土名汤, 明示此症,系中宫不守,血无所摄而下也,佐以附子者,以阳气下陷,非此不能举",
+          "text_sha256": "0ece051e395a7c0787433bdade17e348a722e472466bec44f78fec911c119ed4",
+          "score": 13
+        },
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 107,
+          "unit_label": "第 107 节（L6712-L6815）",
+          "section_title": "辨霍乱病脉证并治",
+          "quote": "厥冷。心烦气闷流汗。 于本方。加麦门冬附子茯苓。 活人书。或四肢拘急。腹满下利。或转筋者。去白术。加附子一枚生用。 三因方。病者因饮食过度伤胃。或胃虚不能消化。致翻呕吐逆。物与气上冲蹙胃口。决裂所伤吐出。其色鲜红。心腹绞痛。白汗自流。名曰伤胃吐血。理中汤。能止伤胃吐血者。以其功最理中脘。分利阴阳。安定血脉。方证广如局方。",
+          "text_sha256": "6cf932efe7a02ffd7da20b9c9ceeee6fef1fb96c22e34e9072110a40b14f8953",
+          "score": 10
+        },
+        {
+          "book_id": "chen-shiduo-shishimilu-txt",
+          "book_title": "陈士铎·石室秘录",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 61,
+          "unit_label": "第 61 节（L1407-L1436）",
+          "section_title": "论中湿 论中暑 论中寒",
+          "quote": "柴胡、参苏。 补中益气、四君子诸汤加减法。 天师曰：同治者，同是一方而同治数病也。如四物可治吐血，又可治下血；逍遥散可治木郁，又可治数郁；六君子汤可治饮食之伤，又可治痰气之积。然而方虽同，而用之轻重有别，加减有殊，未可执之以治一病，又即以治彼病耳。如吐血宜加麦冬、甘草，便血宜加地榆、黄芩之类于四物汤中也。 如丹皮、栀子，",
+          "text_sha256": "a5305ec3d11c4b3bfce9dbbead0205d6dcb60f1b1c624e900e876e626ac4a2da",
+          "score": 6
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 152,
+          "unit_label": "PDF 第 152 页",
+          "section_title": "倪海厦医师 11/19/2003 洛杉矶演讲内容",
+          "quote": "下痞,我一查看,就是四十年前 的开刀切除胆结石的疤痕位置痛,因为所症状都指向半夏泻心汤症,于是我就开此方给他做为 最后收尾的方剂,从开始治疗他到今日,我一共耗费约四十九天,现在他办公室的同仁们无不 惊讶于中药之疗效,自叹不如也,相信以后他们得到同样的病,必将找中医来治疗,不会再去看 西医了. 上週的 26 岁得到红斑性狼疮的女学生今天来覆",
+          "text_sha256": "1b2a0590a76b018d76e5c72a2d12efd2d938cc49e65f651ce71f595a5ef54015",
+          "score": 5
+        }
+      ]
+    },
+    {
+      "id": "syndrome:huangdan-shidu",
+      "title": "黄疸湿热瘀热与谷酒女劳（茵陈蒿/栀子柏皮/硝石矾石群）",
+      "keywords": [
+        "黄疸",
+        "发黄",
+        "谷疸",
+        "酒疸",
+        "女劳疸",
+        "身目黄",
+        "茵陈",
+        "肝胆",
+        "胆结石"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:taiyin-yangming-biaoli",
+        "concept:nj:wu-xing-sheng-ke"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:09",
+        "nj:suwen:19"
+      ],
+      "formula_ids": [
+        "shanghan:茵陈蒿汤",
+        "shanghan:栀子蘗皮汤",
+        "jinkui:茵陈五苓散",
+        "jinkui:硝石矾石散"
+      ],
+      "bencao_ids": [
+        "bencao:茵陈",
+        "bencao:栀子",
+        "bencao:大黄",
+        "bencao:檗木"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s279"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:gb34:阳陵泉",
+        "acupoint:bl18:肝俞",
+        "acupoint:bl19:胆俞",
+        "acupoint:lv03:太冲"
+      ],
+      "clinical_reasoning": "《金匮》明“黄家所得，从湿得之”，兼看小便色白（虚）还是不利赤浊（湿热瘀），外散与清利小便并举，忌见黄即只用苦寒清肝。",
+      "differentials": "但头汗出身无汗、小便不利、腹微满、阳明湿热瘀黄用茵陈蒿汤；湿热俱重无里实大便硬用栀子柏皮汤；湿重于热用茵陈五苓散；额上黑微汗出手足心热薄暮发（女劳疸挟瘀热）用硝石矾石散。",
+      "version_conflicts": "硝石矾石散中芒硝/火硝（硝酸钾/硫酸钠）历代本草辨析极多，单用或配大麦粥汁有严格分量边界。",
+      "safety_note": "剧烈黄疸伴高热寒战腹痛或意识障碍（重症胆管炎/肝衰征兆）须立即急诊医院排查胆道梗阻。",
+      "library_refs": [
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 46,
+          "unit_label": "第 46 节（L2850-L2884）",
+          "section_title": "辨太阳病脉证并治中",
+          "quote": "无复可疑也。 案小便不利者。成氏云。可与茵陈蒿汤。补亡论云。与五苓散。程氏云。属茵陈五苓散。柯氏云。麻黄连轺赤小豆汤症也。以上宜选而用之。 伤寒有热。少腹满。应小便不利。今反利者。为有血也。当下之。不可余药。宜抵当丸。（有热下。玉函。 脉经。外台。有而字。） 〔成〕伤寒有热。少腹满。是蓄血于下焦。若热蓄津液不通。则",
+          "text_sha256": "96b0b6a063540ff4aa0ca14092110d08e82a86ac44ce9f3d9a09674504414015",
+          "score": 14
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 6,
+          "unit_label": "第 6 节（L109-L136）",
+          "section_title": "99.提綱｝陽明之為病，胃家實是也。",
+          "quote": "可攻之；當須自欲大便，宜蜜煎導而通之。若土瓜 根及大豬膽汁，皆可為導。 116.茵陳蒿湯證 陽明病，發熱、汗出者，不能發黃也。但頭汗出，身無汗，劑頸而還，小便不利， 渴引水漿者，身必發黃，茵陳蒿湯主之。 117陽明證，其人喜忘者，必有蓄血。屎雖硬，大便反易，其色必黑，宜抵當湯下之。 118陽明病，下之，心中懊憹而煩，胃中有燥屎者，宜大承氣",
+          "text_sha256": "579c5d7f85f235cb7da3dd108637ac358e7024d1e49b811f074b2a6a8a245780",
+          "score": 9
+        },
+        {
+          "book_id": "chen-shiduo-shishimilu-txt",
+          "book_title": "陈士铎·石室秘录",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 99,
+          "unit_label": "第 99 节（L2341-L2368）",
+          "section_title": "伤寒相舌秘法",
+          "quote": "、干葛亦可，终不若石膏之妙。见舌红而有白点者，乃心中有邪也，宜用柴胡、黄连以解之，心肝同治也。见舌红。而有大红点者，乃胃热而带湿也，须茵陈五苓散以利之。盖水湿必归膀胱以散邪，非肉桂不能引入膀胱，但止可用一二分，不可多入。见舌白苔而带黑点，亦胃热也，宜用石膏以凉之。见舌黄而有黑者，乃肝经实热也，用柴胡、栀子以解之。 见舌白而黄者，邪将",
+          "text_sha256": "40112bd2b1f26321263ec74ad355128ab9810ed9f97b56acf5c68906f18574d5",
+          "score": 7
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 63,
+          "unit_label": "PDF 第 63 页",
+          "section_title": "倪海厦医师 11/19/2003 洛杉矶演讲内容",
+          "quote": "间 , 约至少二个月 , 愈后效果良佳 . 2. 湿热型肝炎 : 此症可见病人发黄疸 , 呕吐 , 无胃口 , 便秘 , 口苦咽乾 , 小便深如 茶 , 失眠 , 胸胁苦满 ,等症状 , 也类似于西医的肝炎 , 此种肝病一般来说 , 大约四星期 左右 , 就好了 , 举凡肝病皆宜静养一些时日, 劳累酗酒是大忌 . 3. 寒湿性肝病: 此类",
+          "text_sha256": "aaba0baca62c0ed7cac3cd4dcf5df702c9bb31aee810691dab9b93f568abb2e9",
+          "score": 4
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 56,
+          "unit_label": "PDF 第 56 页",
+          "section_title": "HT-14 胆石症",
+          "quote": "是治阴虚的淋证，小便不通 利。五苓散治疗气水证，这是经方里面的，都可治疗。 小便发黄尿中有痛尿后仍有尿意，直接用八正散可治。 有石淋的要注意化石，把石头化开。治疗淋症，有个简单的办 法判断人是不是淋症，就是看人的鼻子，鼻头这个部位，是不是色 黄，如果鼻头发黄那是小便难。这是给大家介绍的这个淋证。 HT-14 胆石症 （2006.11.16",
+          "text_sha256": "349bd503a62420230b26d29c699851444d33ffb76cfbc98e33cc76e269a353aa",
+          "score": 4
+        }
+      ]
+    },
+    {
+      "id": "syndrome:xufan-shimian",
+      "title": "虚烦失眠懊憹与脏躁百合（酸枣仁/甘麦大枣/百合地黄）",
+      "keywords": [
+        "失眠",
+        "虚烦",
+        "睡不着",
+        "不得眠",
+        "心悸",
+        "百合",
+        "脏躁",
+        "酸枣仁",
+        "多梦"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:shier-guan-shenming",
+        "concept:nj:zhi-shen-daoyin-yanzhou"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:46",
+        "nj:suwen:08"
+      ],
+      "formula_ids": [
+        "jinkui:酸枣仁汤",
+        "jinkui:甘麦大枣汤",
+        "jinkui:百合地黄汤"
+      ],
+      "bencao_ids": [
+        "bencao:酸枣",
+        "bencao:知母",
+        "bencao:茯苓",
+        "bencao:芎穷",
+        "bencao:百合"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s273",
+        "cond:ch6:s296"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:ht07:神门",
+        "acupoint:pc06:内关",
+        "acupoint:sp06:三阴交",
+        "acupoint:du20:百会"
+      ],
+      "clinical_reasoning": "合《内经》“胃不和则卧不安”“得神者昌”与《金匮》血虚肝郁不眠、胸膈余热懊憹、肺心阴虚百合百脉一宗，分脏腑虚实温凉治神。",
+      "differentials": "虚劳虚烦不得眠（肝血虚热不藏魂）用酸枣仁汤；欲眠不得眠、默默欲饮食复不能食、小便赤（阴虚内热）用百合地黄汤；妇人悲伤欲哭象如神灵所作数欠伸用甘麦大枣汤；胃中热郁心中懊憹用栀子豉汤。",
+      "version_conflicts": "酸枣仁煎法《金匮》注明“先煮酸枣仁”以取其脂液有效成分，后世多误诸药同煎短煮。",
+      "safety_note": "若伴胸痛气短夜间阵发性端坐呼吸，须先鉴别心衰夜喘而非普通失眠。",
+      "library_refs": [
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 345,
+          "unit_label": "PDF 第 345 页",
+          "section_title": "汉唐中医 倪海厦 敬上08/30/2007于佛州",
+          "quote": "同时月经会出现不规则情形 经方家遇到失眠时 , 我们时常使用如黄连阿胶汤 , 或酸枣仁汤 , 或是栀子豆鼓汤等做 加减 , 来把失眠治好 , 同时劝妇女们要保持每天都很开心的心情 , 如果晚上不想睡就不 要睡 , 除非有睡意再去睡 , 如此一来失眠就慢慢的会恢复了 . 经方中有许多处方如大黄甘草汤 , 调胃承气汤 , 小承气汤 , 大承气",
+          "text_sha256": "355c78d96f87aa697d6b7248d5521c6dbfe5ecd9d747eb43c7e2632ba47855fe",
+          "score": 11
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 88,
+          "unit_label": "PDF 第 88 页",
+          "section_title": "卷六",
+          "quote": "之,又或肝经有痰,扰其魂而不得寐者,温胆汤,加枣仁治之, 肝经有火,多梦难寐者,酸枣仁汤治之,或滑氏补肝散,去独活,加巴戟,四物汤, 加法夏枣仁冬草龙骨夜合皮,亦佳。 又按魂虽藏于肝,于昼游于目,目在面部,乃肺胃之所司,肺胃之气,扰而不 静,亦能格魂于外,使不得返也,宜生地黄百合麦冬知母枳壳五味子白芍甘草枣 仁天花粉茯苓治之,人参清肺汤,",
+          "text_sha256": "a42e6f5ba0accb1ae2a2b91e40321ebce55f4e4e787ad725f139c1a07341af8a",
+          "score": 11
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 37,
+          "unit_label": "PDF 第 37 页",
+          "section_title": "HT-7 胃痈及胃出血",
+          "quote": "晚上卫气入于阴，人就会休 息好。你在以前时，夜里面还能睡着觉，现在吃药之后整夜的失眠， 卫气都跑外面去了，卫气逆乱了，这还叫正治吗？从这情况看，在 以前包括我说的判断医生能不能治外感症，这是属于一条，这一条 73 就从五项标准上看，在治疗的过程当中是不是正确了，你就能分辨 什幺是叫中医什幺不叫中医，你就能分辨出来。在以前的情况失眠 睡不着",
+          "text_sha256": "8661ad239eeef9c8a11e0b63ef44c5bbadedb0d48d4d267ea16aff23dc8f2610",
+          "score": 4
+        },
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 27,
+          "unit_label": "第 27 节（L1606-L1665）",
+          "section_title": "辨太阳病脉证并治中",
+          "quote": "误者。几何。不知得之汗下后。则阳虚为阴所凌。故外亡而作烦躁。 必须温补兼施。〔徐〕此证惑人。在病仍不解四字。〔汪〕此虚烦虚躁。乃假热之象也。〔鉴〕大青龙证。不汗出之烦躁。乃未经汗下之须躁属实。 此条病不解之烦躁。乃汗下后之烦躁属虚。然脉之浮紧沉微。自当别之。恐其误也。故谆谆言之也。 案此汤症。阳症俱备。而不然者。身虽烦热",
+          "text_sha256": "63b3be7a2eafdd46cbee725692529e274287119693461d37bddc1288eaa45961",
+          "score": 4
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 4,
+          "unit_label": "第 4 节（L53-L77）",
+          "section_title": "45.中風，發熱六七日，不解而煩，渴欲飲水，水入口吐者，五苓散主之。",
+          "quote": "風，發熱六七日，不解而煩，渴欲飲水，水入口吐者，五苓散主之。 46發汗、吐下後，虛煩不得眠；若劇者，必反復顛倒，心中懊憹，梔子豉湯主之；若少氣者，梔子甘 草豉湯主之；若嘔者，梔子生薑豉湯主之。 47發汗，若下之，而煩熱胸中窒者，梔子豉湯主之。 48傷寒五六日，大下之後，身熱不去，心中結痛者，未欲解也，梔子豉湯主之。 49傷寒下後，心煩、腹",
+          "text_sha256": "2b0b4d184a4a30364dc931073cc028a58347dfbfa5ccb6604af34c11f16180a9",
+          "score": 4
+        }
+      ]
+    },
+    {
+      "id": "syndrome:xiaoke-pidan",
+      "title": "消渴饮水与下消（白虎加人参/肾气丸 + 《石室秘录》）",
+      "keywords": [
+        "消渴",
+        "糖尿病",
+        "口渴",
+        "饮一斗",
+        "小便一斗",
+        "上消",
+        "中消",
+        "下消",
+        "肾气丸"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:qibing-xueku-xiaoke",
+        "concept:nj:wugu-weiyang-yinshi-jiankang"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:47",
+        "nj:suwen:03"
+      ],
+      "formula_ids": [
+        "shanghan:白虎加人参汤",
+        "jinkui:肾气丸",
+        "jinkui:栝蒌瞿麦丸"
+      ],
+      "bencao_ids": [
+        "bencao:干地黄",
+        "bencao:署豫",
+        "bencao:山茱萸",
+        "bencao:石膏",
+        "bencao:瓜篓根"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s284"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:bl23:肾俞",
+        "acupoint:sp06:三阴交",
+        "acupoint:ki03:太溪",
+        "acupoint:st36:足三里"
+      ],
+      "clinical_reasoning": "源自《素问》“脾瘅、消瘅”高粱厚味内热伤阴，接续《金匮·消渴篇》男子消渴小便反多、饮一斗小便一斗之肾阳蒸腾失约，并以《石室秘录》大补真阴壮水制火参究。",
+      "differentials": "上中消肺胃燥热大渴欲饮冷水用白虎加人参汤；下消小便反多饮一斗小便一斗（阳气不能化水蒸津上承）用八味肾气丸；上燥下寒小便不利有水气用栝蒌瞿麦丸。",
+      "version_conflicts": "《金匮》肾气丸原作“干地黄、桂枝、附子”，宋代改用肉桂熟地为后世八味地黄丸，人纪特别标出桂枝与肉桂入阴出阳之差异。",
+      "safety_note": "现代临床糖尿病酮症酸中毒（深大呼吸、烂苹果味、意识模糊）属危重急症，应立即西医抢救不可延误。",
+      "library_refs": [
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 99,
+          "unit_label": "PDF 第 99 页",
+          "section_title": "HT-24 降血糖中医之上中下三消渴症",
+          "quote": "正原因并非西药造成的，而是有糖尿病的人，其结果必 然如此， 我们看仲景有名的方剂肾气丸，可治消渴，饮水一斗小便一斗 饮多少水尿多少水，这是治消渴的.而现在用的都是六味地黄丸，而 198",
+          "text_sha256": "c3ce305f9485c80aa733aa18941a30003667f1e3e795ba62f9e3786bee18be3d",
+          "score": 11
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 105,
+          "unit_label": "PDF 第 105 页",
+          "section_title": "卷六",
+          "quote": "消谷者胃火也,白虎汤,加黄连人参枳壳厚朴生地黄治 之,饮一溲二,为下消,肾虚也,肾气丸主之,食入即吐,为火逆,泻心汤加生姜竹 沥治之,但用水嗽口,而不欲饮者,多是经脉中有瘀血,宜四物汤,加红花血通干 漆冰片葱白桃仁治之,食入良久,翻胃吐出,或不化而?泄者,为脾不磨食,六君子 汤,加肉豆蔻破故纸吴茱萸五味子治之。 夫人之所以能化食思食者,全",
+          "text_sha256": "7532a39bfcfe415218ba75095ac8d7f5a3ace4c94aef6bd6f4568a99cc6cc45e",
+          "score": 9
+        },
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 11,
+          "unit_label": "第 11 节（L582-L659）",
+          "section_title": "辨太阳病脉证并治上",
+          "quote": "略同。但此因大汗出之后。故桂枝略重。而麻黄略轻。 服桂枝汤。大汗出后。大烦渴不解。脉洪大者。白虎加人参汤主之。（脉上。玉函。脉经。有若字。脉经。 千金方。作白虎汤。） 〔成〕大汗出。脉洪大而不渴。邪气犹在表也。可更与桂枝汤。若大汗出。脉洪大。而烦渴不解者。表里有热。不可更与桂枝汤。可与白虎加人参汤。生津止渴。和表散热。〔",
+          "text_sha256": "72630f6a597e6978f451985ace19a2718861cec44f1a5d0316438c6744c873fb",
+          "score": 7
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 2,
+          "unit_label": "第 2 节（L6-L23）",
+          "section_title": "太陽病，下之後，其氣上衝者，可與桂枝湯。",
+          "quote": "，汗出必解，宜桂枝二麻黃一湯。 14服桂枝湯，大汗出後，大煩，渴不解，脈洪大者，白虎加人參湯主之。 15太陽病，發熱惡寒，熱多寒少，脈微弱者，不可發大汗，宜桂枝二越婢一湯。 16服桂枝湯，或下之，仍頭項強痛，翕翕發熱，無汗，心下滿，微痛，小便不利者，桂枝湯去桂加 茯苓白朮湯主之。 17傷寒，脈浮，自汗出，小便數，心煩，微惡寒，腳攣急，反與",
+          "text_sha256": "10c77388b5e788edf1c3745c10da9d5336bfdd5a1e332f28075bfd9da12d66af",
+          "score": 5
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 124,
+          "unit_label": "PDF 第 124 页",
+          "section_title": "倪海厦医师 11/19/2003 洛杉矶演讲内容",
+          "quote": "手上. 今天真是很鬱卒,又气到了. 9/29/2005,晴,女 62 岁,白人,糖尿病第二型,服用口服药十年,之后无法降血糖,于是注射胰 岛素五年,半年前初诊时自述双脚麻而指关节剧痛,视 力很差,倦怠无力,体重过重,口渴,失眠, 便秘,频尿,胃口奇大,越吃是越累,她说如果地上有一石头,她脚踩上去,就算破皮,她也不知道, 此人当然从未吃 过",
+          "text_sha256": "64541e69be696dd9d0f29fad0d4c8422edadc8542aab0a56d4be6bfff5a80536",
+          "score": 4
+        }
+      ]
+    },
+    {
+      "id": "syndrome:toutong-dianding",
+      "title": "六经头痛、巅顶冷痛吐涎沫（吴茱萸/葛根/针灸经络分部）",
+      "keywords": [
+        "头痛",
+        "偏头痛",
+        "巅顶痛",
+        "头疼",
+        "前额痛",
+        "后头痛",
+        "干呕",
+        "吐涎沫",
+        "吴茱萸"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:wufeng-qijue-zhuanbian",
+        "concept:nj:liujing-xueqi-shierpibu"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:42",
+        "nj:suwen:31"
+      ],
+      "formula_ids": [
+        "shanghan:吴茱萸汤",
+        "shanghan:葛根汤",
+        "shanghan:小柴胡汤"
+      ],
+      "bencao_ids": [
+        "bencao:吴茱萸",
+        "bencao:人参",
+        "bencao:干姜",
+        "bencao:芎穷",
+        "bencao:细辛"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:头部与脑瘤治症"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:du20:百会",
+        "acupoint:gb20:风池",
+        "acupoint:li04:合谷",
+        "acupoint:lv03:太冲"
+      ],
+      "clinical_reasoning": "结合《内经》六经循头部位辨证（前额阳明合谷/解溪、两侧少阳外关/率谷、后项太阳列缺/后溪、巅顶厥阴百会/太冲涌泉）与《伤寒》阳明食谷欲呕、厥阴干呕吐涎沫头痛之寒痰浊阴上逆。",
+      "differentials": "胃寒食谷欲呕或厥阴寒极干呕吐涎沫头巅顶痛用吴茱萸汤；外感项背强痛用葛根汤/桂枝汤；少阳偏头胀痛口苦往来寒热用小柴胡汤。",
+      "version_conflicts": "百会“四神聪”与远道配穴下针先后及吴茱萸汤“汤洗七遍”去苦辛烈性炮制极重要。",
+      "safety_note": "极高危警示：突发剧烈“霹雳样”头痛伴呕吐、视物重影、意识改变或偏瘫（脑出血/卒中先兆）严禁延误或随意猛刺，立刻送急诊！",
+      "library_refs": [
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 105,
+          "unit_label": "第 105 节（L6603-L6640）",
+          "section_title": "辨厥阴病脉证并治",
+          "quote": "为阴邪协肝气上逆。则呕吐涎沫。此与柯说同。 金匮要略。呕而胸满者。茱萸汤主之。 呕而发热者。小柴胡汤主之。 〔成〕经曰。呕而发热者。柴胡证具。〔钱〕邪在厥阴。惟恐其厥逆下利。若见呕而发热。是厥阴与少阳。脏腑相连。乃脏邪还腑。自阴出阳。无阴邪变逆之患矣。故当从少阳法治之。而以小柴胡汤。和解其半表半里之邪也。 伤寒大吐",
+          "text_sha256": "5d7a6e98e12f1da3b4d222b224a16547994c53d191b11d3d513d905cd1869b39",
+          "score": 18
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 8,
+          "unit_label": "第 8 节（L172-L192）",
+          "section_title": "辨厥陰病霍亂篇",
+          "quote": "者，先溫其裡，乃攻其表；溫裡宜回逆湯，攻表宜桂枝湯。 172乾嘔吐涎沫，頭痛者，吳茱萸湯主之。 辨厥陰病霍亂篇 173 吐利，惡寒、脈微而復利，回逆加人參湯主之。 174吐利，頭痛、發熱、身疼痛、熱多欲飲水者，五苓散主之；寒多不用水者，理中丸主之 175吐利汗出，發熱惡寒，四肢拘急，手足厥冷者，回逆湯主之。 176既吐且利，小便復利而大汗",
+          "text_sha256": "d44e020cc68efac37e3ff6ef3c941f4f8882ae83cb1d81c90e4438d1d3e47e46",
+          "score": 13
+        },
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 43,
+          "unit_label": "PDF 第 43 页",
+          "section_title": "倪海厦医师 11/19/2003 洛杉矶演讲内容",
+          "quote": "痛, 间有 噁心呕吐, 有这些症状我们就知道病人得了少阳症. 此时有两种汤剂, 小柴胡汤及大柴胡汤. 如果是往来寒热, 头痛, 噁心呕吐, 但是大便很好很正常, 则服用小柴胡汤; 如果便祕, 则服 用大柴胡汤. 少阳症再往裡走, 就走到阴症了. 再来有可能不是进入少阳, 而是进入阳明. 阳明症就是进入你的胃及大肠系统, 病人会 产生燥热,",
+          "text_sha256": "5a324021d204d054e7605703c82be3ce9218a6973092f4b01ba9877a5bfaacf2",
+          "score": 12
+        },
+        {
+          "book_id": "tang-rongchuan-xuezhenglun-pdf",
+          "book_title": "唐容川·血证论",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 26,
+          "unit_label": "PDF 第 26 页",
+          "section_title": "本书救论",
+          "quote": "不止之病,是少阳转枢不利,清气遏而不升,浊气逆而 不降也,金匮呕涎沬头痛胸满者,吴茱萸汤主之,取吴萸降肝之浊气,肝气降而呕 自止,是肝木失其泄之常,横肆每侮,故成呕逆,主用吴茱萸,降肝之浊气,肝气不 逆,则呕止矣,由此观之,可知凡呕皆属肝胆,而血又肝之所司,今见呕血之证,断 以调肝为主,诸家皆言呕血出于肝,而未详其理,吾故旁引金匮伤寒,以",
+          "text_sha256": "f93e6dcd1c6d766497c3b8edc2530e553a1cdcef9ccac400875913c31c71806c",
+          "score": 11
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 95,
+          "unit_label": "PDF 第 95 页",
+          "section_title": "HT-23 肝阳上亢 肾阳不足",
+          "quote": "，也就是有这一个营养了，那幺项部自然就不强硬了， 治疗项部强硬为什幺用到葛根，用葛根汤或者是桂枝加葛根汤，就 是使体液之水进入到组织内，使它产生活力，同时能够润滑，所以 强硬就没了。 以上三种表示三个月之内，会发生中风。第四︰足胫骨前，自 膝向外侧麻到足踝，表示二星期内，必生中风，当然每个人因饮食 及生活环境的不同，会有不同的征兆出现。有",
+          "text_sha256": "c008565468282ace2a978ab3c537ec128a19f6b540410c2c05a484b8f9166d15",
+          "score": 7
+        }
+      ]
+    },
+    {
+      "id": "syndrome:fengshi-lijie",
+      "title": "风湿历节关节痹痛（桂枝芍药知母/乌头汤/甘草附子）",
+      "keywords": [
+        "风湿",
+        "历节",
+        "关节痛",
+        "膝痛",
+        "膝盖冷",
+        "身烦疼",
+        "痛风",
+        "肿如脱",
+        "痹症"
+      ],
+      "neijing_concept_ids": [
+        "concept:nj:ke-tong-bi-wei-bingji",
+        "concept:nj:wufang-yifa-fashi"
+      ],
+      "neijing_chapter_ids": [
+        "nj:suwen:43",
+        "nj:suwen:44"
+      ],
+      "formula_ids": [
+        "jinkui:桂枝芍药知母汤",
+        "jinkui:乌头汤",
+        "jinkui:甘草附子汤",
+        "jinkui:防己黄耆汤"
+      ],
+      "bencao_ids": [
+        "bencao:乌头",
+        "bencao:附子",
+        "bencao:知母",
+        "bencao:牡桂",
+        "bencao:防己"
+      ],
+      "acupuncture_condition_ids": [
+        "cond:ch6:s264"
+      ],
+      "acupuncture_point_ids": [
+        "acupoint:st36:足三里",
+        "acupoint:gb34:阳陵泉",
+        "acupoint:sp09:阴陵泉",
+        "acupoint:bl40:委中"
+      ],
+      "clinical_reasoning": "上承《素问·痹论》“风寒湿三气杂至合而为痹”，接《金匮·中风历节病》寒湿阻遏关节或郁而化热伤阴，以微汗渐解（切忌大汗只出风不出湿）与温通督阳。",
+      "differentials": "诸肢节疼痛、身体尪羸、脚肿如脱、头眩短气（寒湿化热伤阴兼脾虚）用桂枝芍药知母汤；病历节不可屈伸疼痛（纯粹剧烈寒湿阴凝）用乌头汤；骨节掣痛不得屈伸近之则痛剧用甘草附子汤。",
+      "version_conflicts": "《金匮》乌头汤用“蜜二升煎乌头一升减半去滓再入它药”，白蜜之解乌头毒与缓急止痛在原书中不可或缺，不可省蜜换糖！",
+      "safety_note": "高危警示：川乌/草乌（乌头汤主药）属剧毒中药，煎不透必致口舌麻木心律失常窒息，严禁私自抓药煎服！",
+      "library_refs": [
+        {
+          "book_id": "ni-hantang-articles-cases-pdf",
+          "book_title": "汉唐文章与医案集",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 283,
+          "unit_label": "PDF 第 283 页",
+          "section_title": "汉唐中医 倪海厦谨记于06/10/2007佛罗里达州自家书房",
+          "quote": "必须服用备妥的 秋水仙素及止痛药，来立即解除发作疼痛。(民 众不要受到威胁,请买甘草附子汤或是桂枝 芍药知母汤做备用,发病时请吃甘草附子汤,平时吃桂枝芍药知母汤,现在西药厂对痛风或是 关节炎的止痛药都会破坏心 脏结构的,还有许多人因为长期吃西药的关节痛的止痛药最后 导致肾脏衰竭而在洗肾中 , 民众千万不要吃,免得容易猝死 或者终身洗肾.)",
+          "text_sha256": "d97b5bef15ff5474c37091a70deb40cf625dbf6292a27d7997215b45ccb3453b",
+          "score": 14
+        },
+        {
+          "book_id": "ni-hantang-formulas-pdf",
+          "book_title": "汉唐方剂讲解（HT系列）",
+          "shelf": "hantang_clinical",
+          "tradition_layer": "hantang_clinical",
+          "page_no": 117,
+          "unit_label": "PDF 第 117 页",
+          "section_title": "HT-29 消痔丸",
+          "quote": "治黄汗厉节之症基本上都是讲述这两个方剂的，其中 最好用的方子就是桂枝芍药知母汤，乌头汤可借鉴使用，下课时看 一下金匮的叙述，好，这一堂就讲到这里，下课。 一般用量︰早晚饭前25粒。 重症病人︰三餐饭前30粒。 主要成份︰白朮、桂枝、炙甘草、茯苓……等。 233 研发人︰美国佛州汉唐中医学院，院长倪海厦医师。 HT-29 消痔丸 （2006",
+          "text_sha256": "7c342a60cb59ef67fe84704c7a2e561a123d1da3f1f0427389a8d4c69f4df251",
+          "score": 14
+        },
+        {
+          "book_id": "shanghan-juyi-book-txt",
+          "book_title": "丹波元珍·伤寒论辑义",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 62,
+          "unit_label": "第 62 节（L3864-L3929）",
+          "section_title": "辨太阳病脉证并治下",
+          "quote": "芍药非寒湿证所宜。故易以附子之辛热。多至三枚。从桂枝之后。 为纯阳刚剂。以开凝结之阴邪。然脉不单涩而浮虚。先见是湿少而风多也。故藉一附子。而迅扫有余。否则又宜去桂枝加术汤。驱湿为主矣。 吴仪洛方论曰。此即桂枝去芍药加附子汤。又加附子二枚。又即后条之甘草附子汤。以姜枣易术之变制也。 汪氏云。若其人大便硬。小便自利者。后条辨",
+          "text_sha256": "59d9c76b5b8f3d0b06d9744d0ee599ae9864426fea64ca36648b9abb0d30fd54",
+          "score": 9
+        },
+        {
+          "book_id": "otsuka-shanghan-docx",
+          "book_title": "大冢敬节·伤寒论解说",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 5,
+          "unit_label": "第 5 节（L78-L108）",
+          "section_title": "太陽病下篇",
+          "quote": "疼煩，掣痛不得屈伸，近之則痛劇，汗出短氣，小便不利，惡風不欲去衣，或身微 腫者，甘草附子湯主之。 97傷寒脈浮滑，白虎湯主之。 98傷寒解而後，脈結代、心動悸，炙甘草湯主之。 陽明病篇",
+          "text_sha256": "d574b3fa4a0f7e63e3c69733beede7dec7e7063b26e8dc8669f032b50e75d6c2",
+          "score": 7
+        },
+        {
+          "book_id": "chen-shiduo-shishimilu-txt",
+          "book_title": "陈士铎·石室秘录",
+          "shelf": "classical_companions",
+          "tradition_layer": "commentary",
+          "page_no": 66,
+          "unit_label": "第 66 节（L1529-L1544）",
+          "section_title": "论痛风 论风懿 论风痱 论痿废 论痉症",
+          "quote": "其近功。此卧治之一法。 风懿之症，奄忽不知人，不疼不痛，卧于床褥之上，亦终岁经年。此亦风湿之症，入之皮肉之内，而手足不为用者也。方用白术五钱，薏仁一两，芡实五钱，山药三钱，车前子一钱，人参三钱，甘草一钱，陈皮一钱，柴胡一钱，白芍三钱，白芥子三钱，水煎服（〔批〕健胃散湿丹。）此方亦去湿之神剂，水去而又不耗气，则皮肉自然血活，而风症可痊",
+          "text_sha256": "8cf550f6d2bc1eefc72a5d8d5d177a132db58a6d542c02efbe0d17a26ee6a2bb",
+          "score": 4
+        }
+      ]
+    }
+  ]
+}

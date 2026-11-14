@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tcm-study-brain-v2.local/schemas/source-evidence.schema.json",
+  "title": "TCM Study Brain V2 Source & Evidence Schema",
+  "type": "object",
+  "definitions": {
+    "sourceType": {
+      "type": "string",
+      "enum": [
+        "classical_edition",
+        "lecture_transcript",
+        "collated_transcript",
+        "video_sync_transcript",
+        "structured_snapshot"
+      ]
+    },
+    "generationStatus": {
+      "type": "string",
+      "enum": ["auto", "assisted", "manual"]
+    },
+    "evidenceStatus": {
+      "type": "string",
+      "enum": ["unlinked", "anchored", "verified", "conflicted"]
+    },
+    "reviewStatus": {
+      "type": "string",
+      "enum": ["pending", "needs_changes", "approved", "rejected"]
+    },
+    "riskLevel": {
+      "type": "string",
+      "enum": ["standard", "high_risk", "emergency"]
+    },
+    "sourceEntry": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "title",
+        "source_type",
+        "file_format",
+        "sha256",
+        "relative_path",
+        "page_mapping_note"
+      ],
+      "properties": {
+        "source_id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "authors_and_collators": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "edition": { "type": "string" },
+        "source_type": { "$ref": "#/definitions/sourceType" },
+        "file_format": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "byte_size": { "type": "integer", "minimum": 1 },
+        "total_pages": { "type": ["integer", "null"], "minimum": 1 },
+        "page_mapping_note": { "type": "string", "minLength": 1 },
+        "relative_path": { "type": "string", "minLength": 1 },
+        "text_layer_status": {
+          "type": "string",
+          "enum": ["clean_digital", "mixed", "image_only", "garbled", "plain_text", "structured_data", "uninspected"]
+        },
+        "known_issues": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "sourceSpan": {
+      "type": "object",
+      "required": ["span_id", "source_id", "page_id", "pdf_page", "quote"],
+      "properties": {
+        "span_id": { "type": "string", "minLength": 1 },
+        "source_id": { "type": "string", "minLength": 1 },
+        "page_id": { "type": "string", "minLength": 1 },
+        "pdf_page": { "type": "integer", "minimum": 1 },
+        "printed_page": { "type": ["integer", "null"], "minimum": 1 },
+        "chapter_path": { "type": "string" },
+        "quote": { "type": "string", "minLength": 2 },
+        "quote_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "role": {
+          "type": "string",
+          "enum": [
+            "source_quote",
+            "ni_teaching",
+            "other_annotations",
+            "collation_notes",
+            "organizer_summary"
+          ]
+        }
+      }
+    },
+    "contentLayers": {
+      "type": "object",
+      "required": [
+        "source_quote",
+        "ni_teaching",
+        "other_annotations",
+        "collation_notes",
+        "organizer_summary"
+      ],
+      "properties": {
+        "source_quote": { "type": "array", "items": { "type": "string" } },
+        "ni_teaching": { "type": "array", "items": { "type": "string" } },
+        "other_annotations": { "type": "array", "items": { "type": "string" } },
+        "collation_notes": { "type": "array", "items": { "type": "string" } },
+        "organizer_summary": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "knowledgeRecord": {
+      "type": "object",
+      "required": [
+        "id",
+        "record_type",
+        "canonical_name",
+        "aliases",
+        "summary",
+        "source_spans",
+        "content_layers",
+        "open_questions",
+        "generation_status",
+        "evidence_status",
+        "review_status",
+        "risk_level",
+        "safety_warning",
+        "version"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "record_type": {
+          "type": "string",
+          "enum": [
+            "theory",
+            "meridian",
+            "acupoint",
+            "point_selection_rule",
+            "technique",
+            "condition_teaching",
+            "herb",
+            "classic_chapter",
+            "formula",
+            "syndrome",
+            "relation"
+          ]
+        },
+        "canonical_name": { "type": "string", "minLength": 1 },
+        "aliases": { "type": "array", "items": { "type": "string" } },
+        "summary": { "type": "string" },
+        "source_spans": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/sourceSpan" }
+        },
+        "content_layers": { "$ref": "#/definitions/contentLayers" },
+        "open_questions": { "type": "array", "items": { "type": "string" } },
+        "generation_status": { "$ref": "#/definitions/generationStatus" },
+        "evidence_status": { "$ref": "#/definitions/evidenceStatus" },
+        "review_status": { "$ref": "#/definitions/reviewStatus" },
+        "risk_level": { "$ref": "#/definitions/riskLevel" },
+        "safety_warning": { "type": "string" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "relationRecord": {
+      "type": "object",
+      "required": [
+        "id",
+        "relation_type",
+        "from_id",
+        "to_id",
+        "label",
+        "source_spans",
+        "generation_status",
+        "evidence_status",
+        "review_status"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "relation_type": {
+          "type": "string",
+          "enum": [
+            "meridian_to_acupoint",
+            "acupoint_to_condition",
+            "condition_to_meridian",
+            "acupoint_to_technique",
+            "acupoint_to_combination",
+            "meridian_to_channel_pair",
+            "technique_to_condition"
+          ]
+        },
+        "from_id": { "type": "string", "minLength": 1 },
+        "to_id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string" },
+        "note": { "type": "string" },
+        "source_spans": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/sourceSpan" }
+        },
+        "generation_status": { "$ref": "#/definitions/generationStatus" },
+        "evidence_status": { "$ref": "#/definitions/evidenceStatus" },
+        "review_status": { "$ref": "#/definitions/reviewStatus" }
+      }
+    }
+  }
+}

@@ -3,17 +3,17 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>中医学习大脑 · 方剂</title>
+    <title>中医学习大脑 · 针灸 / 神农本草 / 黄帝内经 / 经方</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/style.css?v=layout-fix-2">
+    <link rel="stylesheet" href="/style.css?v=stage2-2">
   </head>
   <body>
     <header class="app-header">
       <div class="brand">
-        <span class="brand-mark" aria-hidden="true">方</span>
+        <span class="brand-mark" aria-hidden="true">医</span>
         <div>
           <h1>中医学习大脑</h1>
-          <p>本地方剂 · 伤寒 + 金匮</p>
+          <p>人纪针灸 · 神农本草 · 黄帝内经 · 经方</p>
         </div>
       </div>
       <div class="header-note">
@@ -24,18 +24,274 @@
 
     <nav class="module-bar" aria-label="模块">
       <div class="module-tabs" role="tablist">
-        <button class="module-tab active" data-view="formulas" role="tab" aria-selected="true">方剂</button>
-        <button class="module-tab" data-view="herbs" role="tab" aria-selected="false">中药</button>
-        <button class="module-tab" data-view="six" role="tab" aria-selected="false">六经辨证</button>
+        <button class="module-tab active" data-view="acupuncture" role="tab" aria-selected="true">针灸</button>
+        <button class="module-tab" data-view="herbs" role="tab" aria-selected="false">神农本草</button>
+        <button class="module-tab" data-view="neijing" role="tab" aria-selected="false">黄帝内经</button>
+        <button class="module-tab" data-view="formulas" role="tab" aria-selected="false">经方</button>
       </div>
-      <span class="module-pending">针灸 · 辨证论治 · 待接入</span>
+      <div class="stage5-nav-group" role="tablist" aria-label="综合辨证与书库">
+        <button class="top-utility-tab" data-stage5-view="stage5" role="tab" aria-selected="false">辨证论治 · 合方配穴</button>
+        <button class="top-utility-tab" data-stage5-view="library" role="tab" aria-selected="false">书库 · 17册</button>
+      </div>
+      <span class="module-pending">第1–5阶段贯通 · 17册全藏书联动</span>
     </nav>
 
     <main>
-      <section id="formulas-view" class="module-view active">
-        <div class="toolbar">
+      <section id="acupuncture-view" class="module-view active">
+        <div class="toolbar acup-toolbar">
+          <div class="acup-dim-switch" role="tablist" aria-label="针灸浏览维度">
+            <button class="acup-dim-tab active" data-acup-dim="diagnose" role="tab" aria-selected="true">辨证取穴</button>
+            <button class="acup-dim-tab" data-acup-dim="book" role="tab" aria-selected="false">按原书学习</button>
+            <button class="acup-dim-tab" data-acup-dim="knowledge" role="tab" aria-selected="false">按临床知识查询</button>
+          </div>
           <label class="search-box">
-            <span>检索方剂</span>
+            <span>检索症状 / 穴位 / 原文</span>
+            <input id="acup-query" type="search" placeholder="输入症状或证候（如：偏头痛 恶寒、鼻塞清涕、胃痛呕吐、痛经），或经络/穴位/页码" autocomplete="off">
+          </label>
+          <button id="acup-diagnose-run" class="dossier-button" type="button">辨证推演</button>
+          <label class="filter-box">
+            <span>审校</span>
+            <select id="acup-review-filter">
+              <option value="">全部状态</option>
+              <option value="approved">已核定稿</option>
+              <option value="pending">待核条目</option>
+            </select>
+          </label>
+          <label class="filter-box">
+            <span>安全等级</span>
+            <select id="acup-risk-filter">
+              <option value="">全部等级</option>
+              <option value="high_risk">高风险教学</option>
+              <option value="emergency">急症 / 肿瘤警示</option>
+              <option value="standard">常规教学</option>
+            </select>
+          </label>
+          <button id="acup-reset" class="quiet-button" type="button">重置</button>
+        </div>
+
+        <div id="acup-subbar" class="acup-subbar hidden">
+          <div class="acup-subtabs" role="tablist" aria-label="临床知识分类">
+            <button class="acup-subtab active" data-acup-sub="meridians" role="tab" aria-selected="true">经络归属</button>
+            <button class="acup-subtab" data-acup-sub="points" role="tab" aria-selected="false">穴位详情</button>
+            <button class="acup-subtab" data-acup-sub="techniques" role="tab" aria-selected="false">针灸法则与用法</button>
+            <button class="acup-subtab" data-acup-sub="conditions" role="tab" aria-selected="false">治症专题</button>
+            <button class="acup-subtab" data-acup-sub="indexes" role="tab" aria-selected="false">原书后附索引</button>
+          </div>
+          <label id="acup-meridian-wrap" class="filter-box acup-meridian-wrap hidden">
+            <span>所属经络</span>
+            <select id="acup-meridian-filter">
+              <option value="">全部经络</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="workspace acup-workspace">
+          <section class="list-panel" aria-labelledby="acup-list-title">
+            <div class="panel-heading">
+              <div>
+                <h2 id="acup-list-title">症状辨证取穴</h2>
+                <small id="acup-list-subtitle">《倪海厦人纪系列之针灸教程》（216页）</small>
+              </div>
+              <span id="acup-count" class="count-label">全书</span>
+            </div>
+            <div id="acup-list" class="entity-list"></div>
+          </section>
+
+          <section id="acup-detail" class="detail-panel" aria-live="polite">
+            <div class="empty-state">
+              <span class="empty-mark">针</span>
+              <h2>输入症状开始辨证取穴，或切换原书精读</h2>
+              <p>严格依据《倪海厦人纪系列之针灸教程》还原「症状 → 辨证条件 → 经络与法则 → 穴位配伍 → 原书出处」完整证据链，明确标注禁忌与尚待考证。</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="herbs-view" class="module-view">
+        <div class="toolbar bc-toolbar">
+          <div id="bc-dim-switch" class="acup-dim-switch" role="tablist" aria-label="神农本草研究模块">
+            <button type="button" class="acup-dim-tab" data-bc-dim="diagnose" role="tab" aria-selected="false">症状找药与辨证</button>
+            <button type="button" class="acup-dim-tab active" data-bc-dim="catalog" role="tab" aria-selected="true">本草全书图谱 (385)</button>
+            <button type="button" class="acup-dim-tab" data-bc-dim="theory" role="tab" aria-selected="false">前言 · 药性总义与经卷</button>
+            <button type="button" class="acup-dim-tab" data-bc-dim="comparisons" role="tab" aria-selected="false">本草鉴别对照 (38)</button>
+            <button type="button" class="acup-dim-tab" data-bc-dim="pages" role="tab" aria-selected="false">原书全页图鉴 (154)</button>
+          </div>
+          <label class="search-box bc-search-box">
+            <span>检索本草 / 症状</span>
+            <input id="bc-query" type="search" placeholder="输入药名、别名、性味、症状、入方或原书关键词（共 385 味）" autocomplete="off">
+          </label>
+          <button id="bc-diag-btn" class="dossier-button" type="button">辨证找药</button>
+          <div id="bc-catalog-filters" class="bc-filter-group">
+            <label class="filter-box">
+              <span>品级卷次</span>
+              <select id="bc-grade">
+                <option value="">全部 (385)</option>
+                <option value="上品">上品 (142)</option>
+                <option value="中品">中品 (112)</option>
+                <option value="下品">下品 (103)</option>
+                <option value="增补经方药">第三章增补经方药 (28)</option>
+              </select>
+            </label>
+            <label class="filter-box">
+              <span>四气</span>
+              <select id="bc-nature">
+                <option value="">全部</option>
+                <option value="寒">寒</option>
+                <option value="微寒">微寒</option>
+                <option value="平">平</option>
+                <option value="微温">微温</option>
+                <option value="温">温</option>
+                <option value="大热">大热</option>
+                <option value="热">热</option>
+                <option value="凉">凉</option>
+              </select>
+            </label>
+            <label class="filter-box">
+              <span>五味</span>
+              <select id="bc-flavor">
+                <option value="">全部</option>
+                <option value="酸">酸</option>
+                <option value="苦">苦</option>
+                <option value="甘">甘</option>
+                <option value="辛">辛</option>
+                <option value="咸">咸</option>
+              </select>
+            </label>
+            <label class="filter-box">
+              <span>风险 / 争议</span>
+              <select id="bc-risk">
+                <option value="">全部等级</option>
+                <option value="emergency">高危 · 毒剧/峻攻/重金属</option>
+                <option value="high_risk">慎用 · 小毒/偏性/基原争议</option>
+                <option value="standard">常规</option>
+              </select>
+            </label>
+          </div>
+          <label id="bc-comp-filter-box" class="filter-box hidden">
+            <span>对照类别</span>
+            <select id="bc-comp-category">
+              <option value="">全部鉴别组 (38)</option>
+            </select>
+          </label>
+          <button id="bc-clear" class="quiet-button" type="button">重置</button>
+        </div>
+
+        <div id="bc-toggle-row" class="bc-toggle-row">
+          <label class="bc-check-pill"><input id="bc-only-formulas" type="checkbox"> 仅看入《伤寒》《金匮》经方药 (145)</label>
+          <label class="bc-check-pill"><input id="bc-only-recovered" type="checkbox"> 仅看 Stage 2 新复原补齐 (34)</label>
+          <div id="bc-honesty-note" class="bc-honesty-note">正在读取《神农本草经》版本统计…</div>
+        </div>
+
+        <div id="bc-prompt-chips" class="s4-quick-chips">
+          <span class="s4-chips-label">症状找药示例：</span>
+          <div id="bc-prompt-chips-list" class="bc-chip-row"></div>
+        </div>
+
+        <div class="workspace">
+          <section class="list-panel" aria-labelledby="bc-list-title">
+            <div class="panel-heading">
+              <div>
+                <h2 id="bc-list-title">神农本草经全书目录 (385 味)</h2>
+                <small id="bc-list-subtitle">上品 142 · 中品 112 · 下品 103 · 第三章增补经方药 28</small>
+              </div>
+              <span id="bc-count" class="count-label">—</span>
+            </div>
+            <div id="bc-list" class="entity-list"></div>
+            <button id="bc-more" class="more-button hidden" type="button">加载更多</button>
+          </section>
+          <section id="bc-detail" class="detail-panel" aria-live="polite">
+            <div class="empty-state">
+              <span class="empty-mark">药</span>
+              <h2>《神农本草经》研究与辨证工作台</h2>
+              <p>选择左侧药物或章节，即可按《本经》原文、药物属性、倪注临证、炮制禁忌、历代注家、基原争议与经方剂量反向关联分层研读。</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="neijing-view" class="module-view">
+        <div class="toolbar acup-toolbar">
+          <div class="acup-dim-switch" role="tablist" aria-label="黄帝内经浏览维度">
+            <button class="acup-dim-tab" data-nj-dim="diagnose" role="tab" aria-selected="false">辨证论治推演</button>
+            <button class="acup-dim-tab active" data-nj-dim="concepts" role="tab" aria-selected="true">理论与辨证专题</button>
+            <button class="acup-dim-tab" data-nj-dim="chapters" role="tab" aria-selected="false">按篇精读（人纪《素问》74篇目）</button>
+            <button class="acup-dim-tab" data-nj-dim="pages" role="tab" aria-selected="false">原书页与全文检索</button>
+          </div>
+          <label class="search-box">
+            <span>检索内经理论 / 篇名 / 全文</span>
+            <input id="nj-query" type="search" placeholder="如：冬伤于寒、胃气、按之痛止、十二官、热论、标本" autocomplete="off">
+          </label>
+          <button id="nj-search-run" class="quiet-button" type="button">检索</button>
+          <label id="nj-volume-wrap" class="filter-box hidden">
+            <span>分册</span>
+            <select id="nj-volume-filter">
+              <option value="">上册 + 下册</option>
+              <option value="vol1">上册（1–28篇）</option>
+              <option value="vol2">下册（29–81篇及附篇）</option>
+            </select>
+          </label>
+          <label class="filter-box">
+            <span>审校</span>
+            <select id="nj-review-filter">
+              <option value="">全部状态</option>
+              <option value="approved">已审定精校</option>
+              <option value="pending">目录锚定·待精校</option>
+            </select>
+          </label>
+          <label class="filter-box">
+            <span>风险边界</span>
+            <select id="nj-risk-filter">
+              <option value="">全部等级</option>
+              <option value="standard">常规医理</option>
+              <option value="high_risk">危重/高敏边界</option>
+            </select>
+          </label>
+          <button id="nj-reset" class="quiet-button" type="button">重置</button>
+        </div>
+
+        <div id="nj-subbar" class="acup-subbar">
+          <div class="acup-subtabs" role="tablist" aria-label="黄帝内经六大理论子模块">
+            <button class="acup-subtab active" data-nj-sub="" role="tab" aria-selected="true">全部专题</button>
+            <button class="acup-subtab" data-nj-sub="yin_yang_wu_xing" role="tab" aria-selected="false">阴阳五行</button>
+            <button class="acup-subtab" data-nj-sub="zang_xiang" role="tab" aria-selected="false">藏象理论</button>
+            <button class="acup-subtab" data-nj-sub="bing_yin_bing_ji" role="tab" aria-selected="false">病因病机</button>
+            <button class="acup-subtab" data-nj-sub="zhen_fa" role="tab" aria-selected="false">诊法理论</button>
+            <button class="acup-subtab" data-nj-sub="bian_zheng" role="tab" aria-selected="false">辨证原则</button>
+            <button class="acup-subtab" data-nj-sub="yang_sheng" role="tab" aria-selected="false">养生理论</button>
+          </div>
+          <span class="muted-line">严分《素问》引文 · 倪海厦讲授 · 校勘边界 · 跨模块关联</span>
+        </div>
+
+        <div class="workspace nj-workspace">
+          <section class="list-panel" aria-labelledby="nj-list-title">
+            <div class="panel-heading">
+              <div>
+                <h2 id="nj-list-title">理论与辨证专题</h2>
+                <small id="nj-list-subtitle">八纲辨证 · 阴阳五行 · 藏象 · 病因病机 · 诊法 · 养生</small>
+              </div>
+              <span id="nj-count" class="count-label">—</span>
+            </div>
+            <div id="nj-list" class="entity-list"></div>
+          </section>
+
+          <section id="nj-detail" class="detail-panel" aria-live="polite">
+            <div class="empty-state">
+              <span class="empty-mark">经</span>
+              <h2>《黄帝内经·素问》理论与辨证工作台</h2>
+              <p>严格区分古典经文、倪海厦课堂阐释与版本校注；打通内经理论与针灸经穴、六经辨证、经方、神农本草双向索引。</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="formulas-view" class="module-view">
+        <div class="toolbar">
+          <div class="acup-dim-switch" role="tablist" aria-label="经方子模块">
+            <button class="acup-dim-tab active" data-switch-view="formulas" role="tab" aria-selected="true">经方目录</button>
+            <button class="acup-dim-tab" data-switch-view="six" role="tab" aria-selected="false">六经辨证</button>
+          </div>
+          <label class="search-box">
+            <span>检索经方</span>
             <input id="formula-query" type="search" placeholder="方名、条文、组成、煎服法" autocomplete="off">
           </label>
           <label class="filter-box">
@@ -94,68 +350,70 @@
           <button id="formula-clear" class="quiet-button" type="button">清空</button>
         </div>
 
-        <div class="workspace">
+        <div id="s4-mode-strip" class="s4-mode-strip">
+          <div class="acup-dim-switch" role="tablist" aria-label="经方辨证与学习模式">
+            <button type="button" class="acup-dim-tab active" data-s4-mode="diagnose" role="tab" aria-selected="true">症状辨证推演</button>
+            <button type="button" class="acup-dim-tab" data-s4-mode="catalog" role="tab" aria-selected="false">全部经方目录 (299)</button>
+            <button type="button" class="acup-dim-tab" data-s4-mode="jinkui" role="tab" aria-selected="false">金匮二十篇 (20)</button>
+            <button type="button" class="acup-dim-tab" data-switch-view="six" role="tab" aria-selected="false">伤寒六经 (6)</button>
+            <button type="button" class="acup-dim-tab" data-s4-mode="rules" role="tab" aria-selected="false">加减规则 · 同名对照</button>
+          </div>
+          <div class="s4-diagnose-bar">
+            <label class="s4-search-field">
+              <span>辨证查方</span>
+              <input id="s4-diag-input" type="search" placeholder="输入症状、脉象或证候（如：心烦喜呕 往来寒热、项背强几几 无汗、少腹肿痞、胸痹 短气）" />
+            </label>
+            <button id="s4-diag-btn" class="dossier-button" type="button">辨证推演</button>
+          </div>
+          <div class="s4-quick-chips" id="s4-quick-chips">
+            <span class="s4-chips-label">辨证示例：</span>
+            <button type="button" class="s4-chip" data-s4-q="心烦喜呕 往来寒热">心烦喜呕·往来寒热</button>
+            <button type="button" class="s4-chip" data-s4-q="项背强几几 无汗">项背强·无汗</button>
+            <button type="button" class="s4-chip" data-s4-q="项背强几几 有汗">项背强·有汗</button>
+            <button type="button" class="s4-chip" data-s4-q="少腹肿痞">少腹肿痞(肠痈)</button>
+            <button type="button" class="s4-chip" data-s4-q="胸痹 短气">胸痹·短气</button>
+            <button type="button" class="s4-chip" data-s4-q="寒多不用水">寒多不用水</button>
+            <button type="button" class="s4-chip" data-s4-q="热入血室">热入血室</button>
+            <button type="button" class="s4-chip" data-s4-q="下血 先便后血">先便后血</button>
+          </div>
+        </div>
+
+        <div id="s4-dynamic-panel" class="s4-dynamic-panel hidden"></div>
+
+        <div id="s4-catalog-workspace" class="workspace">
           <section class="list-panel" aria-labelledby="formula-list-title">
             <div class="panel-heading">
               <div>
-                <h2 id="formula-list-title">方剂目录</h2>
-                <small>跨书同名分别保留</small>
+                <h2 id="formula-list-title">经方辨证与目录</h2>
+                <small id="s4-list-subtitle">症状辨证推演 · 跨书同名分别保留</small>
               </div>
               <span id="formula-count" class="count-label">—</span>
             </div>
-            <div id="formula-list" class="entity-list"></div>
+            <div id="s4-left-host" class="entity-list s4-left-host"></div>
+            <div id="formula-list" class="entity-list hidden"></div>
             <button id="formula-more" class="more-button hidden" type="button">加载更多</button>
           </section>
           <section id="formula-detail" class="detail-panel" aria-live="polite">
             <div class="empty-state">
               <span class="empty-mark">方</span>
-              <h2>从左侧选择一首方剂</h2>
+              <h2>从左侧选择一首经方</h2>
               <p>组成、剂量、煎服法与出处会在这里展开。</p>
             </div>
           </section>
         </div>
       </section>
 
-      <section id="herbs-view" class="module-view">
-        <div class="toolbar">
-          <label class="search-box">
-            <span>检索中药</span>
-            <input id="herb-query" type="search" placeholder="药名、性味、主治、功效" autocomplete="off">
-          </label>
-          <label class="filter-box">
-            <span>原文章节</span>
-            <select id="herb-category">
-              <option value="">全部</option>
-              <option value="本经原文">本经原文</option>
-              <option value="性味">性味</option>
-              <option value="主治">主治</option>
-              <option value="用量">用量</option>
-              <option value="禁忌">禁忌</option>
-            </select>
-          </label>
-          <button id="herb-clear" class="quiet-button" type="button">清空</button>
-        </div>
-
-        <div class="workspace">
-          <section class="list-panel" aria-labelledby="herb-list-title">
-            <div class="panel-heading">
-              <h2 id="herb-list-title">本经药物</h2>
-              <span id="herb-count" class="count-label">—</span>
-            </div>
-            <div id="herb-list" class="entity-list"></div>
-            <button id="herb-more" class="more-button hidden" type="button">加载更多</button>
-          </section>
-          <section id="herb-detail" class="detail-panel" aria-live="polite">
-            <div class="empty-state">
-              <span class="empty-mark">药</span>
-              <h2>从左侧选择一味药</h2>
-              <p>神农本草经原文、倪注条目和相关方剂会在这里展开。</p>
-            </div>
-          </section>
-        </div>
-      </section>
-
       <section id="six-view" class="module-view">
+        <div class="toolbar">
+          <div class="acup-dim-switch" role="tablist" aria-label="经方子模块">
+            <button class="acup-dim-tab" data-switch-view="formulas" data-s4-jump-mode="diagnose" role="tab" aria-selected="false">症状辨证推演</button>
+            <button class="acup-dim-tab" data-switch-view="formulas" data-s4-jump-mode="catalog" role="tab" aria-selected="false">全部经方目录 (299)</button>
+            <button class="acup-dim-tab" data-switch-view="formulas" data-s4-jump-mode="jinkui" role="tab" aria-selected="false">金匮二十篇</button>
+            <button class="acup-dim-tab active" data-switch-view="six" role="tab" aria-selected="true">伤寒六经 (6)</button>
+            <button class="acup-dim-tab" data-switch-view="formulas" data-s4-jump-mode="rules" role="tab" aria-selected="false">加减规则 · 同名对照</button>
+          </div>
+          <span class="muted-line">《伤寒论》六经辨证提纲 · 原文注解 · 方证衔接</span>
+        </div>
         <div class="workspace six-workspace">
           <section class="list-panel" aria-labelledby="six-list-title">
             <div class="panel-heading">
@@ -176,9 +434,88 @@
           </section>
         </div>
       </section>
+
+      <!-- Stage 5: 综合辨证（5A 跨书网络 + 5B 循证研习问答） -->
+      <section id="stage5-view" class="module-view">
+        <div class="toolbar s5-toolbar">
+          <div class="acup-dim-switch" role="tablist" aria-label="第五阶段模式">
+            <button id="s5-tab-compose" class="acup-dim-tab active" data-s5-mode="compose" role="tab" aria-selected="true">辨证论治 · 症状脉象合方取穴</button>
+            <button id="s5-tab-diagnose" class="acup-dim-tab" data-s5-mode="diagnose" role="tab" aria-selected="false">四经一体总览 (5A)</button>
+            <button id="s5-tab-ground" class="acup-dim-tab" data-s5-mode="ground" role="tab" aria-selected="false">循证 AI 研习问答 (5B)</button>
+            <button id="s5-tab-syndromes" class="acup-dim-tab" data-s5-mode="syndromes" role="tab" aria-selected="false">20 大跨书证候群图谱</button>
+          </div>
+          <span class="muted-line">症状拆解 · 脉象权重 · 动态合方 · 经络取穴 · 预留AI循证包</span>
+        </div>
+
+        <div id="s5-search-bar" class="s5-search-strip">
+          <input id="s5-query-input" class="search-input s5-query-input" type="search" placeholder="请选择下方症状 / 脉象开关或输入症状组合与研习问题（初始空白，随选即推）" />
+          <button id="s5-submit-btn" class="primary-btn" type="button">综合推演 / 循证解析</button>
+          <button id="s5-reset-btn" class="ghost-btn" type="button">重置</button>
+        </div>
+        <div id="s5-chips" class="s5-chip-bar"></div>
+        <div id="s5-workspace-body" class="s5-workspace-body"></div>
+      </section>
+
+      <!-- 书库板块（独立全藏书阁 + 跨书全文检 + 原页影印 + 双向模块联动） -->
+      <section id="library-view" class="module-view">
+        <div class="toolbar lib-toolbar">
+          <div id="lib-shelf-tabs" class="acup-dim-switch" role="tablist" aria-label="藏书书架分类">
+            <button class="acup-dim-tab active" data-lib-shelf="" role="tab" aria-selected="true">全部藏书 (17册)</button>
+            <button class="acup-dim-tab" data-lib-shelf="renji_core" role="tab" aria-selected="false">人纪四大经典 (7册)</button>
+            <button class="acup-dim-tab" data-lib-shelf="hantang_clinical" role="tab" aria-selected="false">汉唐方剂与医案 (3册 · 新增)</button>
+            <button class="acup-dim-tab" data-lib-shelf="classical_companions" role="tab" aria-selected="false">古籍辅注与影印 (7册 · 新增)</button>
+          </div>
+          <span id="lib-overview-stats" class="muted-line">共 17 册 · 15 册全文检索 + 2 册高清影印原件 · 双向联动四大模块</span>
+        </div>
+
+        <div class="lib-search-strip">
+          <input id="lib-global-search-input" class="search-input s5-query-input" type="search" placeholder="跨书全文检索（支持繁简通用，如：桂枝汤、HT-、胸痹、吐血、少阴、大承气…）" />
+          <label class="lib-scope-check">
+            <input id="lib-scope-current" type="checkbox" />
+            <span>仅搜当前选中书目</span>
+          </label>
+          <button id="lib-global-search-btn" class="primary-btn" type="button">全库检索</button>
+          <button id="lib-global-clear-btn" class="ghost-btn" type="button">返回阅览</button>
+        </div>
+
+        <div id="lib-search-results-panel" class="lib-search-results hidden"></div>
+
+        <div id="lib-reader-workspace" class="workspace lib-workspace">
+          <aside class="list-panel lib-sidebar" aria-label="书库目录与章节">
+            <div class="panel-heading">
+              <div>
+                <h2>藏书阁书目</h2>
+                <small id="lib-books-count">17 册已收录</small>
+              </div>
+              <span id="lib-linked-badge" class="count-label">双向联动</span>
+            </div>
+            <div id="lib-book-list" class="lib-book-list"></div>
+            <div id="lib-toc-box" class="lib-toc-box hidden">
+              <div class="lib-toc-header">
+                <strong id="lib-toc-title">本书章节 / HT方目录</strong>
+                <input id="lib-toc-filter" class="lib-toc-filter" type="search" placeholder="筛章节或页码..." />
+              </div>
+              <div id="lib-toc-list" class="lib-toc-list"></div>
+            </div>
+          </aside>
+
+          <section id="lib-page-reader" class="detail-panel lib-reader-panel" aria-live="polite">
+            <div class="empty-state">
+              <span class="empty-mark">书</span>
+              <h2>选择左侧任意一册典籍开始精读</h2>
+              <p>支持原文全文阅读、PDF 扫描原页图对照，并自动标出涉《经方》《神农本草》《针灸》《内经》的可跳转知识节点。</p>
+            </div>
+          </section>
+        </div>
+      </section>
     </main>
 
     <div id="notice" class="notice hidden" role="status"></div>
+    <script src="/acupuncture.js"></script>
+    <script src="/bencao.js"></script>
+    <script src="/neijing.js"></script>
     <script src="/app.js"></script>
+    <script src="/formulas_stage4.js"></script>
+    <script src="/library_stage5.js"></script>
   </body>
 </html>

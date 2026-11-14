@@ -21,7 +21,7 @@ class FormulaCatalogTest(unittest.TestCase):
         self.assertEqual(data["herbs"], 351)
         self.assertEqual(data["by_book"], {"伤寒论": 113, "金匮要略": 186})
         self.assertEqual(data["source_pending"], 1)
-        self.assertEqual(data["modules"]["acupuncture"], "not_imported")
+        self.assertEqual(data["modules"]["acupuncture"], "complete")
 
     def test_formula_detail_keeps_dose_and_source(self):
         data = self.client.get("/api/formulas/shanghan%3A%E6%A1%82%E6%9E%9D%E6%B1%A4").json()

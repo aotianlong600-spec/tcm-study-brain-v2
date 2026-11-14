@@ -7,7 +7,8 @@ import json
 from pathlib import Path
 import re
 
-from etl.herb_alias import ALIAS
+from app import bencao_catalog, neijing_catalog
+from etl.herb_alias import ALIAS, CONTROVERSY_ALIASES
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,9 +23,21 @@ def _norm(value: str) -> str:
     return re.sub(r"[\s·・，,。；;（）()]+", "", value or "").lower()
 
 
-def _resolve_herb(name: str, herbs_by_name: dict[str, dict]) -> dict | None:
+def _resolve_herb(
+    name: str,
+    herbs_by_name: dict[str, dict],
+    bencao_by_name: dict[str, dict] | None = None,
+) -> dict | None:
     target = ALIAS.get(name, (name, ""))[0]
-    return herbs_by_name.get(target) or herbs_by_name.get(name)
+    pool = bencao_by_name or {}
+    # Stage 2 complete edition (385 herbs) first so recovered Ch3 entries like 豆豉/鸡子黄/猪胆 resolve accurately instead of old proxies
+    return (
+        pool.get(target)
+        or pool.get(target.split("（")[0])
+        or pool.get(name)
+        or herbs_by_name.get(target)
+        or herbs_by_name.get(name)
+    )
 
 
 def _summary(formula: dict) -> dict:
@@ -57,11 +70,20 @@ def _index() -> dict:
         formula["evidence"] = merged
     herbs = _read("herbs.json")
     herbs_by_name = {item["name"]: item for item in herbs}
+    bencao_entries = bencao_catalog._entries()
+    bencao_by_name: dict[str, dict] = {}
+    for entry in bencao_entries:
+        if entry["kind"] == "main":
+            bencao_by_name[entry["name"]] = entry
+    for entry in bencao_entries:
+        if entry["kind"] == "ch3":
+            bencao_by_name.setdefault(entry["name"], entry)
+            bencao_by_name.setdefault(entry["name"].split("（")[0], entry)
 
     formula_links: dict[str, list[dict]] = {}
     for formula in formulas:
         for ingredient in formula["ingredients"]:
-            herb = _resolve_herb(ingredient["name"], herbs_by_name)
+            herb = _resolve_herb(ingredient["name"], herbs_by_name, bencao_by_name)
             if herb:
                 formula_links.setdefault(herb["id"], []).append(_summary(formula))
 
@@ -71,6 +93,7 @@ def _index() -> dict:
         "herbs": herbs,
         "herbs_by_id": {item["id"]: item for item in herbs},
         "herbs_by_name": herbs_by_name,
+        "bencao_by_name": bencao_by_name,
         "formula_links": formula_links,
     }
 
@@ -134,18 +157,27 @@ def list_formulas(
 
 
 def get_formula(formula_id: str) -> dict | None:
-    formula = _index()["formulas_by_id"].get(formula_id)
+    idx = _index()
+    formula = idx["formulas_by_id"].get(formula_id)
     if not formula:
         return None
     result = deepcopy(formula)
     linked = []
     for ingredient in result["ingredients"]:
-        herb = _resolve_herb(ingredient["name"], _index()["herbs_by_name"])
+        raw_name = ingredient["name"]
+        herb = _resolve_herb(raw_name, idx["herbs_by_name"], idx.get("bencao_by_name"))
         if herb:
             ingredient["herb_id"] = herb["id"]
-            ingredient["herb_name"] = herb["name"]
-            linked.append({"id": herb["id"], "name": herb["name"]})
+            ingredient["herb_name"] = herb.get("short_name", herb["name"])
+            if "properties" in herb:
+                ingredient["herb_risk_level"] = herb["properties"].get("risk_level", "standard")
+                ingredient["herb_grade"] = herb.get("grade", "")
+            c_note = CONTROVERSY_ALIASES.get(raw_name, "")
+            if c_note:
+                ingredient["herb_controversy"] = c_note
+            linked.append({"id": herb["id"], "name": herb.get("short_name", herb["name"])})
     result["related_herbs"] = linked
+    result["neijing_relations"] = neijing_catalog.relations_for_external(formula_id)
     return result
 
 
@@ -178,11 +210,38 @@ def list_herbs(query: str = "", category: str = "", page: int = 1, page_size: in
 
 
 def get_herb(herb_id: str) -> dict | None:
-    herb = _index()["herbs_by_id"].get(herb_id)
-    if not herb:
+    idx = _index()
+    bencao_entry = bencao_catalog.get_entry(herb_id)
+    herb = idx["herbs_by_id"].get(herb_id)
+    if not herb and not bencao_entry:
         return None
+    if not herb and bencao_entry:
+        # Synthesize backward-compatible view for 34 newly recovered main/Ch3 Stage 2 entries
+        result = {
+            "id": bencao_entry["id"],
+            "name": bencao_entry["name"],
+            "names": [bencao_entry["name"], *bencao_entry.get("aliases", [])],
+            "seq": bencao_entry["seq_raw"],
+            "page_start": bencao_entry["page_start"],
+            "page_end": bencao_entry["page_end"],
+            "source": bencao_entry["grade"],
+            "sections": {
+                "本经原文": bencao_entry["classic_original"]["text"],
+                "性味": bencao_entry["properties"].get("qi_wei_raw", ""),
+                "主治": bencao_entry["applications"].get("main_summary", ""),
+                "用量": bencao_entry["processing_and_compatibility"].get("dosage", ""),
+                "禁忌": bencao_entry["processing_and_compatibility"].get("contraindications", ""),
+            },
+            "formulas": deepcopy(idx["formula_links"].get(bencao_entry["id"], [])),
+            "neijing_relations": bencao_entry.get("neijing_relations", []),
+            "bencao_entry": bencao_entry,
+        }
+        return result
     result = deepcopy(herb)
-    result["formulas"] = deepcopy(_index()["formula_links"].get(herb_id, []))
+    result["formulas"] = deepcopy(idx["formula_links"].get(herb_id, []))
+    result["neijing_relations"] = neijing_catalog.relations_for_external(herb_id)
+    if bencao_entry:
+        result["bencao_entry"] = bencao_entry
     return result
 
 
@@ -195,7 +254,11 @@ def get_six_channel(channel_id: str) -> dict | None:
         (item for item in _read("six_channels.json")["items"] if item["id"] == channel_id),
         None,
     )
-    return deepcopy(channel) if channel else None
+    if not channel:
+        return None
+    result = deepcopy(channel)
+    result["neijing_relations"] = neijing_catalog.relations_for_external(channel_id)
+    return result
 
 
 def overview() -> dict:
@@ -220,10 +283,32 @@ def overview() -> dict:
         "six_channels": len(_read("six_channels.json")["items"]),
         "modules": {
             "formulas": "ready",
-            "herbs": "ready",
+            "herbs": "complete",
             "diagnosis": "not_imported",
             "six_channels": "partial",
-            "acupuncture": "not_imported",
-            "conditions": "not_imported",
+            "acupuncture": "complete",
+            "conditions": "complete",
+            "neijing": "partial",
         },
+        "acupuncture_summary": _acupuncture_overview(),
+        "bencao_summary": _bencao_overview(),
+        "neijing_summary": _neijing_overview(),
     }
+
+
+def _acupuncture_overview() -> dict:
+    from . import acupuncture_catalog  # noqa: PLC0415
+
+    return acupuncture_catalog.overview()
+
+
+def _bencao_overview() -> dict:
+    from . import bencao_catalog  # noqa: PLC0415
+
+    return bencao_catalog.overview()
+
+
+def _neijing_overview() -> dict:
+    from . import neijing_catalog  # noqa: PLC0415
+
+    return neijing_catalog.overview()
