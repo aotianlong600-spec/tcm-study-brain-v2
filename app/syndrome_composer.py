@@ -19,9 +19,13 @@ from app.syndrome_rules import (
     EXTRA_SYMPTOM_CANONICAL_RULES,
     LEGACY_ATOM_POLARITIES,
     are_formulas_redundant_siblings,
+    canonical_formula_name,
+    detect_compound_herb_conflicts,
     evaluate_classical_context,
+    score_atom_tongue,
 )
 from retrieval.index import norm_simp, search_library_pages, tokenize_query
+from retrieval.tcm_synonyms import strip_clinical_negations
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -1669,7 +1673,23 @@ def _search_all_jingfang_clues(
         )
 
     scored.sort(key=lambda x: (-x[0], not x[1]["in_compound"], x[1]["formula_id"]))
-    return [item for _, item in scored[:limit]]
+    deduped: list[dict[str, Any]] = []
+    by_canon_idx: dict[str, int] = {}
+    for _, item in scored:
+        canon_name = canonical_formula_name(item["name"])
+        if canon_name in by_canon_idx:
+            prev = deduped[by_canon_idx[canon_name]]
+            other_book = item.get("book") or ""
+            if other_book and other_book != prev.get("book"):
+                also = prev.setdefault("also_in_books", [])
+                if other_book not in also:
+                    also.append(other_book)
+            continue
+        by_canon_idx[canon_name] = len(deduped)
+        deduped.append(item)
+        if len(deduped) >= limit:
+            break
+    return deduped
 
 
 def _build_followup_questions(
@@ -1892,8 +1912,24 @@ def _build_decoction_and_recovery_guide(
     return notes
 
 
+_NON_PULSE_COMPOUNDS_RE = re.compile(
+    r"(?:浮肿|虚浮|浮阳|浮火|轻浮|沉重|昏沉|沉闷|沉滞|下沉|数日|数天|数月|数年|数次|数回|数十|"
+    r"微寒|微热|微汗|微微|轻微|细辛|细小|细碎|缓慢|缓解|舒缓|紧张|紧缩|拘紧|滑胎|滑泻|滑利|滑腻|"
+    r"迟滞|延迟|迟缓|大小|大便|大渴|大热|大汗|口涩|小便涩|涩滞)"
+)
+_Q_PULSE_CLAUSE_RE = re.compile(
+    r"(?:寸|关|尺|两寸|两尺)?脉(?:象|来|见|转|亦|兼|仍|似)?[：:是为]*小?"
+    r"(?:洪大|结代|微细|浮|沉|迟|数|滑|涩|弦|紧|缓|微|细|濡|弱|短|促)"
+    r"(?:[、\s和兼与亦偏略稍而]{0,2}(?:洪大|结代|微细|浮|沉|迟|数|滑|涩|弦|紧|缓|微|细|濡|弱|短|促)){0,4}"
+    r"|(?:洪大|结代|微细|浮|沉|迟|数|滑|涩|弦|紧|缓){1,3}脉"
+)
+
+
 def _extract_pulses(pulse_str: str, q: str) -> list[str]:
-    combined = norm_simp(f"{pulse_str} {q}")
+    pulse_norm = norm_simp(pulse_str or "")
+    q_clean = _NON_PULSE_COMPOUNDS_RE.sub(" ", norm_simp(q or ""))
+    q_pulse_clauses = " ".join(_Q_PULSE_CLAUSE_RE.findall(q_clean))
+    combined = f"{pulse_norm} {q_pulse_clauses}".strip()
     selected: list[str] = []
     for p in PULSE_OPTIONS:
         pid = p["id"]
@@ -1915,14 +1951,72 @@ def _herb_names_of(formula: dict[str, Any]) -> list[str]:
     return names
 
 
+def _build_regimen_entry(
+    f1: dict[str, Any],
+    f2: dict[str, Any] | None,
+    symptoms: list[str],
+    *,
+    regimen_kind: str = "primary",
+    herb_conflict: dict[str, Any] | None = None,
+    single_note: str = "",
+) -> dict[str, Any]:
+    """Construct a single-formula or compatible two-formula regimen entry cleanly."""
+    if f2 is None:
+        return {
+            "regimen_kind": regimen_kind,
+            "is_compound": False,
+            "title": (f"备选参考单方：{f1['name']}" if regimen_kind == "alternative" else f"单方专治统摄：{f1['name']}"),
+            "formula_ids": [f1["formula_id"]],
+            "formula_names": [f1["name"]],
+            "axis_roles": [f"【专方主轴】{f1['name']}（{f1['six_meridian']}）：统括「{'、'.join(f1['matched_symptoms'])}」"],
+            "covered_symptoms": list(f1["matched_symptoms"]),
+            "uncovered_symptoms": [s for s in symptoms if s not in set(f1["matched_symptoms"])],
+            "overlap_herbs": [],
+            "herb_conflict_alerts": [],
+            "overlap_note": single_note or "目前症状已由单首核心经方完全覆盖（或兼顾避免同类/十八反十九畏互斥），优先考虑专方纯正取效，无须机械合方。",
+        }
+
+    covered = set(f1["matched_symptoms"]) | set(f2["matched_symptoms"])
+    overlap_herbs = sorted(set(f1.get("herbs", [])) & set(f2.get("herbs", [])))
+    hc_alerts = (herb_conflict or {}).get("alerts", [])
+    note_parts: list[str] = []
+    if hc_alerts:
+        note_parts.append("【配伍警戒】" + "；".join(hc_alerts) + "。")
+    if overlap_herbs:
+        note_parts.append(
+            f"两方共有重叠药味：{'、'.join(overlap_herbs)}（传统合方需依轻重统调克数并分明姜/干姜及制附先后煎法，不可机械叠加双倍剂量）。"
+        )
+    elif not hc_alerts:
+        note_parts.append("两方药味分工各专，可据证候主次斟酌主从合参。")
+
+    prefix = "备选对照合方" if regimen_kind == "alternative" else "主推合方"
+    return {
+        "regimen_kind": regimen_kind,
+        "is_compound": True,
+        "title": f"{prefix}：{f1['name']} 合 {f2['name']}",
+        "formula_ids": [f1["formula_id"], f2["formula_id"]],
+        "formula_names": [f1["name"], f2["name"]],
+        "axis_roles": [
+            f"【主轴一】{f1['name']}（{f1['six_meridian']}）：主司「{'、'.join(f1['matched_symptoms'])}」",
+            f"【主轴二】{f2['name']}（{f2['six_meridian']}）：兼顾「{'、'.join(f2['matched_symptoms'])}」",
+        ],
+        "covered_symptoms": [s for s in symptoms if s in covered],
+        "uncovered_symptoms": [s for s in symptoms if s not in covered],
+        "overlap_herbs": overlap_herbs,
+        "herb_conflict_alerts": hc_alerts,
+        "overlap_note": " ".join(note_parts),
+    }
+
+
 def compose_differentiation(q: str = "", pulse: str = "") -> dict[str, Any]:
     """Perform clinical symptom + pulse breakdown -> dynamic single/compound Jingfang + Acupoints."""
     cleaned_q = (q or "").strip()
     cleaned_pulse = (pulse or "").strip()
+    positive_q, negated_terms = strip_clinical_negations(cleaned_q)
     safety = _detect_safety_boundary(f"{cleaned_q} {cleaned_pulse}")
-    pulses = _extract_pulses(cleaned_pulse, cleaned_q)
-    symptoms = _extract_symptoms(cleaned_q, pulses=pulses)
-    tongues = _extract_tongues(cleaned_q)
+    pulses = _extract_pulses(cleaned_pulse, positive_q)
+    symptoms = _extract_symptoms(positive_q, pulses=pulses)
+    tongues = _extract_tongues(positive_q)
     fmap = _formulas_by_id()
 
     if not cleaned_q and not cleaned_pulse:
@@ -1937,6 +2031,7 @@ def compose_differentiation(q: str = "", pulse: str = "") -> dict[str, Any]:
             "clinical_entry_cards": CLINICAL_ENTRY_CARDS,
             "preset_cases": PRESET_CASES,
             "recognized_symptoms": [],
+            "recognized_negations": [],
             "recognized_pulses": [],
             "recognized_tongues": [],
             "followup_questions": [],
@@ -1974,6 +2069,10 @@ def compose_differentiation(q: str = "", pulse: str = "") -> dict[str, Any]:
             if p in pulses:
                 score += w
                 matched_pulses.append(f"+脉{p}")
+        t_delta, matched_tongues, t_conflict = score_atom_tongue(atom, tongues)
+        score += t_delta
+        if t_conflict:
+            conflict_reasons.append(t_conflict)
         for sym, pen in atom.get("conflict_symptoms", {}).items():
             if sym in symptoms:
                 score += pen
@@ -1993,6 +2092,7 @@ def compose_differentiation(q: str = "", pulse: str = "") -> dict[str, Any]:
                         "suppressed": True,
                         "matched_symptoms": matched_syms,
                         "matched_pulses": matched_pulses,
+                        "matched_tongues": matched_tongues,
                         "conflict_reasons": conflict_reasons,
                     }
                 )
@@ -2006,6 +2106,7 @@ def compose_differentiation(q: str = "", pulse: str = "") -> dict[str, Any]:
                 "suppressed": False,
                 "matched_symptoms": matched_syms,
                 "matched_pulses": matched_pulses,
+                "matched_tongues": matched_tongues,
                 "conflict_reasons": conflict_reasons,
                 "formula_summary": fobj.get("indication", ""),
                 "decoction": fobj.get("decoction_method", ""),
@@ -2019,7 +2120,7 @@ def compose_differentiation(q: str = "", pulse: str = "") -> dict[str, Any]:
         symptoms,
         pulses,
         tongues,
-        cleaned_q,
+        positive_q,
         fmap=fmap,
         herb_fn=_herb_names_of,
     )
@@ -2028,63 +2129,116 @@ def compose_differentiation(q: str = "", pulse: str = "") -> dict[str, Any]:
     active.sort(key=lambda x: (-x["score"], -len(x["matched_symptoms"]), x["atom_id"]))
     suppressed = [a for a in scored_atoms if a["suppressed"]]
 
-    # Build Dynamic Compound Regimen(s): identify distinct complementary & thermally compatible formulas
+    # Build Dynamic Single/Compound Regimen(s): check polarity, sibling overlap, symptom necessity & 十八反/十九畏
     compound_regimens: list[dict[str, Any]] = []
+    compound_conflict_alerts: list[str] = []
     if active:
         f1 = active[0]
-        # Prefer second formula that contributes uncovered symptoms AND stays thermally compatible + non-redundant
-        uncovered = set(symptoms) - set(f1["matched_symptoms"])
-        compatible_cands = [
-            cand
-            for cand in active[1:8]
-            if _are_polarities_compatible(f1.get("polarity", "balanced"), cand.get("polarity", "balanced"))
-            and not are_formulas_redundant_siblings(f1["formula_id"], cand["formula_id"])
-        ]
-        if compatible_cands:
-            ranked_partners = sorted(
-                compatible_cands,
-                key=lambda cand: (
-                    -(len(set(cand["matched_symptoms"]) & uncovered) * 20 + cand["score"]),
-                    cand["atom_id"],
-                ),
+        def _assess_partner(
+            base: dict[str, Any],
+            cand: dict[str, Any],
+            missing_syms: set[str],
+            weak_syms: set[str],
+        ) -> tuple[bool, tuple[int, int], dict[str, Any], list[str]]:
+            if cand["formula_id"] == base["formula_id"]:
+                return False, (0, 0), {}, []
+            if not _are_polarities_compatible(base.get("polarity", "balanced"), cand.get("polarity", "balanced")):
+                return False, (0, 0), {}, []
+            if are_formulas_redundant_siblings(base["formula_id"], cand["formula_id"]):
+                return False, (0, 0), {}, []
+            h1_set, h2_set = set(base.get("herbs", [])), set(cand.get("herbs", []))
+            if (
+                h1_set
+                and h2_set
+                and base.get("polarity") == cand.get("polarity")
+                and len(h1_set & h2_set) >= 4
+                and len(h1_set & h2_set) / max(1, len(h1_set | h2_set)) >= 0.5
+            ):
+                return False, (0, 0), {}, []
+            hc = detect_compound_herb_conflicts(base.get("herbs", []), cand.get("herbs", []), base["name"], cand["name"])
+            if hc["blocking"]:
+                alerts = [
+                    f"【十八反/十九畏合方拦截】{msg}，系统已阻止两方自动合方。"
+                    for msg in hc.get("blocking_alerts", hc["alerts"])
+                ]
+                return False, (0, 0), hc, alerts
+            b_weights = base.get("symptom_weights", {})
+            c_syms = set(cand["matched_symptoms"])
+            c_weights = cand.get("symptom_weights", {})
+            hard_uncov = len(c_syms & missing_syms)
+            weak_dom = sum(
+                1 for s in (c_syms & weak_syms) if c_weights.get(s, 0) - b_weights.get(s, 0) >= 6 and c_weights.get(s, 0) >= 12
             )
-            f2 = ranked_partners[0]
-            covered = set(f1["matched_symptoms"]) | set(f2["matched_symptoms"])
-            herbs1 = set(f1.get("herbs", []))
-            herbs2 = set(f2.get("herbs", []))
-            overlap_herbs = sorted(herbs1 & herbs2)
+            return True, (hard_uncov, weak_dom), hc, []
+
+        # Check whether f1 already strongly handles every symptom or whether a complementary partner covers missing/weak axes
+        f1_weights = f1.get("symptom_weights", {})
+        uncovered = {s for s in symptoms if s not in set(f1["matched_symptoms"])}
+        weakly_covered = {s for s in f1["matched_symptoms"] if f1_weights.get(s, 0) < 10}
+        meaningful_partners: list[tuple[tuple[int, int], dict[str, Any], dict[str, Any]]] = []
+        for cand in active[1:10]:
+            ok, gain, hc, blocked_msgs = _assess_partner(f1, cand, uncovered, weakly_covered)
+            for alert_line in blocked_msgs:
+                if alert_line not in compound_conflict_alerts:
+                    compound_conflict_alerts.append(alert_line)
+            if not ok:
+                continue
+            if gain[0] >= 1 or (gain[1] >= 2 and cand["score"] >= int(f1["score"] * 0.6)):
+                meaningful_partners.append((gain, cand, hc))
+
+        # Only propose a two-formula compound primary hero when uncovered or clearly subordinate symptoms need a distinct axis
+        if meaningful_partners:
+            meaningful_partners.sort(
+                key=lambda row: (-(row[0][0] * 25 + row[0][1] * 14 + row[1]["score"]), row[1]["atom_id"])
+            )
+            _, f2, f2_hc = meaningful_partners[0]
             compound_regimens.append(
-                {
-                    "title": f"主推合方：{f1['name']} 合 {f2['name']}",
-                    "formula_ids": [f1["formula_id"], f2["formula_id"]],
-                    "formula_names": [f1["name"], f2["name"]],
-                    "axis_roles": [
-                        f"【主轴一】{f1['name']}（{f1['six_meridian']}）：主司「{'、'.join(f1['matched_symptoms'])}」",
-                        f"【主轴二】{f2['name']}（{f2['six_meridian']}）：兼顾「{'、'.join(f2['matched_symptoms'])}」",
-                    ],
-                    "covered_symptoms": [s for s in symptoms if s in covered],
-                    "uncovered_symptoms": [s for s in symptoms if s not in covered],
-                    "overlap_herbs": overlap_herbs,
-                    "overlap_note": (
-                        f"两方共有重叠药味：{'、'.join(overlap_herbs)}（传统合方需依轻重统调克数并分明姜/干姜及制附先后煎法，不可机械叠加双倍剂量）。"
-                        if overlap_herbs
-                        else "两方药味分工各专，可据证候主次斟酌主从合参。"
-                    ),
-                }
+                _build_regimen_entry(f1, f2, symptoms, regimen_kind="primary", herb_conflict=f2_hc)
             )
         else:
+            if not uncovered:
+                note = f"核心方「{f1['name']}」已完整覆盖当前全部核心症候（{'、'.join(f1['matched_symptoms'])}），依「有是证用是方」原则单用本方即可，避免冗余合方。"
+            elif compound_conflict_alerts:
+                note = "；".join(compound_conflict_alerts)
+            else:
+                note = "目前症状集中于单一主经病机（或备选方存在寒热/同类互斥），优先考虑专方纯正取效。"
             compound_regimens.append(
-                {
-                    "title": f"单方统摄：{f1['name']}",
-                    "formula_ids": [f1["formula_id"]],
-                    "formula_names": [f1["name"]],
-                    "axis_roles": [f"【专方主轴】{f1['name']}（{f1['six_meridian']}）：统括「{'、'.join(f1['matched_symptoms'])}」"],
-                    "covered_symptoms": f1["matched_symptoms"],
-                    "uncovered_symptoms": [s for s in symptoms if s not in set(f1["matched_symptoms"])],
-                    "overlap_herbs": [],
-                    "overlap_note": "目前症状集中于单一主经病机（或次选存在寒热/同类互斥），优先考虑专方纯正取效。",
-                }
+                _build_regimen_entry(f1, None, symptoms, regimen_kind="primary", single_note=note)
             )
+
+        # Optional secondary comparative regimen (distinct non-sibling meridian/axis, strictly conflict-checked)
+        primary_fids = set(compound_regimens[0]["formula_ids"])
+        for alt in active[1:6]:
+            if alt["formula_id"] in primary_fids or are_formulas_redundant_siblings(f1["formula_id"], alt["formula_id"]):
+                continue
+            if alt["score"] < max(42, int(f1["score"] * 0.68)):
+                continue
+            alt_uncov = set(symptoms) - set(alt["matched_symptoms"])
+            if alt_uncov:
+                alt_partners = []
+                for cand in active:
+                    if cand["formula_id"] in primary_fids:
+                        continue
+                    ok, gain, alt_hc, _ = _assess_partner(alt, cand, alt_uncov, set())
+                    if ok and gain[0] >= 1:
+                        alt_partners.append((gain[0], cand["score"], cand, alt_hc))
+                if alt_partners:
+                    alt_partners.sort(key=lambda row: (-row[0], -row[1], row[2]["atom_id"]))
+                    _, _, p2, p2_hc = alt_partners[0]
+                    compound_regimens.append(
+                        _build_regimen_entry(alt, p2, symptoms, regimen_kind="alternative", herb_conflict=p2_hc)
+                    )
+                    break
+            compound_regimens.append(
+                _build_regimen_entry(
+                    alt,
+                    None,
+                    symptoms,
+                    regimen_kind="alternative",
+                    single_note=f"若临床侧重「{alt['six_meridian']}」证候或兼顾「{'、'.join(alt['matched_symptoms'])}」，可作鉴方对照参考。",
+                )
+            )
+            break
 
     # Build Dynamic Acupoint Protocol from top active atoms + uncovered symptoms
     primary_pts: list[dict[str, str]] = []
@@ -2102,11 +2256,12 @@ def compose_differentiation(q: str = "", pulse: str = "") -> dict[str, Any]:
                 adjunct_pts.append(entry)
 
     # Full-corpus Jingfang clues (299 formulas + 258 curated symptoms + 108 modifications)
+    clue_q = positive_q or " ".join(symptoms)
     top_atom_fids = [a["formula_id"] for a in active[:4]]
-    jingfang_clues = _search_all_jingfang_clues(cleaned_q, symptoms, top_atom_fids, limit=8)
+    jingfang_clues = _search_all_jingfang_clues(clue_q, symptoms, top_atom_fids, limit=8)
 
     # Full-corpus Acupuncture Condition Sub-patterns (34倪师《针灸》临床治症)
-    acup_diag = acupuncture_diagnose.diagnose_symptoms(cleaned_q or " ".join(symptoms), limit_patterns=6, limit_points=8)
+    acup_diag = acupuncture_diagnose.diagnose_symptoms(clue_q, limit_patterns=6, limit_points=8)
     cond_patterns_raw = acup_diag.get("matched_patterns", [])
     matched_condition_patterns: list[dict[str, Any]] = []
     for cp in cond_patterns_raw[:6]:
@@ -2279,7 +2434,7 @@ def compose_differentiation(q: str = "", pulse: str = "") -> dict[str, Any]:
         )
 
     hantang_ctx = hantang_catalog.match_clinical_context(
-        q=cleaned_q,
+        q=positive_q,
         symptoms=symptoms,
         pulses=pulses,
         suppressed_names=[e["name"] for e in excluded],
@@ -2287,12 +2442,14 @@ def compose_differentiation(q: str = "", pulse: str = "") -> dict[str, Any]:
     )
 
     triage_summary = _build_plain_triage_summary(symptoms, pulses, tongues, active, excluded)
-    decoction_and_safety = _build_decoction_and_recovery_guide(active, symptoms, pulses, primary_pts + adjunct_pts)
-    for line in reversed(ctx.get("extra_safety_lines", [])):
+    regimen_fids = set(compound_regimens[0]["formula_ids"]) if compound_regimens and compound_regimens[0].get("formula_ids") else set()
+    guide_atoms = [a for a in active if a["formula_id"] in regimen_fids] if regimen_fids else active[:2]
+    decoction_and_safety = _build_decoction_and_recovery_guide(guide_atoms or active[:2], symptoms, pulses, primary_pts + adjunct_pts)
+    for line in reversed([*compound_conflict_alerts, *ctx.get("extra_safety_lines", [])]):
         if line not in decoction_and_safety:
             decoction_and_safety.insert(0, line)
 
-    lib_query = " ".join((symptoms[:4] or _extract_query_terms(cleaned_q, [])[:3])) or cleaned_q
+    lib_query = " ".join((symptoms[:4] or _extract_query_terms(positive_q, [])[:3])) or positive_q or cleaned_q
     lib_res = search_library_pages(lib_query, limit=6)
     lib_refs = [
         {
@@ -2312,9 +2469,19 @@ def compose_differentiation(q: str = "", pulse: str = "") -> dict[str, Any]:
         "ready_for_llm": True,
         "safety_gate": safety,
         "recognized_symptoms": symptoms,
+        "negated_terms": negated_terms,
         "recognized_pulses": pulses,
         "recognized_tongues": tongues,
-        "decomposed_axes": [{"formula": a["name"], "axis": a["six_meridian"], "matched": a["matched_symptoms"], "score": a["score"]} for a in active[:4]],
+        "decomposed_axes": [
+            {
+                "formula": a["name"],
+                "axis": a["six_meridian"],
+                "matched": a["matched_symptoms"],
+                "matched_tongues": a.get("matched_tongues", []),
+                "score": a["score"],
+            }
+            for a in active[:4]
+        ],
         "matched_jingfang_ids": [c["formula_id"] for c in jingfang_clues[:6]],
         "matched_condition_ids": [cp["condition_id"] for cp in matched_condition_patterns[:4]],
         "proposed_compound": compound_regimens[0]["formula_names"] if compound_regimens else [],
@@ -2341,6 +2508,7 @@ def compose_differentiation(q: str = "", pulse: str = "") -> dict[str, Any]:
         "clinical_entry_cards": CLINICAL_ENTRY_CARDS,
         "preset_cases": PRESET_CASES,
         "recognized_symptoms": symptoms,
+        "recognized_negations": negated_terms,
         "recognized_pulses": pulses,
         "recognized_tongues": tongues,
         "followup_questions": followup_questions,

@@ -1745,9 +1745,13 @@
     const recognizedTongues = new Set(d.recognized_tongues || []);
     const curTxt = st.s5Query || "";
     const tongueText = (d.recognized_tongues || []).join("、") || "未指定";
+    const negText = (d.recognized_negations || []).length
+      ? `<span>已自动排空否定项：<b>${esc((d.recognized_negations || []).join("、"))}</b></span>`
+      : "";
     const statusHtml = isEmpty
       ? `<span>已辨识规范症状：<strong>暂未选择</strong>（点选下方症状/舌象/十问即自动填入）</span><span>已选脉象权重：<strong>暂未选择</strong></span>`
       : `<span>已辨识症状轴：<b>${esc((d.recognized_symptoms || []).join("、") || "暂未提取")}</b></span>
+         ${negText}
          <span>当前脉象：<b>${esc((d.recognized_pulses || []).map((x) => "脉" + x).join(" ") || "未指定（纯依症状）")}</b></span>
          <span>当前舌象：<b>${esc(tongueText)}</b></span>`;
 
@@ -1967,9 +1971,18 @@
 
     const sb = d.safety_boundary || {};
     const triage = d.triage_summary || {};
-    const topCompound = (d.compound_regimens || [])[0];
+    const regimens = d.compound_regimens || [];
+    const topCompound = regimens[0];
+    const altRegimens = regimens.slice(1);
     const acup = d.acupoint_protocol || { primary: [], adjuncts: [], technique_note: "" };
     const hasTriage = Boolean(triage.headline || (triage.crossroads || []).length || (triage.tongue_notes || []).length);
+    const heroBadgeLabel = topCompound
+      ? topCompound.is_compound === false
+        ? (topCompound.formula_ids || []).length
+          ? "单方专治统摄"
+          : "《针灸》专症主治"
+        : "动态合方辨证结果"
+      : "动态辨证结果";
 
     host.innerHTML = `
       ${renderComposeControls(d, { isEmpty: false })}
@@ -2015,7 +2028,7 @@
           ? `<section class="s5-compound-hero">
                <div class="s5-compound-head">
                  <div>
-                   <span class="lib-badge lib-badge-core">动态合方辨证结果</span>
+                   <span class="lib-badge lib-badge-core">${esc(heroBadgeLabel)}</span>
                    <h2>${esc(topCompound.title)}</h2>
                  </div>
                  <div class="lib-chip-cloud">
@@ -2037,10 +2050,36 @@
                <ul class="s5-axis-list">
                  ${(topCompound.axis_roles || []).map((r) => `<li>${esc(r)}</li>`).join("")}
                </ul>
+               ${
+                 (topCompound.herb_conflict_alerts || []).length
+                   ? `<div class="s5-pitfall-box"><strong>配伍警戒与反畏提醒：</strong>${esc(topCompound.herb_conflict_alerts.join("；"))}</div>`
+                   : ""
+               }
                <p class="s5-overlap-note"><strong>合方与药味协同提示：</strong>${esc(topCompound.overlap_note)}</p>
                ${
                  (topCompound.uncovered_symptoms || []).length
                    ? `<p class="muted-line">未完全归入前二方轴之兼症（请参照下方兼症加减或随症取穴）：${esc(topCompound.uncovered_symptoms.join("、"))}</p>`
+                   : ""
+               }
+               ${
+                 altRegimens.length
+                   ? `<div class="s5-alt-regimen-row">
+                        ${altRegimens
+                          .map(
+                            (alt) => `<div class="s5-alt-regimen-card">
+                                        <div class="s5-alt-regimen-head">
+                                          <strong>${esc(alt.title)}</strong>
+                                          <span class="lib-chip-cloud">${(alt.formula_ids || [])
+                                            .map(
+                                              (fid, idx) => `<button class="entity-jump-chip badge-formula" type="button" data-jump-module="formulas" data-jump-id="${esc(fid)}">${esc((alt.formula_names || [])[idx] || fid)}</button>`
+                                            )
+                                            .join("")}</span>
+                                        </div>
+                                        <p class="muted-line">${esc((alt.axis_roles || []).join("；"))} · ${esc(alt.overlap_note || "")}</p>
+                                      </div>`
+                          )
+                          .join("")}
+                      </div>`
                    : ""
                }
              </section>`
@@ -2126,7 +2165,7 @@
                   (clue) => `<article class="s5-clue-card ${clue.in_compound ? "is-compound" : ""}">
                                <div class="s5-cand-top">
                                  <button class="s5-link-title" type="button" data-jump-module="formulas" data-jump-id="${esc(clue.formula_id)}">${esc(clue.name)}</button>
-                                 <span class="sha-pill">${esc(clue.book)} · ${clue.in_compound ? "主推合方" : "分值 " + clue.score}</span>
+                                 <span class="sha-pill">${esc(clue.book)}${(clue.also_in_books || []).length ? `（兼见${esc(clue.also_in_books.join("/"))}）` : ""} · ${clue.in_compound ? "主推轴心" : "分值 " + clue.score}</span>
                                </div>
                                <div class="muted-line">${esc(clue.six_meridian)}${clue.ingredients_summary ? ` ｜ 组成：${esc(clue.ingredients_summary)}` : ""}</div>
                                ${
@@ -2185,7 +2224,7 @@
                        .map(
                          (f) => `<div class="s5-mini-card clickable" data-jump-module="formulas" data-jump-id="${esc(f.formula_id)}">
                                    <div class="s5-cand-top"><strong>${esc(f.name)}</strong> <span class="sha-pill">得分 ${f.score}</span></div>
-                                   <div class="muted-line">${esc(f.six_meridian)} · 命中：${esc(f.matched_symptoms.join("、"))} ${esc(f.matched_pulses.join(" "))}</div>
+                                   <div class="muted-line">${esc(f.six_meridian)} · 命中：${esc(f.matched_symptoms.join("、"))} ${esc(f.matched_pulses.join(" "))}${(f.matched_tongues || []).length ? ` [${esc(f.matched_tongues.join("、"))}]` : ""}</div>
                                    <p>${esc(f.pathogenesis)}</p>
                                  </div>`
                        )
@@ -2274,6 +2313,11 @@
 
       <details class="layer-card s5-ai-packet">
         <summary>下一阶段 AI 循证推理接入口（结构化四诊与原文锚点数据包 · Ready for LLM）</summary>
+        <div class="s5-ai-actions">
+          <button class="secondary-btn small-btn" type="button" data-copy-ai="prompt">一键复制循证大模型提问词</button>
+          <button class="secondary-btn small-btn" type="button" data-copy-ai="json">复制病案 JSON 数据包</button>
+          <span class="muted-line" id="s5-ai-copy-status">严格携带否定排误记录、禁忌红线及原文 SHA-256 校验锚点</span>
+        </div>
         <pre class="lib-verbatim-text">${esc(JSON.stringify(d.ai_ready_case_packet, null, 2))}</pre>
       </details>
     `;
@@ -3339,6 +3383,38 @@
         activateTopView("stage5", false);
         st.s5Query = s5SynJump.dataset.s5JumpSyndrome.replace(/[（(].*$/, "");
         await activateStage5("diagnose", false);
+        return;
+      }
+      const copyAiBtn = e.target.closest("[data-copy-ai]");
+      if (copyAiBtn && st.s5Data?.ai_ready_case_packet) {
+        const pkt = st.s5Data.ai_ready_case_packet;
+        const mode = copyAiBtn.dataset.copyAi;
+        const payload =
+          mode === "json"
+            ? JSON.stringify(pkt, null, 2)
+            : [
+                "你是一位严守《伤寒论》《金匮要略》《黄帝内经》《神农本草经》与倪海厦人纪辨证体系的中医学术研习助手（严禁超越学术范畴直接代客开具临床处方）。",
+                `【四诊采集】症状：${(pkt.recognized_symptoms || []).join("、") || "无"}；已排空否定：${(pkt.negated_terms || []).join("、") || "无"}；脉象：${(pkt.recognized_pulses || []).join(" ") || "未定"}；舌象：${(pkt.recognized_tongues || []).join("、") || "未定"}`,
+                `【主轴推演】候选合方/单方：${(pkt.proposed_compound || []).join(" + ") || "暂无"}；同步取穴：${(pkt.proposed_acupoints || []).join("、") || "暂无"}`,
+                `【已拦截误治与红线】排除方：${(pkt.excluded_pitfalls || []).map((x) => `${x.name}（${x.why_excluded}）`).join("；") || "无"}；红线：${(pkt.classical_redlines || []).map((r) => r.title).join("、") || "无"}`,
+                `【循证引用约束】仅可引用以下原文 SHA-256 锚点阐述病机与鉴别：${(pkt.grounded_citations || []).map((c) => `《${c.book}》${c.unit} [${String(c.sha256 || "").slice(0, 10)}]`).join("；")}`,
+              ].join("\n");
+        const statusEl = $("#s5-ai-copy-status");
+        try {
+          if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(payload);
+          } else {
+            const ta = document.createElement("textarea");
+            ta.value = payload;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            ta.remove();
+          }
+          if (statusEl) statusEl.textContent = mode === "json" ? "✓ 已复制结构化 JSON 病案包" : "✓ 已复制大模型循证提问词模板";
+        } catch (_err) {
+          if (statusEl) statusEl.textContent = "浏览器剪贴板受限，请展开下方 JSON 手动复制";
+        }
         return;
       }
       if (e.target.closest("#s5-clear-selected-btn")) {

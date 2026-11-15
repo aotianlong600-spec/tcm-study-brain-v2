@@ -11,6 +11,7 @@ from app.acupuncture_catalog import (
     _load_json,
     _pages_by_num,
 )
+from retrieval.tcm_synonyms import strip_clinical_negations
 
 
 SYNONYM_GROUPS: tuple[tuple[str, ...], ...] = (
@@ -408,12 +409,13 @@ def diagnose_symptoms(
             "safety_alerts": [],
         }
 
-    tokens = _tokenize_query(cleaned)
+    positive_q, _ = strip_clinical_negations(cleaned)
+    tokens = _tokenize_query(positive_q)
     expanded, token_groups = _expand_tokens(tokens)
 
     # 1. Safety & population notices triggered by input
     safety_alerts: list[str] = []
-    low_q = cleaned.lower()
+    low_q = positive_q.lower()
     for triggers, msg in SPECIAL_GROUP_ALERTS:
         if any(t in low_q or any(t in ex for ex in expanded) for t in triggers):
             safety_alerts.append(msg)
@@ -421,7 +423,7 @@ def diagnose_symptoms(
     # 2. Check Meridian Ziwu Clock matches
     matched_clocks = []
     for entry in MERIDIAN_TIME_RULES:
-        if any(tok in cleaned for tok in entry["tokens"]):
+        if any(tok in positive_q for tok in entry["tokens"]):
             mer = entities.get(entry["meridian_id"], {})
             fs = mer.get("five_shu_table", {})
             matched_clocks.append(
@@ -441,7 +443,7 @@ def diagnose_symptoms(
     # 3. Check Channel Differentiation Guides
     guides = []
     for guide in CHANNEL_GUIDES:
-        if any(t in cleaned or any(t in ex for ex in expanded) for t in guide["triggers"]):
+        if any(t in positive_q or any(t in ex for ex in expanded) for t in guide["triggers"]):
             guides.append(guide)
 
     # Pre-index techniques related to points or conditions via relations
@@ -459,7 +461,7 @@ def diagnose_symptoms(
                 pt_to_techs.setdefault(rel["from_id"], []).append(_entity_summary(t_ent, rel["to_id"]))
 
     # 4. Score Condition Sub-Patterns (primary 辨证分型推理链)
-    asked_pregnancy = any(w in cleaned for w in ("孕", "胎", "产", "生育", "绝孕", "避孕", "分娩"))
+    asked_pregnancy = any(w in positive_q for w in ("孕", "胎", "产", "生育", "绝孕", "避孕", "分娩"))
     scored_patterns: list[dict] = []
     for cond in conditions:
         if risk_level and cond.get("risk_level") != risk_level:

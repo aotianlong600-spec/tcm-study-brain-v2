@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 from typing import Any
 
-from retrieval.tcm_synonyms import FORMULA_SYNONYM_GROUPS
+from retrieval.tcm_synonyms import FORMULA_SYNONYM_GROUPS, strip_clinical_negations
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -218,7 +218,8 @@ def diagnose_formulas(
     limit_formulas: int = 12,
 ) -> dict:
     cleaned = (q or "").strip()
-    tokens, token_groups, expanded = _tokenize_and_expand(cleaned)
+    positive_q, _ = strip_clinical_negations(cleaned)
+    tokens, token_groups, expanded = _tokenize_and_expand(positive_q)
     records = _all_records()
     six_channels = _load_json("six_channels.json").get("items", [])
     jchapters = _load_json("jinkui_chapters.json").get("items", [])
@@ -240,17 +241,17 @@ def diagnose_formulas(
 
     # Polarity signals in query (exclude head-only sweating and nocturnal night sweats from systemic exterior sweating)
     sweat_scoped = (
-        cleaned.replace("但头汗出", " ")
+        positive_q.replace("但头汗出", " ")
         .replace("头汗出", " ")
         .replace("头汗", " ")
         .replace("骨蒸盗汗", " ")
         .replace("盗汗", " ")
         .replace("手足心汗", " ")
     )
-    wants_anhidrosis = "无汗" in cleaned
+    wants_anhidrosis = "无汗" in positive_q
     wants_sweating = any(k in sweat_scoped for k in ["有汗", "汗出", "自汗", "汗多"]) and not wants_anhidrosis
-    wants_no_thirst = any(k in cleaned for k in ["不渴", "不用水", "不饮水"])
-    wants_thirst = any(k in cleaned for k in ["口渴", "大渴", "烦渴", "欲饮水"]) and not wants_no_thirst
+    wants_no_thirst = any(k in positive_q for k in ["不渴", "不用水", "不饮水"])
+    wants_thirst = any(k in positive_q for k in ["口渴", "大渴", "烦渴", "欲饮水"]) and not wants_no_thirst
 
     scored_formulas = []
     for rec in records:
@@ -470,12 +471,12 @@ def diagnose_formulas(
 
     guides = [
         g for g in DIFFERENTIAL_GUIDES
-        if any(tr in cleaned or any(tr in ex for ex in expanded) for tr in g["triggers"])
+        if any(tr in positive_q or any(tr in ex for ex in expanded) for tr in g["triggers"])
     ]
 
     top_raw_recs = [x[2] for x in scored_formulas[:5]]
-    safety_alerts = _safety_alerts(cleaned, top_raw_recs)
-    follow_ups = [{"label": lbl, "chip": chip} for lbl, chip in COMMON_CHIPS if chip not in cleaned]
+    safety_alerts = _safety_alerts(positive_q, top_raw_recs)
+    follow_ups = [{"label": lbl, "chip": chip} for lbl, chip in COMMON_CHIPS if chip not in positive_q]
 
     return {
         "query": cleaned,

@@ -77,7 +77,238 @@ REDUNDANT_SIBLING_GROUPS: tuple[frozenset[str], ...] = (
     frozenset({"shanghan:当归四逆汤", "shanghan:当归四逆加吴茱萸生姜汤"}),
     frozenset({"shanghan:抵当汤", "shanghan:抵当丸"}),
     frozenset({"shanghan:大陷胸汤", "shanghan:大陷胸丸"}),
+    # Cold-fluid wheezing siblings sharing 麻黄/细辛/半夏/五味子 core
+    frozenset({"jinkui:射干麻黄汤", "shanghan:小青龙汤", "jinkui:厚朴麻黄汤", "jinkui:小青龙加石膏汤", "jinkui:泽漆汤"}),
+    # Orthographic / cross-book identical base formulas
+    frozenset({"jinkui:苓桂术甘汤", "shanghan:茯苓桂枝白术甘草汤"}),
+    frozenset({"shanghan:柴胡桂枝干姜汤", "jinkui:柴胡桂姜汤"}),
+    frozenset({"jinkui:肾气丸", "jinkui:八味肾气丸"}),
+    frozenset({"shanghan:炙甘草汤", "jinkui:灸甘草汤"}),
+    frozenset({"jinkui:猪膏髪煎", "jinkui:膏髪煎"}),
+    frozenset({"jinkui:麻黄附子汤", "shanghan:麻黄附子细辛汤"}),
+    # 真武汤 vs 附子汤 share 茯苓、芍药、白术、附子 4/5 herbs (differ only 生姜 vs 人参)
+    frozenset({"shanghan:真武汤", "shanghan:附子汤", "jinkui:附子汤"}),
 )
+
+CANONICAL_FORMULA_ALIASES: dict[str, str] = {
+    "茯苓桂枝白术甘草汤": "苓桂术甘汤",
+    "柴胡桂姜汤": "柴胡桂枝干姜汤",
+    "八味肾气丸": "肾气丸",
+    "崔氏八味丸": "肾气丸",
+    "灸甘草汤": "炙甘草汤",
+    "膏髪煎": "猪膏髪煎",
+    "猪膏发煎": "猪膏髪煎",
+}
+
+
+def canonical_formula_name(name: str) -> str:
+    """Normalize known recension/typo variants to a single canonical formula name."""
+    cleaned = (name or "").strip()
+    return CANONICAL_FORMULA_ALIASES.get(cleaned, cleaned)
+
+
+def _norm_herb_family(herb: str) -> str:
+    h = re.sub(r"[炮制生炙酒醋盐蜜炒煅水洗去心皮尖]+", "", (herb or "").strip())
+    if not h:
+        return (herb or "").strip()
+    if any(k in herb for k in ("乌头", "川乌", "草乌", "天雄")):
+        return "乌头"
+    if "附子" in herb:
+        return "附子"
+    if "半夏" in herb:
+        return "半夏"
+    if "栝蒌根" in herb or "瓜蒌根" in herb or "天花粉" in herb:
+        return "天花粉"
+    if any(k in herb for k in ("瓜蒌", "栝蒌", "栝篓")):
+        return "瓜蒌"
+    if "贝母" in herb:
+        return "贝母"
+    if "大戟" in herb:
+        return "大戟"
+    if "甘遂" in herb:
+        return "甘遂"
+    if "芫花" in herb:
+        return "芫花"
+    if "海藻" in herb:
+        return "海藻"
+    if "甘草" in herb:
+        return "甘草"
+    if "藜芦" in herb:
+        return "藜芦"
+    if "细辛" in herb:
+        return "细辛"
+    if "芍药" in herb or "白芍" in herb or "赤芍" in herb:
+        return "芍药"
+    if "人参" in herb or "党参" in herb:
+        return "人参"
+    if "丹参" in herb:
+        return "丹参"
+    if "玄参" in herb:
+        return "玄参"
+    if "沙参" in herb:
+        return "沙参"
+    if "苦参" in herb:
+        return "苦参"
+    if "白蔹" in herb:
+        return "白蔹"
+    if "白及" in herb:
+        return "白及"
+    if "芒硝" in herb or "朴硝" in herb or "牙硝" in herb:
+        return "芒硝"
+    if "三棱" in herb:
+        return "三棱"
+    if "硫黄" in herb or "硫磺" in herb:
+        return "硫黄"
+    if "五灵脂" in herb:
+        return "五灵脂"
+    if "郁金" in herb:
+        return "郁金"
+    if "丁香" in herb:
+        return "丁香"
+    if "巴豆" in herb:
+        return "巴豆"
+    if "牵牛" in herb:
+        return "牵牛"
+    if "狼毒" in herb:
+        return "狼毒"
+    if "密陀僧" in herb:
+        return "密陀僧"
+    if "肉桂" in herb or "官桂" in herb:
+        return "肉桂"
+    if "赤石脂" in herb:
+        return "赤石脂"
+    if "麻黄" in herb:
+        return "麻黄"
+    if "大黄" in herb:
+        return "大黄"
+    return (herb or "").strip()
+
+
+_SHIBAFAN_RULES: tuple[tuple[frozenset[str], frozenset[str], str, bool], ...] = (
+    (frozenset({"甘草"}), frozenset({"甘遂", "大戟", "芫花", "海藻"}), "十八反「藻戟遂芫俱战草」（甘草反甘遂/大戟/芫花/海藻）", True),
+    (frozenset({"乌头"}), frozenset({"半夏", "瓜蒌", "天花粉", "贝母", "白蔹", "白及"}), "十八反「半蒌贝蔹及攻乌」（生/制乌头天雄反半夏/瓜蒌/天花粉/贝母/白蔹/白及）", True),
+    (frozenset({"附子"}), frozenset({"半夏", "瓜蒌", "贝母", "白蔹", "白及"}), "十八反「半蒌贝蔹及攻乌」（现代药典附子反半夏/瓜蒌/贝母/白蔹/白及；跨方合方默认阻断，仅《金匮》单方附子粳米等自有古配特例）", True),
+    (frozenset({"附子"}), frozenset({"天花粉"}), "药典十八反慎配「附子 × 天花粉（栝蒌根）」（提示：现代药典列附子反天花粉，而《金匮》栝蒌瞿麦丸及人纪柴胡桂枝干姜汤合真武汤亦有炮附配栝蒌根古例，临床须炮制久煎并严审师承法度）", False),
+    (frozenset({"藜芦"}), frozenset({"人参", "沙参", "丹参", "玄参", "苦参", "细辛", "芍药"}), "十八反「诸参辛芍叛藜芦」", True),
+)
+
+_SHIJIUWEI_RULES: tuple[tuple[str, str, str], ...] = (
+    ("硫黄", "芒硝", "十九畏「硫黄原是火中精，朴硝一见便相争」"),
+    ("巴豆", "牵牛", "十九畏「巴豆性烈最为毒，偏与牵牛不顺情」"),
+    ("丁香", "郁金", "十九畏「丁香莫与郁金见」"),
+    ("芒硝", "三棱", "十九畏「牙硝难合京三棱」"),
+    ("人参", "五灵脂", "十九畏「人参最怕五灵脂」"),
+    ("狼毒", "密陀僧", "十九畏「狼毒最怕密陀僧」"),
+    ("肉桂", "赤石脂", "十九畏「官桂善能调冷气，若逢石脂便相欺」"),
+)
+
+_POTENT_TOXIC_FAMILIES: frozenset[str] = frozenset({"乌头", "附子", "麻黄", "细辛", "甘遂", "大戟", "芫花", "巴豆", "大黄"})
+
+
+def detect_compound_herb_conflicts(
+    herbs1: list[str],
+    herbs2: list[str],
+    name1: str = "",
+    name2: str = "",
+) -> dict[str, Any]:
+    """Detect 十八反 / 十九畏 incompatibilities and overlapping potent herbs when combining two formulas."""
+    fam1 = {_norm_herb_family(h) for h in herbs1 if h}
+    fam2 = {_norm_herb_family(h) for h in herbs2 if h}
+    alerts: list[str] = []
+    blocking_alerts: list[str] = []
+    blocking = False
+
+    for grp_a, grp_b, desc, is_block in _SHIBAFAN_RULES:
+        hit1 = (fam1 & grp_a) and (fam2 & grp_b)
+        hit2 = (fam2 & grp_a) and (fam1 & grp_b)
+        if hit1 or hit2:
+            left = "、".join(sorted((fam1 & grp_a) | (fam1 & grp_b)))
+            right = "、".join(sorted((fam2 & grp_a) | (fam2 & grp_b)))
+            msg = f"{name1 or '主方'}（含{left}）与{name2 or '配伍方'}（含{right}）触及{desc}"
+            alerts.append(msg)
+            if is_block:
+                blocking = True
+                blocking_alerts.append(msg)
+
+    for ha, hb, desc in _SHIJIUWEI_RULES:
+        if (ha in fam1 and hb in fam2) or (hb in fam1 and ha in fam2):
+            msg = f"{name1 or '主方'}与{name2 or '配伍方'}（{ha} × {hb}）触及{desc}"
+            alerts.append(msg)
+            blocking = True
+            blocking_alerts.append(msg)
+
+    potent_overlap = sorted((fam1 & fam2) & _POTENT_TOXIC_FAMILIES)
+    if potent_overlap:
+        alerts.append(f"两方均含峻烈/有毒或峻汗药味：{'、'.join(potent_overlap)}，严禁机械叠加剂量")
+
+    return {
+        "blocking": blocking,
+        "blocking_alerts": blocking_alerts,
+        "alerts": alerts,
+        "potent_overlap": potent_overlap,
+    }
+
+
+_POLARITY_TONGUE_WEIGHTS: dict[str, dict[str, int]] = {
+    "yang_def_cold": {"舌淡胖滑": 10, "舌白厚湿": 10, "舌黄厚燥": -16},
+    "heat_excess": {"舌黄厚燥": 10, "舌白厚湿": -16, "舌淡胖滑": -16},
+    "yin_def_heat": {"舌红少苔": 12, "舌白厚湿": -12},
+    "blood_stasis": {"舌紫暗瘀": 14},
+    "half_interior": {"舌黄厚燥": 4, "舌淡胖滑": 4},
+}
+
+_ATOM_TONGUE_OVERRIDES: dict[str, dict[str, int]] = {
+    "atom:zhenwu": {"舌淡胖滑": 16, "舌白厚湿": 12, "舌黄厚燥": -18},
+    "atom:sini": {"舌淡胖滑": 14, "舌白厚湿": 14, "舌黄厚燥": -20},
+    "atom:tongmai-sini": {"舌白厚湿": 14, "舌淡胖滑": 14, "舌黄厚燥": -20},
+    "atom:lizhong": {"舌淡胖滑": 16, "舌白厚湿": 12, "舌黄厚燥": -18},
+    "atom:linggui-zhugan": {"舌淡胖滑": 16, "舌白厚湿": 10},
+    "atom:baihu": {"舌黄厚燥": 16, "舌白厚湿": -20, "舌淡胖滑": -18},
+    "atom:baihu-jiarenshen": {"舌黄厚燥": 14, "舌红少苔": 10, "舌白厚湿": -20},
+    "atom:dachengqi": {"舌黄厚燥": 18, "舌白厚湿": -20, "舌淡胖滑": -18},
+    "atom:tiaowei-chengqi": {"舌黄厚燥": 16, "舌白厚湿": -18},
+    "atom:jinkui-xiexin": {"舌黄厚燥": 14, "舌红少苔": 10, "舌白厚湿": -16},
+    "atom:huanglian-ejiao": {"舌红少苔": 18, "舌白厚湿": -16},
+    "atom:zhigancao": {"舌红少苔": 16, "舌白厚湿": -12},
+    "atom:maimendong": {"舌红少苔": 18, "舌白厚湿": -14},
+    "atom:baihe-dihuang": {"舌红少苔": 16, "舌白厚湿": -14},
+    "atom:zhuye-shigao": {"舌红少苔": 16, "舌黄厚燥": 8, "舌白厚湿": -16},
+    "atom:zhuling": {"舌红少苔": 14, "舌白厚湿": -12},
+    "atom:taohe-chengqi": {"舌紫暗瘀": 16, "舌黄厚燥": 10},
+    "atom:didang": {"舌紫暗瘀": 18},
+    "atom:didang-wan": {"舌紫暗瘀": 18},
+    "atom:guizhi-fuling": {"舌紫暗瘀": 16},
+    "atom:dahuang-zhechong": {"舌紫暗瘀": 16},
+    "atom:wenjing": {"舌紫暗瘀": 14, "舌红少苔": 8},
+    "atom:xiayuxue-tang": {"舌紫暗瘀": 16},
+    "atom:daxianxiong": {"舌黄厚燥": 12, "舌白厚湿": -26},
+    "atom:banxia-xiexin": {"舌白厚湿": 8, "舌黄厚燥": 8},
+}
+
+
+def score_atom_tongue(atom: dict[str, Any], tongues: list[str]) -> tuple[int, list[str], str]:
+    """Score structured tongue findings against an atom's tongue_weights, symptom_weights('舌*'), overrides, and polarity."""
+    if not tongues:
+        return 0, [], ""
+    weights: dict[str, int] = dict(_POLARITY_TONGUE_WEIGHTS.get(atom.get("polarity", "balanced"), {}))
+    weights.update(_ATOM_TONGUE_OVERRIDES.get(atom.get("atom_id", ""), {}))
+    for sym_key, sym_w in atom.get("symptom_weights", {}).items():
+        if sym_key.startswith("舌"):
+            weights[sym_key] = sym_w
+    weights.update(atom.get("tongue_weights", {}))
+    delta = 0
+    matched: list[str] = []
+    conflict_note = ""
+    for t in tongues:
+        w = weights.get(t, 0)
+        if not w:
+            continue
+        delta += w
+        if w > 0:
+            matched.append(t)
+        elif w <= -16 and not conflict_note:
+            conflict_note = f"舌象「{t}」偏离本方寒热燥润边界（{w}）"
+    return delta, matched, conflict_note
 
 
 def are_formulas_redundant_siblings(fid1: str, fid2: str) -> bool:

@@ -201,8 +201,36 @@
       });
     }
 
+    function showSwUpdateToast() {
+      if (document.getElementById("tcm-sw-update-toast")) return;
+      const bar = document.createElement("div");
+      bar.id = "tcm-sw-update-toast";
+      bar.className = "tcm-sw-toast";
+      bar.innerHTML =
+        `<span>发现新版经方知识库与辨证引擎</span>` +
+        `<button type="button" class="primary-btn small-btn" id="tcm-sw-reload-btn">点击刷新生效</button>`;
+      document.body?.appendChild(bar);
+      document.getElementById("tcm-sw-reload-btn")?.addEventListener("click", () => window.location.reload());
+    }
+
     if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "127.0.0.1" || location.hostname === "localhost")) {
-      navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" }).catch(() => {});
+      navigator.serviceWorker
+        .register("./sw.js", { updateViaCache: "none" })
+        .then((reg) => {
+          if (reg.waiting && navigator.serviceWorker.controller) {
+            showSwUpdateToast();
+          }
+          reg.addEventListener("updatefound", () => {
+            const nextWorker = reg.installing;
+            if (!nextWorker) return;
+            nextWorker.addEventListener("statechange", () => {
+              if (nextWorker.state === "installed" && navigator.serviceWorker.controller) {
+                showSwUpdateToast();
+              }
+            });
+          });
+        })
+        .catch(() => {});
     }
   });
 })();

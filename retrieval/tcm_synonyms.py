@@ -7,7 +7,10 @@ Used by:
 """
 from __future__ import annotations
 
+import re
 from typing import Callable
+
+from retrieval.t2s_table import T2S_TRANS
 
 
 FORMULA_SYNONYM_GROUPS: tuple[tuple[str, ...], ...] = (
@@ -148,3 +151,125 @@ def expand_clinical_synonyms(tokens: list[str], norm_fn: Callable[[str], str] | 
                         grp_list.append(s)
         out.append(grp_list[:12])
     return out
+
+
+# Canonical TCM phrases containing 不/无/反不 that signify positive clinical symptoms (not negations)
+_PROTECTED_TCM_IDIOMS: tuple[str, ...] = tuple(
+    sorted(
+        {
+            "身反不恶寒",
+            "反不恶寒",
+            "大便不成形",
+            "小便不利",
+            "小便不通",
+            "大便不通",
+            "大便不爽",
+            "大便难",
+            "不大便",
+            "不能平卧",
+            "不得俯仰",
+            "不可屈伸",
+            "不能自转侧",
+            "麻木不仁",
+            "不省人事",
+            "口不燥不渴",
+            "口不渴",
+            "不转矢气",
+            "不放屁",
+            "不更衣",
+            "不得眠",
+            "不得卧",
+            "不能食",
+            "不欲食",
+            "食不下",
+            "不下食",
+            "不抬肩",
+            "不出汗",
+            "无汗出",
+            "脉微欲绝",
+            "不孕",
+            "不育",
+            "无力",
+            "无汗",
+            "无苔",
+            "无脉",
+            "不渴",
+            "不寐",
+            "不眠",
+            "不仁",
+            "不食",
+            "不欲饮",
+            "不用水",
+            "不喜饮",
+        },
+        key=len,
+        reverse=True,
+    )
+)
+
+_NEG_PREFIX = r"(?:尚未|还未|并不|并非|已无|绝无|否认|排除|没有|不在|未曾|未做过|未做|未行|未见|未患|未|无|不|非|没)"
+_NEG_FILLER = r"(?:[\s]{0,2}(?:明显|显著|任何|过|有|见|伴|患|呈|在|曾))?[\s]{0,2}"
+_NEG_TARGETS = (
+    r"(?:心脏外科|心外科)?(?:心脏)?(?:搭桥|支架|瓣膜)?手术史?"
+    r"|心脏手术|心脏术后|心脏支架|搭桥|瓣膜手术"
+    r"|胆囊切除(?:术|史)?|切胆(?:史)?|胆切除"
+    r"|放化疗(?:史)?|化疗(?:史)?|放疗(?:史)?|穿刺(?:活检)?|切片"
+    r"|怀孕|妊娠|孕妇|胎动不安|孕吐|恶阻"
+    r"|经期(?:感冒)?|月经(?:期间|适来|适断)?|经水(?:适来|适断)?"
+    r"|糖尿病史?|高血压史?|高血脂史?"
+    r"|寒热往来|往来寒热|骨蒸盗汗|手足心汗|但头汗出|头汗|盗汗|自汗|出汗|汗出|骨蒸"
+    r"|心下硬痛|心下痞|胃脘痛|腹胀痛|腹满拒按|小便刺痛|咽喉肿痛"
+    r"|恶寒|恶风|发热|发烧|高热|壮热|潮热"
+    r"|偏头痛|头痛|头疼|眩晕|头晕|耳鸣|耳聋"
+    r"|腹痛|腹胀|胸痛|胁痛|心痛|胃痛|身痛|腰痛|关节痛|痛经|咽痛"
+    r"|干呕|呕吐|恶心|反胃|吐血|咯血|咳血|尿血|便血|失血|出血"
+    r"|咳喘|咳嗽|喘鸣|喘息|气喘|哮喘|痰鸣|咳痰|痰多|有痰|痰|咳|喘"
+    r"|心动悸|心悸|心烦|失眠|多梦|水肿|浮肿|黄疸|发黄"
+    r"|下利清谷|下利|便溏|泄泻|腹泻|口苦|口干|咽干|大渴|口渴|喜冷饮|饮食如故"
+    r"|尿痛|尿频|尿急|大便干|便秘|脚冷|身冷|手脚冰冷|四肢厥冷|面赤如妆|面赤"
+    r"|皮肤干燥|湿疹|瘙痒|疮疡"
+)
+_NEG_CLAUSE_RE = re.compile(rf"(?<!\S)?{_NEG_PREFIX}{_NEG_FILLER}(?P<target>{_NEG_TARGETS})(?:史)?")
+_HISTORY_DENIAL_RE = re.compile(r"(?:否认|排除)[^\s,，。；;、/+|]{1,12}")
+
+
+def strip_clinical_negations(text: str) -> tuple[str, list[str]]:
+    """Remove explicitly negated symptoms/histories while keeping classic positive idioms like 无汗/口不渴."""
+    raw = (text or "").translate(T2S_TRANS).strip()
+    if not raw:
+        return "", []
+
+    placeholders: dict[str, str] = {}
+    working = raw
+    for idx, idiom in enumerate(_PROTECTED_TCM_IDIOMS):
+        if idiom in working:
+            token = f"\x00TCMIDIOM{idx}\x00"
+            placeholders[token] = idiom
+            working = working.replace(idiom, token)
+
+    negated: list[str] = []
+
+    def _repl_neg(m: re.Match[str]) -> str:
+        target = (m.group("target") or "").strip()
+        if target and target not in negated:
+            negated.append(target)
+        # Preserve negative-thirst signal without matching positive thirst
+        if target in {"口渴", "大渴"}:
+            return " 不渴 "
+        return " "
+
+    working = _NEG_CLAUSE_RE.sub(_repl_neg, working)
+
+    def _repl_deny(m: re.Match[str]) -> str:
+        phrase = m.group(0).strip()
+        if phrase and phrase not in negated:
+            negated.append(phrase)
+        return " "
+
+    working = _HISTORY_DENIAL_RE.sub(_repl_deny, working)
+
+    for token, idiom in placeholders.items():
+        working = working.replace(token, idiom)
+
+    cleaned = re.sub(r"\s+", " ", working).strip()
+    return cleaned, negated
